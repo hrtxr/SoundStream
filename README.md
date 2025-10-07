@@ -10,7 +10,7 @@ Diffusion sonore est un projet que nous sommes en train de réaliser dans le cad
 | ----------------- | ------------------------------------- | -----------           |
 | HEURTAUX Romain   | heurtaux.romain@gmail.com             | romain_hrtx           |
 | SY Aboubakry      | aboubakry.sy@edu.univ-paris13.fr      | -                     |
-| CASSEL Kadir      | kadir.cassel@edu.univ-paris13.fr      | -                     |
+| CASSEL Kadir      | kadir.cassel06@gmail.com| -                     |
 | COLLEN Tristan    | tristan.collen@edu.univ-paris13.fr    | -                     |
 - Groupe Neptune A
 ### 🖊️ Descriptif du projet
