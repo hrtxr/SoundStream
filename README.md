@@ -1,6 +1,6 @@
-# 🔉 Diffusion Sonore
+# 🔉 Synapse-Audio
 
-### Qu'est ce que Diffusion Sonore
+### Qu'est ce que Synapse-Audio
 Diffusion sonore est un projet que nous sommes en train de réaliser dans le cadre de la SAÉ S301 (SAÉ = projet évalué qui regroupe un ensemble de compétances afin de pouvoir appliquer les principes théoriques vus en cours). Elle est réalisée en groupe et consiste en le développement d'une application web complète.
 <br>
 > Rendu du projet le **19 Janvier** & Soutenance la **semaine du 20 Janvier**
@@ -47,5 +47,5 @@ Les étudiants développeraient la solution pour un pilote :
 
 ### 🧋 Autres Sources
 - [📖 La page notion](https://www.notion.so/SAE-S301-285e654d8b0e8024aa79ce5e4947d1f4?source=copy_link)
-- [🐈‍⬛ Le Github](https://github.com/hrtxr/Diffusion-Sonore-S301.git )
+- [🐈‍⬛ Le Github](https://github.com/hrtxr/Synapse-Audio-S3.01 )
 - [🔗 Le Moodle](https://moodle.univ-spn.fr/course/view.php?id=7746)
