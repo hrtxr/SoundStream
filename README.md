@@ -12,7 +12,7 @@ Diffusion sonore est un projet que nous sommes en train de réaliser dans le cad
 | SY Aboubakry      | aboubakry.sy@edu.univ-paris13.fr      | -                     |
 | CASSEL Kadir      | kadir.cassel06@gmail.com              | -                     |
 | COLLEN Tristan    | tristan.collen@edu.univ-paris13.fr    | -                     |
-| ALJANE Saif-Eddine| saifeddinealjane@egmail.com           | -                     |
+| ALJANE Saif-Eddine| saifeddinealjane@gmail.com            | -                     |
 - Groupe Neptune A
 ### 🖊️ Descriptif du projet
 
