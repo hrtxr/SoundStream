@@ -1,7 +1,7 @@
-# 🔉 Synapse-Audio
+# 🔉 SoundStream
 
-### Qu'est ce que Synapse-Audio
-Diffusion sonore est un projet que nous sommes en train de réaliser dans le cadre de la SAÉ S301 (SAÉ = projet évalué qui regroupe un ensemble de compétances afin de pouvoir appliquer les principes théoriques vus en cours). Elle est réalisée en groupe et consiste en le développement d'une application web complète.
+### Qu'est ce que SoundStream
+SoundStream est un projet que nous sommes en train de réaliser dans le cadre de la SAÉ S301 (SAÉ = projet évalué qui regroupe un ensemble de compétances afin de pouvoir appliquer les principes théoriques vus en cours). Elle est réalisée en groupe et consiste en le développement d'une application web complète.
 <br>
 > Rendu du projet le **19 Janvier** & Soutenance la **semaine du 20 Janvier**
 
@@ -19,7 +19,7 @@ Diffusion sonore est un projet que nous sommes en train de réaliser dans le cad
 Dans beaucoup d’organisations (entreprises, collectivités, gares, campus…), il faut assurer une diffusion musicale continue, avec insertion de messages publicitaires et possibilité de lancer des messages urgents. L’enjeu est de garantir la continuité de service : même en cas de coupure réseau, il doit toujours y avoir de la musique qui joue. La supervision permet en plus de vérifier que chaque lecteur est bien en fonctionnement et que ses playlists de secours sont correctement synchronisées.
 
 L’idée serait de mettre en place un système de supervision qui permette :
-- de suivre l’état des lecteurs (UP/KO)
+- de suivre l’état des lecteurs
 - de mettre à jour en central la playlist locale et de la synchroniser automatiquement sur les lecteurs
 - de vérifier que la playlist locale de secours est bien à jour
 - de consigner les messages diffusés (musique, publicité, urgent)
@@ -47,5 +47,5 @@ Les étudiants développeraient la solution pour un pilote :
 
 ### 🧋 Autres Sources
 - [📖 La page notion](https://www.notion.so/SAE-S301-285e654d8b0e8024aa79ce5e4947d1f4?source=copy_link)
-- [🐈‍⬛ Le Github](https://github.com/hrtxr/Synapse-Audio-S3.01 )
+- [🐈‍⬛ Le Github](https://github.com/hrtxr/SoundStream)
 - [🔗 Le Moodle](https://moodle.univ-spn.fr/course/view.php?id=7746)
