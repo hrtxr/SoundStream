@@ -32,13 +32,43 @@ Les étudiants développeraient la solution pour un pilote :
 4. Scénarios de test : coupure réseau, coupure électrique, diffusion d’un message urgent, respect du planning des publicités.
 
 ### 📷 Photos du projet 
+
+#### Maquette:
+![Login](00-documents/Screenshots-Maquette/V1/Login.png "Login")
+
+![Dashboard Admin](00-documents/Screenshots-Maquette/V1/Dashboard%20Admin.png "Dashboard Admin")
+
+![Dashboard CM](00-documents/Screenshots-Maquette/V1/Dashboard%20CM.png "Dashboard Admin")
+
+![Device view 1](00-documents/Screenshots-Maquette/V1/Device%20view%201.png "Device view 1")
+
+![timetable view 1](00-documents/Screenshots-Maquette/V1/Timetable%20view%201.png "timetable view 1")
+
+![Timetable view 2 - Calendar](00-documents/Screenshots-Maquette/V1/Timetable%20view%202%20-%20Calendar.png "Timetable view 2 - Calendar")
+
+![Player Web](00-documents/Screenshots-Maquette/V1/Player%20web.png "Player Web")
+
+### Produit final
 *-> En cours de création ;)*
 
 ### 🌲 Arborescence 
 ```
 /
 ├── 00-Documents
-│   └── indications.txt
+│   ├── Screenshots-Maquette
+│   │   └── V1
+│   │       ├── Dashboard Admin.png
+│   │       ├── Dashboard CM.png
+│   │       ├── Device view 1.png
+│   │       ├── Login.png
+│   │       ├── Player web.png
+│   │       ├── Timetable view 1.png
+│   │       └── Timetable view 2 - Calendar.png
+│   ├── Besoin_Utilisateurs.pdf
+│   ├── Cahier_des_chargesV1.0.pdf
+│   ├── indications.txt
+│   ├── Ignore-latex-userstories.txt
+│   └── Synthèse des questions à poser à Mr.pdf
 ├── Code
 │   └── indications.txt
 ├── .gitignore
@@ -46,6 +76,5 @@ Les étudiants développeraient la solution pour un pilote :
 ```
 
 ### 🧋 Autres Sources
-- [📖 La page notion](https://www.notion.so/SAE-S301-285e654d8b0e8024aa79ce5e4947d1f4?source=copy_link)
 - [🐈‍⬛ Le Github](https://github.com/hrtxr/SoundStream)
 - [🔗 Le Moodle](https://moodle.univ-spn.fr/course/view.php?id=7746)
