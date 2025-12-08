@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}"> 
+
+    <div class="login">
+        <h1> 🔉 SoundStream </h1>
+
+        <form method="post">
+            
+            <label for="username">Username:</label><br>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="password">Password:</label><br>
+            <input type="password" id="password" name="password" required><br><br>
+            
+            <p> Mot de passe oublié ? <a href="/forgotten">Cliquez-ici</a></p>
+
+            <input type="submit" value="Login" class="sublog">
+
+        </form>
+    </div>
+
+{% endblock %}
