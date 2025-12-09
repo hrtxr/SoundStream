@@ -100,3 +100,4 @@ CREATE TABLE planned(
    FOREIGN KEY(id_playlist) REFERENCES playlist(id_playlist),
    FOREIGN KEY(day_) REFERENCES Planning(day_)
 );
+

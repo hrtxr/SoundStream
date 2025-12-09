@@ -50,6 +50,12 @@ input{
     margin:0px;
 }
 
+h3 {
+    color: red;
+    font-size: 1.2vh;
+    margin: 0px;
+}
+
 .sublog{
     background-color: #ffffff;
     color:black;

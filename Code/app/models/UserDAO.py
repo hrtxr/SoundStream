@@ -24,7 +24,17 @@ class UserDAO(UserDAOInterface) :
     
     def createUser(self, username, password, role):
         pass
-    
+
+    def findByUsername(self, username):
+        """ Récupère un utilisateur par son username """
+        conn = self._getDbConnection()
+        # On utilise une requête paramétrée pour éviter les injections SQL
+        res = conn.execute('SELECT * FROM user_ WHERE username = ?', (username,)).fetchone()
+        conn.close()
+
+        if res:
+            return User(dict(res))
+        return None
     
     def findAll(self):
         conn = self._getDbConnection()
