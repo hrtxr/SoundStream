@@ -31,10 +31,10 @@ CREATE TABLE organisation(
    id_orga INTEGER PRIMARY KEY,
    name_orga TEXT NOT NULL,
    subsidiary TEXT NOT NULL,
-   UNIQUE(name_orga, subsidiary)
+   UNIQUE(name_orga)
 );
 
-CREATE TABLE file(
+CREATE TABLE file (
    id_file INTEGER PRIMARY KEY,
    name TEXT NOT NULL,
    path TEXT NOT NULL,

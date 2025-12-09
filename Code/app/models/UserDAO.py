@@ -38,7 +38,24 @@ class UserDAO(UserDAOInterface) :
             return User(dict(res))
         return None
     
-    def findAll(self):
+    def findUserOrganisation(self, username):
+        """ Get the organisation of a user by username """
+        conn = self._getDbConnection()
+        
+        query = """
+            SELECT o.name_orga 
+            FROM user_ u
+            JOIN work_link w ON u.id_user = w.id_user
+            JOIN organisation o ON w.id_orga = o.id_orga
+            WHERE u.username = ?
+        """
+        
+        res = conn.execute(query, (username,)).fetchall()
+        conn.close()
+
+        return [row[0] for row in res]
+        
+    def  findAll(self):
         """ Get all users """
         conn = self._getDbConnection()
         users = conn.execute('SELECT * FROM user_ ;').fetchall()
