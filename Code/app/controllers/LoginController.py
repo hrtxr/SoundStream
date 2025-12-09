@@ -13,22 +13,21 @@ def LoggedIn(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
-            return redirect(url_for('login')) # Assure-toi que la route s'appelle 'login'
+            return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
 
-# 2. Décorateur pour vérifier le rôle (ex: @role_required('admin'))
 def reqrole(roles_needed):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            # D'abord on vérifie s'il est connecté
+            # Checkpoint logged in
             if 'user_id' not in session:
                 return redirect(url_for('login'))
             
-            # Ensuite on vérifie si le rôle en session correspond au rôle requis
+            # Then check if the role in session matches the required role
             if session.get('role') not in roles_needed:
-                return "Vous n'avez pas le bon role...", 403
+                return "You do not have the correct role...", 403
                 
             return f(*args, **kwargs)
         return decorated_function

@@ -11,24 +11,26 @@ class UserDAO(UserDAOInterface) :
         self.databasename = app.static_folder + '/database/database.db'
     
     def _getDbConnection(self):
-        """ connection à la base de données. Retourne l'objet connection """
+        """ Connect to the database. Returns the connection object """
         conn = sqlite3.connect(self.databasename)
         conn.row_factory = sqlite3.Row
         return conn
 
     def _generatePWDHash(self, password) :
+        """ Generate password hash from plain text password """
         password_bytes = password.encode('utf-8')
         hashed_bytes = bcrypt.hashpw(password_bytes, bcrypt.gensalt())
         password_hashed = hashed_bytes.decode('utf-8')
         return password_hashed
     
     def createUser(self, username, password, role):
+        """ Create a new user """
         pass
 
     def findByUsername(self, username):
-        """ Récupère un utilisateur par son username """
+        """ Get user by username """
         conn = self._getDbConnection()
-        # On utilise une requête paramétrée pour éviter les injections SQL
+        # Use a parameterized query to prevent SQL injection
         res = conn.execute('SELECT * FROM user_ WHERE username = ?', (username,)).fetchone()
         conn.close()
 
@@ -37,6 +39,7 @@ class UserDAO(UserDAOInterface) :
         return None
     
     def findAll(self):
+        """ Get all users """
         conn = self._getDbConnection()
         users = conn.execute('SELECT * FROM user_ ;').fetchall()
         userList = list()
