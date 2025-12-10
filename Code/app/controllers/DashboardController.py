@@ -4,10 +4,10 @@ from app import app
 from app.controllers.LoginController import LoggedIn, reqrole
 
 class DashboardController:
-
-    @app.route('/dashboard', methods=['GET'])
+    
+    @app.route('/dashboard/<nom_orga>', methods=['GET'])
     @LoggedIn
-    def index():
+    def dashboard(nom_orga):
         metadata= {'title': 'Dashboard'}
         
-        return render_template('dashboard.html', metadata=metadata)
+        return render_template('dashboard.html', metadata=metadata, orga=nom_orga)

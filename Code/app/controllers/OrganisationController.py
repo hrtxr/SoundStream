@@ -14,6 +14,5 @@ class DashboardController:
         metadata= {'title': 'Organisation Choice'}
         
         userorga = us.findUserOrganisation(session['username'])
-        print(userorga)
 
-        return render_template('organisation.html', metadata=metadata)
+        return render_template('organisation.html', metadata=metadata, userorga=userorga)

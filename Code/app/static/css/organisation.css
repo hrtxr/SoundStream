@@ -9,6 +9,7 @@ body {
 }
 
 .organisation {
+    font-family: 'HelveticaNeueLight', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -16,4 +17,51 @@ body {
     height: 100vh;
     font-size: 2vh;
     margin:0px;
-}   
+}  
+
+.block {
+    background-color: rgba(174, 174, 174, 0.25);
+    padding: 5vh;
+    border-radius: 40px;
+    max-width: 30vw;
+}
+
+.block h2 {
+    font-family: 'HelveticaNeueUltraLight', sans-serif;
+    margin: 0;
+    font-size: 4vh;
+    text-align: right;
+}
+
+.block ul {
+    display: flex;
+    flex-direction: column;
+    margin: 0px;
+    padding: 0px;
+}
+.el {
+    background-color: rgba(174, 174, 174, 0.25);
+    padding: 4vh;
+    padding-left: 2vh;
+    margin: 2vh;
+    width: 20vw;
+    height: 2vh;
+    font-size: 2.5vh;
+    display: flex;
+    align-items: center;
+    border-radius: 40px;
+    text-decoration: none;
+    color:white;
+}
+
+.orgicon {
+    width: 7vh;
+    height: 7vh;
+    margin-right: 2vh;
+    border-radius:50%;
+}
+
+.el:hover {
+    background-color: rgba(174, 174, 174, 0.45);
+    cursor: pointer;
+}
