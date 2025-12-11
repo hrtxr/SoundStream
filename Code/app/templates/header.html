@@ -1,0 +1,36 @@
+<header>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/header.css') }}"> 
+    <script src="{{ url_for('static', filename='js/header.js') }}"></script>
+
+    <div class="header">   
+        
+        <div class="headerleft">
+            <p class="icon"> 🔉 </p>
+            
+            {% if session['role'] == 'admin' %}
+                <a href="/tools/{{ orga }}" class="navbtn">TOOLS</a>
+                
+                <a href="/devices/{{ orga }}" class="navbtn">DEVICES</a>
+                <a href="/timetable/{{ orga }}" class="navbtn">TIMETABLE</a>
+
+            {% elif session['role'] == 'it' %}
+                <a href="/devices/{{ orga }}" class="navbtn">DEVICES</a>
+                <a href="/timetable/{{ orga }}" class="navbtn">TIMETABLE</a>
+            
+            {% elif session['role'] == 'commercial' %}
+                <a href="/timetable/{{ orga }}" class="navbtn">TIMETABLE</a>
+
+            {% endif %}
+        </div>
+
+        <div class="headercenter">
+            <p id="clock">Chargement...</p>
+        </div>
+
+        <div class="headerright">
+            <p class="roletext">{{ session.get('role') }} access - </p>
+            <a href="{{ url_for('logout') }}" class="logoutbtn">Logout</a>
+        </div>
+
+    </div>
+</header>

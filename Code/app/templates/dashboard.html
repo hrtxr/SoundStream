@@ -4,8 +4,10 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}"> 
 
     <div class="dashboard">
-        <h1> Welcome to your Dashboard </h1>
-
+        {% include 'header.html' %}
+        <div class="bento">
+            <p> Welcome to the dashboard of {{ orga }} </p>
+        </div>
     </div>
 
 {% endblock %}

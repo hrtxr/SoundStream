@@ -17,3 +17,10 @@ body {
     font-size: 2vh;
     margin:0px;
 } 
+
+.bento {
+    display: flex;
+    align-items: center;
+    height: 92vh;
+    width: 100vw;
+}

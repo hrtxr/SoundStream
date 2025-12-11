@@ -58,7 +58,7 @@ class LoginController:
             user = dao.findByUsername(username)
             
             if user:
-                # Vérification du mot de passe                
+                # Vérification du mot de passe -> à implémenter dans le UserDAO                
                 hashed_pw = user.password.encode('utf-8') 
                 input_pw = password.encode('utf-8')
 
