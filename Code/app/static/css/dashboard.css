@@ -47,32 +47,34 @@ h1 {
     font-family: 'HelveticaNeueUltraLight';
     text-align: right;
     margin-right: 4vh;
-    margin-bottom: 0vh;
+    margin-bottom: -1vh;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    margin: 0px;
 }
 
 /* Style des cellules pour aérer un peu */
 td, th {
     padding: 1.5vh;
     text-align: left;
-    font-size: 2.25vh;
+    font-size: 2.15vh;
 }
 
-/* --- LA MAGIE EST ICI --- */
-/* Cible chaque ligne paire (2, 4, 6...) */
 thead tr:nth-child(odd) {
     background-color: rgba(217, 217, 217, 0.09);
 }
+
 tbody {
     font-family: 'HelveticaNeueThin';
 }
+
 tbody tr:nth-child(even) {
     background-color: rgba(217, 217, 217, 0.09);
 }
+
 tbody tr:nth-child(odd) {
     background-color: rgba(217, 217, 217, 0.05);
 }

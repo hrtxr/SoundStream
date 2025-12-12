@@ -13,28 +13,39 @@
                         <h1>Timetable</h1>
                     </div>
                     <div class="divider colored">
-                        <h1>Devices</h1>
+                        <h1>Users</h1>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in us.findOrganisationUser(orga) %}
+                                    {% if ns.LineNb < 5 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{el}} </td>
+                                            <td> {{ us.findByUsername(el)['role']}}</td>
+                                        </tr>
+                                    {%endif%}
+                                {% endfor %}
+                                    
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 5) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                        
                     </div>
                 </div>
                 <div class="divider">
                     <div class="divider colored">
-                        <h1>Users</h1>
-                        <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Role</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for el in us.findOrganisationUser(orga) %}
-                                <tr>
-                                    <td> {{el}} </td>
-                                    <td> {{ us.findByUsername(el)['role']}}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                        <h1>Devices</h1>
                     </div>
                     <div class="divider colored">
                         <h1>Organisations</h1>
