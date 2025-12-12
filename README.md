@@ -1,5 +1,9 @@
 # 🔉 SoundStream
 
+### Livrable pour les évaluations des Compétences :
+## Compétance 4 :
+[livrable compétences 4](00-Documents/Compte_rendu_compétence_4.pdf)
+
 ### Qu'est ce que SoundStream
 SoundStream est un projet que nous sommes en train de réaliser dans le cadre de la SAÉ S301 (SAÉ = projet évalué qui regroupe un ensemble de compétances afin de pouvoir appliquer les principes théoriques vus en cours). Elle est réalisée en groupe et consiste en le développement d'une application web complète.
 <br>
@@ -49,7 +53,8 @@ Les étudiants développeraient la solution pour un pilote :
 ![Player Web](00-documents/Screenshots-Maquette/V1/Player%20web.png "Player Web")
 
 ### Produit final
-*-> En cours de création ;)*
+*-> En cours git push origin main
+Username for 'https://github.com': de création ;)*
 
 ### 🌲 Arborescence 
 ```
