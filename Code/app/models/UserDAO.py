@@ -41,7 +41,6 @@ class UserDAO(UserDAOInterface) :
     def findUserOrganisation(self, username):
         """ Get the organisation of a user by username """
         conn = self._getDbConnection()
-        
         query = """
             SELECT o.name_orga 
             FROM user_ u
@@ -49,12 +48,25 @@ class UserDAO(UserDAOInterface) :
             JOIN organisation o ON w.id_orga = o.id_orga
             WHERE u.username = ?
         """
-        
         res = conn.execute(query, (username,)).fetchall()
         conn.close()
-
         return [row[0] for row in res]
-        
+    
+    def findOrganisationUser(self, organisation):
+        """ Get all the users of an organisation """
+        conn = self._getDbConnection()
+        query = """
+            SELECT u.username
+            FROM user_ u
+            JOIN work_link w ON u.id_user = w.id_user
+            JOIN organisation o ON w.id_orga = o.id_orga
+            WHERE o.name_orga = ?
+        """
+        res = conn.execute(query, (organisation,)).fetchall()
+        conn.close()
+        return [row[0] for row in res]
+    
+
     def  findAll(self):
         """ Get all users """
         conn = self._getDbConnection()

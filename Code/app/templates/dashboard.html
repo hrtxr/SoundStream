@@ -6,7 +6,70 @@
     <div class="dashboard">
         {% include 'header.html' %}
         <div class="bento">
-            <p> Welcome to the dashboard of {{ orga }} </p>
+            <!-- ############## ADMIN ############### -->
+            {% if session.get('role') == 'admin' %}
+                <div class="divider">
+                    <div class="divider colored">
+                        <h1>Timetable</h1>
+                    </div>
+                    <div class="divider colored">
+                        <h1>Devices</h1>
+                    </div>
+                </div>
+                <div class="divider">
+                    <div class="divider colored">
+                        <h1>Users</h1>
+                        <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Role</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for el in us.findOrganisationUser(orga) %}
+                                <tr>
+                                    <td> {{el}} </td>
+                                    <td> {{ us.findByUsername(el)['role']}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    </div>
+                    <div class="divider colored">
+                        <h1>Organisations</h1>
+                    </div>
+                </div>
+
+            <!-- ############## MANAGER ############## -->
+            {% elif session.get('role') == 'manager' %}
+                <div class="divider colored">
+                        <h1>Timetable</h1>
+                </div>
+                <div class="divider">
+                    <div class="divider colored">
+                        <h1>Devices</h1>
+                    </div>
+                    <div class="divider colored">
+                        <h1>Upload</h1>
+                    </div>
+                </div>
+            
+            <!-- ############# COMMERCIAL ############ -->
+            {% elif session.get('role') == 'commercial' %}
+                <div class="divider colored">
+                        <h1>Timetable</h1>
+                </div>
+                <div class="divider">
+                    <div class="divider colored">
+                        <h1>Devices</h1>
+                    </div>
+                    <div class="divider colored">
+                        <h1>Upload</h1>
+                    </div>
+                </div>
+            
+            {% endif %}
         </div>
     </div>
 

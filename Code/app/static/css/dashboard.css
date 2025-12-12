@@ -20,7 +20,59 @@ body {
 
 .bento {
     display: flex;
-    align-items: center;
     height: 92vh;
     width: 100vw;
+
+    gap: 2vh;
+    padding: 2vh;
+    box-sizing: border-box;
+}
+
+.divider {
+    display: flex;
+    flex-direction: column; 
+    gap: 2vh; 
+    flex: 1;
+    box-sizing: border-box;
+}
+
+.colored{
+    background-color: rgba(217, 217, 217, 0.09);
+    flex: 1;
+    border-radius: 25px;
+}
+
+h1 {
+    color: white;
+    font-family: 'HelveticaNeueUltraLight';
+    text-align: right;
+    margin-right: 4vh;
+    margin-bottom: 0vh;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Style des cellules pour aérer un peu */
+td, th {
+    padding: 1.5vh;
+    text-align: left;
+    font-size: 2.25vh;
+}
+
+/* --- LA MAGIE EST ICI --- */
+/* Cible chaque ligne paire (2, 4, 6...) */
+thead tr:nth-child(odd) {
+    background-color: rgba(217, 217, 217, 0.09);
+}
+tbody {
+    font-family: 'HelveticaNeueThin';
+}
+tbody tr:nth-child(even) {
+    background-color: rgba(217, 217, 217, 0.09);
+}
+tbody tr:nth-child(odd) {
+    background-color: rgba(217, 217, 217, 0.05);
 }

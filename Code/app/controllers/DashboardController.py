@@ -2,6 +2,9 @@ from flask import render_template, session, redirect, url_for, request
 from functools import wraps
 from app import app
 from app.controllers.LoginController import LoggedIn, reqrole
+from app.services.UserService import UserService
+
+us=UserService()
 
 class DashboardController:
     
@@ -10,4 +13,4 @@ class DashboardController:
     def dashboard(nom_orga):
         metadata= {'title': 'Dashboard'}
         
-        return render_template('dashboard.html', metadata=metadata, orga=nom_orga)
+        return render_template('dashboard.html', metadata=metadata, orga=nom_orga, us=us)

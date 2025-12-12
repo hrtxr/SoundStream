@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS file;
 DROP TABLE IF EXISTS user_;
 DROP TABLE IF EXISTS Planning;
 DROP TABLE IF EXISTS organisation;
-CREATE TABLE playlist(
+CREATE TABLE IF NOT EXISTS playlist(
    id_playlist INTEGER PRIMARY KEY,
    name TEXT NOT NULL,
    creation_date DATETIME NOT NULL,
@@ -19,7 +19,7 @@ CREATE TABLE playlist(
    UNIQUE(name)
 );
 
-CREATE TABLE user_(
+CREATE TABLE IF NOT EXISTS user_(
    id_user INTEGER PRIMARY KEY,
    username VARCHAR(25) NOT NULL,
    role VARCHAR(50) NOT NULL,
@@ -27,14 +27,14 @@ CREATE TABLE user_(
    UNIQUE(username)
 );
 
-CREATE TABLE organisation(
+CREATE TABLE IF NOT EXISTS organisation(
    id_orga INTEGER PRIMARY KEY,
    name_orga TEXT NOT NULL,
    subsidiary TEXT NOT NULL,
    UNIQUE(name_orga)
 );
 
-CREATE TABLE file (
+CREATE TABLE IF NOT EXISTS  file (
    id_file INTEGER PRIMARY KEY,
    name TEXT NOT NULL,
    path TEXT NOT NULL,
@@ -43,7 +43,7 @@ CREATE TABLE file (
    UNIQUE(name)
 );
 
-CREATE TABLE song_player(
+CREATE TABLE IF NOT EXISTS song_player(
    id_player INTEGER PRIMARY KEY,
    name_place TEXT UNIQUE NOT NULL,
    IP_adress TEXT NOT NULL,
@@ -55,12 +55,12 @@ CREATE TABLE song_player(
    FOREIGN KEY(id_orga) REFERENCES organisation(id_orga)
 );
 
-CREATE TABLE Planning(
+CREATE TABLE IF NOT EXISTS Planning(
    day_ VARCHAR(50),
    PRIMARY KEY(day_)
 );
 
-CREATE TABLE log(
+CREATE TABLE IF NOT EXISTS log(
    id_log INTEGER PRIMARY KEY,
    type_log TEXT NOT NULL,
    text_log TEXT NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE log(
    FOREIGN KEY(id_orga) REFERENCES organisation(id_orga)
 );
 
-CREATE TABLE work_link(
+CREATE TABLE IF NOT EXISTS work_link(
    id_user INT,
    id_orga INT,
    PRIMARY KEY(id_user, id_orga),
@@ -77,7 +77,7 @@ CREATE TABLE work_link(
    FOREIGN KEY(id_orga) REFERENCES organisation(id_orga)
 );
 
-CREATE TABLE composition(
+CREATE TABLE IF NOT EXISTS composition(
    id_playlist INT,
    id_file INT,
    PRIMARY KEY(id_playlist, id_file),
@@ -85,7 +85,7 @@ CREATE TABLE composition(
    FOREIGN KEY(id_file) REFERENCES file(id_file)
 );
 
-CREATE TABLE interaction(
+CREATE TABLE IF NOT EXISTS interaction(
    id_playlist INT,
    id_user INT,
    PRIMARY KEY(id_playlist, id_user),
@@ -93,7 +93,7 @@ CREATE TABLE interaction(
    FOREIGN KEY(id_user) REFERENCES user_(id_user)
 );
 
-CREATE TABLE planned(
+CREATE TABLE IF NOT EXISTS planned(
    id_playlist INT,
    day_ VARCHAR(50),
    PRIMARY KEY(id_playlist, day_),

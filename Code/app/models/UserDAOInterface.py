@@ -16,3 +16,6 @@ class UserDAOInterface :
     
     def deleteByUsername(self, username):
         pass
+
+    def findOrganisationUser(self, organisation):
+        pass
