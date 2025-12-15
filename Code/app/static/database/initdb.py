@@ -83,9 +83,9 @@ def populate_database():
     # 6. SONG_PLAYER (Les boitiers physiques)
     # Note: id_orga doit correspondre aux organisations existantes (111, 113, etc.)
     players = [
-        (501, 'Showroom Paris', '192.168.1.10', 'active', now, '12 Rue de Rivoli, Paris', 111), # JBL
-        (502, 'Boutique Lyon', '192.168.1.15', 'offline', now - timedelta(days=1), '5 Place Bellecour, Lyon', 113), # Samsung
-        (503, 'Corner Fnac', '10.0.0.55', 'maintenance', now, 'Centre Commercial, Lille', 112) # Harman
+        (501, 'Showroom Paris', '192.168.1.10', 'PLAYING', now, '12 Rue de Rivoli, Paris', 111), # JBL
+        (502, 'Boutique Lyon', '192.168.1.15', 'OFFLINE', now - timedelta(days=1), '5 Place Bellecour, Lyon', 113), # Samsung
+        (503, 'Corner Fnac', '10.0.0.55', 'PLAYING', now, 'Centre Commercial, Lille', 112) # Harman
     ]
     conn.executemany("INSERT INTO song_player (id_player, name_place, IP_adress, state, last_synchronization, place_adress, id_orga) VALUES (?, ?, ?, ?, ?, ?, ?)", players)
     print("✅ Players insérés.")

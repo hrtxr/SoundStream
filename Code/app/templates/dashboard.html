@@ -86,7 +86,7 @@
                                         {% set ns.LineNb = ns.LineNb + 1 %}
                                         <tr>
                                             <td> {{ el['IP_adress'] }} </td>
-                                            <td class="{% if el['state'] == 'active' %}green{% elif el['state'] == 'offline' %}red{% endif %}">
+                                            <td class="{% if el['state'] == 'PLAYING' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
                                                 {{ el['state'] }}
                                             </td>
                                             <td> {{ el['name_place'] }}</td>
