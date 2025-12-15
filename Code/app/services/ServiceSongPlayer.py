@@ -1,23 +1,49 @@
 from app.models.SongPlayerDAO import SongPlayerDAO
-import os
+import subprocess
 
 class SongPlayerService:
     
     def __init__(self) :
         self.spdao = SongPlayerDAO()
     
-    """
-    WoRK IN PROGRESS mais en gros c'est la methode qui fait le ping 
-    def ping(self,ip) :
-        return os.system(f"ping -c 1 -W 1 {ip}") == 
-    
-    ICI c la methode qui va utiliser spdao.UpdateState pour modifier dans la BD
-    def changeState(self,ip) :
+   
+    def ping(ip: str) ->bool :
+        # ici le try except est obliger 
+        try :
+            command = ["ping","-c","1","-w","1",ip]
+
+            result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            return result.returncode == 0
+
+        except subprocess.CalledProcessError:
+            # If subprocess fails, return False
+            return False
+        except Exception:
+            # In case of any other exception, return False
+            return False
         
-        soung_player = self.spdao.findByIpAdress(ip)
-    """
-        
+
+
+    def changeState(self, ip):
+        # Define the two possible states: "PLAYING" and "OFFLINE"
+        state_playing = "PLAYING"
+        state_offline = "OFFLINE"
     
+        # Retrieve the song player associated with the given IP address from the database
+        song_player = self.spdao.findByIpAdress(ip)
+    
+        # Get the ID of the song player
+        id_song_player = song_player.id_player 
+    
+        # Check if the IP is reachable (ping the IP)
+        if self.ping(ip) == False:
+            # If the IP is not reachable, update the player's state to "OFFLINE"
+            song_player.UpdateState(state_offline, id_song_player)
+        else:
+            # If the IP is reachable, update the player's state to "PLAYING"
+            song_player.UpdateState(state_playing, id_song_player)
+
+
     def findAllByOrganisation(self, id_orga):
         return self.spdao.findAllByOrganisation(str(id_orga))
 
