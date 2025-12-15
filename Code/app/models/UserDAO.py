@@ -84,12 +84,12 @@ class UserDAO(UserDAOInterface) :
         
         #Check password using bcrypt 
         hashed_pw = user.password.encode('utf-8')
-        input_pw = password.encode('utf_8')
+        input_pw = password.encode('utf-8')
 
         return bcrypt.checkpw(input_pw, hashed_pw)
     
     def changePassword(self, username, password):
-        """Change the password of lamine yamal"""
+        """Change the password of the user"""
         conn = self._getDbConnection()
 
         #Hash the new password
