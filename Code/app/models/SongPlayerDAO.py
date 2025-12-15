@@ -14,16 +14,29 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         conn.row_factory = sqlite3.Row
         return conn
     
-    def createSongPlayer(self, name_place, IP_adress, state, last_synchronization, place_adress, id_orga) :
-        
+    def createSongPlayer(self, name_place, IP_adress, state,last_synchronization, place_adress, id_orga):
         conn = self._getDbConnection()
-        
-        query = '''INSERT INTO song_player (name_place , Ip_adress, state ,last_synchronization , place_address , id_orga)
-                      VALUES (?,?,?,?,?,?) ;'''
-        conn.execute(query,(name_place, IP_adress, state, last_synchronization, place_adress, id_orga))
-        conn.commit()
-        conn.close()
-            
+        try:
+            query = '''
+            INSERT INTO song_player
+            (name_place, ip_address, state, last_synchronization, place_address, id_orga)
+            VALUES (?, ?, ?, ?, ?, ?);
+            '''
+            conn.execute(query, (
+            name_place,
+            IP_adress,
+            state,
+            last_synchronization,
+            place_adress,
+            id_orga
+            ))
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()
+
 
     def findByIpAdress(self, ip):
         conn = self._getDbConnection()
