@@ -25,7 +25,15 @@ class UserDAO(UserDAOInterface) :
     
     def createUser(self, username, password, role):
         """ Create a new user """
-        pass
+        conn  = self._getDbConnection()
+        """ Hash the password before storing """
+        hashed_password = self._generatePWDHash(password)
+        """ Insert the new user """
+        query = 'INSERT INTO user_(username, password, role) VALUES (?,?,?)'
+        conn.execute(query, (username,hashed_password,role))
+        conn.commit()
+        conn.close()
+        
 
     def findByUsername(self, username):
         """ Get user by username """
@@ -66,6 +74,43 @@ class UserDAO(UserDAOInterface) :
         conn.close()
         return [row[0] for row in res]
     
+
+    def verifyUer(self,username, password):
+        """Verify if username and password are correct"""
+        user = self.findByUsername(username)
+
+        if user is None:
+            return False
+        
+        #Check password using bcrypt 
+        hashed_pw = user.password.encode('utf-8')
+        input_pw = password.encode('utf_8')
+
+        return bcrypt.checkpw(input_pw, hashed_pw)
+    
+    def changePassword(self, username, password):
+        """Change the password of lamine yamal"""
+        conn = self._getDbConnection()
+
+        #Hash the new password
+        hashed_password = self._generatePWDHash(password)
+
+        #update the password
+        query = 'UPDATE user_ SET password = ? WHERE username = ?'
+        conn.execute(query, (hashed_password, username))
+        conn.commit()
+        conn.close()
+
+    def deleteByUsername(self,username):
+        """ Delete a user by username""" 
+        conn = self._getDbConnection()
+
+        # Delete the user 
+        query = 'DELETE FROM user_ WHERE username = ?'
+        conn.execute(query,(username,))
+        conn.commit()
+        conn.close()
+
 
     def  findAll(self):
         """ Get all users """
