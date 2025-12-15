@@ -11,9 +11,8 @@
                 <div class="divider">
                     <div class="divider colored">
                         <h1>Timetable</h1>
+
                         <table>
-                            <thead>
-                            </thead>
                             <tbody>
                                 <tr><td>...</td><td></td></tr>
 
@@ -69,7 +68,7 @@
                 </div>
                 <div class="divider">
                     <div class="divider colored">
-                        <h1>Devices {{orga}}</h1>
+                        <h1>Devices</h1>
 
                         <table>
                             <thead>
@@ -86,7 +85,7 @@
                                         {% set ns.LineNb = ns.LineNb + 1 %}
                                         <tr>
                                             <td> {{ el['IP_adress'] }} </td>
-                                            <td class="{% if el['state'] == 'PLAYING' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
+                                            <td class="{% if el['state'] == 'ONLINE' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
                                                 {{ el['state'] }}
                                             </td>
                                             <td> {{ el['name_place'] }}</td>
@@ -100,8 +99,8 @@
                                 {% endfor %}
 
                                 <tr>
-                                    <td> Offline : <span class="red">Nb</span></td>
-                                    <td> Playing : <span class="green">Nb</span></td>
+                                    <td> Offline : <span class="red"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'OFFLINE') }}</span></td>
+                                    <td> Playing : <span class="green"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'ONLINE') }}</span></td>
                                     <td></td>
                                 </tr>
 
@@ -110,6 +109,7 @@
                     </div>
                     <div class="divider colored">
                         <h1>Logs</h1>
+
                     </div>
                 </div>
 
@@ -121,6 +121,43 @@
                 <div class="divider">
                     <div class="divider colored">
                         <h1>Devices</h1>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ip</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in sps.findAllByOrganisation(ogs.getIdByName(orga))  %}
+                                    {% if ns.LineNb < 4 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{ el['IP_adress'] }} </td>
+                                            <td class="{% if el['state'] == 'ONLINE' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
+                                                {{ el['state'] }}
+                                            </td>
+                                            <td> {{ el['name_place'] }}</td>
+                                        </tr>
+                                    {%endif%}
+                                {% endfor %}
+                                    
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 4) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+
+                                <tr>
+                                    <td> Offline : <span class="red"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'OFFLINE') }}</span></td>
+                                    <td> Playing : <span class="green"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'ONLINE') }}</span></td>
+                                    <td></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
                     </div>
                     <div class="divider colored">
                         <h1>Upload</h1>
@@ -135,6 +172,43 @@
                 <div class="divider">
                     <div class="divider colored">
                         <h1>Devices</h1>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ip</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in sps.findAllByOrganisation(ogs.getIdByName(orga))  %}
+                                    {% if ns.LineNb < 4 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{ el['IP_adress'] }} </td>
+                                            <td class="{% if el['state'] == 'ONLINE' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
+                                                {{ el['state'] }}
+                                            </td>
+                                            <td> {{ el['name_place'] }}</td>
+                                        </tr>
+                                    {%endif%}
+                                {% endfor %}
+                                    
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 4) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+
+                                <tr>
+                                    <td> Offline : <span class="red"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'OFFLINE') }}</span></td>
+                                    <td> Playing : <span class="green"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'ONLINE') }}</span></td>
+                                    <td></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
                     </div>
                     <div class="divider colored">
                         <h1>Upload</h1>

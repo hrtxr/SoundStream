@@ -11,11 +11,14 @@ us=UserService()
 tts=TimetableService()
 sps=SongPlayerService()
 ogs=OrganisationService()
+
 class DashboardController:
     
     @app.route('/dashboard/<nom_orga>', methods=['GET'])
     @LoggedIn
     def dashboard(nom_orga):
         metadata= {'title': 'Dashboard'}
+
+        print(sps.findAllByOrganisation(ogs.getIdByName(nom_orga)))
     
         return render_template('dashboard.html', metadata=metadata, orga=nom_orga, us=us, tts=tts, sps=sps, ogs=ogs)

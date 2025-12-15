@@ -23,7 +23,6 @@ class SongPlayerService:
             return False
         
 
-
     def changeState(self, ip):
         # Define the two possible states: "PLAYING" and "OFFLINE"
         state_playing = "PLAYING"
@@ -43,9 +42,17 @@ class SongPlayerService:
             # If the IP is reachable, update the player's state to "PLAYING"
             song_player.UpdateState(state_playing, id_song_player)
 
-
+    def findAllByOrganisationAndStatus(self, id_orga, status):
+        return self.spdao.findAllByOrganisationAndStatus(str(id_orga), str(status))
+    
+    def CountAllByOrganisationAndStatus(self, id_orga, status):
+        return len(self.spdao.findAllByOrganisationAndStatus(str(id_orga), str(status)))
+                                            
     def findAllByOrganisation(self, id_orga):
-        return self.spdao.findAllByOrganisation(str(id_orga))
+        return self.spdao.findAllByOrganisation(id_orga)
+    
+    def findAllOffline(self):
+        return self.spdao.findAllOffline()
 
         
         
