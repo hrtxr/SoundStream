@@ -9,7 +9,7 @@ __pycache__/
 *.pyo
 *.pyd
 
-# --- Environnements virtuels (Conseillé) ---
+# --- Environnements virtuels ---
 env/
 venv/
 .env
