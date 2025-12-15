@@ -3,10 +3,10 @@ import os
 
 class SongPlayerService:
     
-    def __init__(sefl) :
-        sefl.spdao =SongPlayerDAO()
+    def __init__(self) :
+        self.spdao = SongPlayerDAO()
     
-    '''' 
+    """
     WoRK IN PROGRESS mais en gros c'est la methode qui fait le ping 
     def ping(self,ip) :
         return os.system(f"ping -c 1 -W 1 {ip}") == 
@@ -15,10 +15,11 @@ class SongPlayerService:
     def changeState(self,ip) :
         
         soung_player = self.spdao.findByIpAdress(ip)
-        
-        '''
+    """
         
     
-        
+    def findAllByOrganisation(self, id_orga):
+        return self.spdao.findAllByOrganisation(str(id_orga))
+
         
         

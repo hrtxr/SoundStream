@@ -5,5 +5,5 @@ class SongPlayer :
         self.IP_adress = dico['IP_adress']
         self.state = dico['state']
         self.last_synchronization = dico['last_synchronization']
-        self.place_adress = dico['place_address']
+        self.place_adress = dico['place_adress']
         self.name_orga = dico['id_orga']

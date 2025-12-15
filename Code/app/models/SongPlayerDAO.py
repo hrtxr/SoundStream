@@ -18,7 +18,7 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         
         conn = self._getDbConnection()
         
-        query = '''INSERT INTO soung_player (name_place , Ip_adress, state ,last_synchronization , place_address , id_orga)
+        query = '''INSERT INTO song_player (name_place , Ip_adress, state ,last_synchronization , place_address , id_orga)
                       VALUES (?,?,?,?,?,?) ;'''
         conn.execute(query,(name_place, IP_adress, state, last_synchronization, place_adress, id_orga))
         conn.commit()
@@ -34,7 +34,7 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         if res:
             return SongPlayer(dict(res))
         return None
-    0
+    
     def findByOrganisation(self, name_orga) :
         conn = self._getDbConnection()
         songplayers = conn.execute('SELECT * FROM song_player JOIN organization USING(id_orga) WHERE name_orga = ?;', (name_orga,)).fetchall()
@@ -60,6 +60,18 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
             return songplayerList
         return None
     
+    def findAllByOrganisation(self, id_orga):
+        conn = self._getDbConnection()
+        songplayers = conn.execute("""SELECT * FROM song_player WHERE id_orga = ?;""", (id_orga,)).fetchall()
+        songplayerList = list()
+        for songplayer in songplayers : 
+            songplayerList.append(SongPlayer(dict(songplayer)))
+        conn.close()
+
+        if songplayerList :
+            return songplayerList
+        return []
+    
     def findAll(self):
         conn = self._getDbConnection()
         songplayers = conn.execute('SELECT * FROM song_player;').fetchall()
@@ -73,8 +85,8 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         return None
     
     def UpdateState(self, state, id_player) :
+        ''' Update the state of a song player '''
         conn = self._getDbConnection()
         conn.execute('UPDATE song_player SET state = ? WHERE id_player =  ?;', (state,id_player))
         conn.commit() 
         conn.close()
-        ''' Update the state of a song player '''

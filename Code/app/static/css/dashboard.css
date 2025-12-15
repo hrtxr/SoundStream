@@ -78,3 +78,11 @@ tbody tr:nth-child(even) {
 tbody tr:nth-child(odd) {
     background-color: rgba(217, 217, 217, 0.05);
 }
+
+.green{
+    color:#00FF44;
+}
+
+.red{
+    color:#FF0004;
+}

@@ -1,4 +1,4 @@
-class SongPlayerDAOinterface :
+class SongPlayerDAOInterface :
     
     def createSongPlayer(self, name_place, IP_adress, state, last_synchronization, place_address , name_orga) :
         """ Create a new song player in the data base"""
