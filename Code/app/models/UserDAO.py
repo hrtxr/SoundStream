@@ -46,21 +46,7 @@ class UserDAO(UserDAOInterface) :
             return User(dict(res))
         return None
     
-    def findUserOrganisation(self, username):
-        """ Get the organisation of a user by username """
-        conn = self._getDbConnection()
-        query = """
-            SELECT o.name_orga 
-            FROM user_ u
-            JOIN work_link w ON u.id_user = w.id_user
-            JOIN organisation o ON w.id_orga = o.id_orga
-            WHERE u.username = ?
-        """
-        res = conn.execute(query, (username,)).fetchall()
-        conn.close()
-        return [row[0] for row in res]
-    
-    def findOrganisationUser(self, organisation):
+    def findUsersInOrganisation(self, organisation):
         """ Get all the users of an organisation """
         conn = self._getDbConnection()
         query = """
@@ -75,7 +61,7 @@ class UserDAO(UserDAOInterface) :
         return [row[0] for row in res]
     
 
-    def verifyUer(self,username, password):
+    def verifyUser(self,username, password):
         """Verify if username and password are correct"""
         user = self.findByUsername(username)
 
@@ -84,12 +70,12 @@ class UserDAO(UserDAOInterface) :
         
         #Check password using bcrypt 
         hashed_pw = user.password.encode('utf-8')
-        input_pw = password.encode('utf_8')
+        input_pw = password.encode('utf-8')
 
         return bcrypt.checkpw(input_pw, hashed_pw)
     
     def changePassword(self, username, password):
-        """Change the password of lamine yamal"""
+        """Change the password of the user"""
         conn = self._getDbConnection()
 
         #Hash the new password
@@ -112,7 +98,7 @@ class UserDAO(UserDAOInterface) :
         conn.close()
 
 
-    def  findAll(self):
+    def findAll(self):
         """ Get all users """
         conn = self._getDbConnection()
         users = conn.execute('SELECT * FROM user_ ;').fetchall()

@@ -46,11 +46,11 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
 
         if res:
             return SongPlayer(dict(res))
-        return None
+        return  []
     
     def findByOrganisation(self, name_orga) :
         conn = self._getDbConnection()
-        songplayers = conn.execute('SELECT * FROM song_player JOIN organization USING(id_orga) WHERE name_orga = ?;', (name_orga,)).fetchall()
+        songplayers = conn.execute('SELECT * FROM song_player JOIN organisation USING(id_orga) WHERE name_orga = ?;', (name_orga,)).fetchall()
         songplayerList = list()
         for songplayer in songplayers : 
             songplayerList.append(SongPlayer(dict(songplayer)))
@@ -58,12 +58,12 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
 
         if songplayerList:
             return songplayerList
-        return None
+        return []
     
     def findByState(self, state) :
         """ Get song player by state """
         conn = self._getDbConnection()
-        songplayers = conn.execute('SELECT * FROM song_player WHERE state = ?;', (state,)).fetchall()
+        songplayers = conn.execute('SELECT * FROM song_player WHERE state = ;', (state,)).fetchall()
         songplayerList = list()
         for songplayer in songplayers :
             songplayerList.append(SongPlayer(dict(songplayer)))
@@ -71,8 +71,9 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
 
         if songplayerList:
             return songplayerList
-        return None
+        return []
     
+
     def findAllByOrganisation(self, id_orga):
         conn = self._getDbConnection()
         songplayers = conn.execute("""SELECT * FROM song_player WHERE id_orga = ?;""", (id_orga,)).fetchall()
@@ -84,7 +85,23 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         if songplayerList :
             return songplayerList
         return []
-    
+
+    def findAllByOrganisationAndStatus(self, id_orga, status):
+        conn = self._getDbConnection()
+
+        sql = "SELECT * FROM song_player WHERE id_orga = ? AND state = ?;"
+
+        songplayers = conn.execute(sql, (id_orga, status)).fetchall()
+
+        songplayerList = list()
+        for songplayer in songplayers: 
+            songplayerList.append(SongPlayer(dict(songplayer)))
+        conn.close()
+
+        if songplayerList:
+            return songplayerList
+        return []
+
     def findAll(self):
         conn = self._getDbConnection()
         songplayers = conn.execute('SELECT * FROM song_player;').fetchall()
@@ -95,7 +112,7 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
 
         if songplayerList :
             return songplayerList
-        return None
+        return []
     
     def UpdateState(self, state, id_player) :
         ''' Update the state of a song player '''

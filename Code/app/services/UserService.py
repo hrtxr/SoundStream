@@ -6,13 +6,9 @@ class UserService():
 		# cette ligne utilise le Data Access Object (DAO) dédié aux fichier JSON
         self.udao = UserDAO()
     
-    def findUserOrganisation(self, username):
-        """ Get the organisation of a user by username and return the list of organisations """
-        return  self.udao.findUserOrganisation(username)
-    
-    def findOrganisationUser(self, organisation):
+    def findUsersInOrganisation(self, organisation):
         """ Get all the users of an organisation """
-        return self.udao.findOrganisationUser(organisation)
+        return self.udao.findUsersInOrganisation(organisation)
     
     def findByUsername(self, username):
         """ Get user by username  """

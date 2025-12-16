@@ -2,6 +2,7 @@
 {% block content %}
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}"> 
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 
     <div class="dashboard">
         {% include 'header.html' %}
@@ -11,9 +12,8 @@
                 <div class="divider">
                     <div class="divider colored">
                         <h1>Timetable</h1>
+
                         <table>
-                            <thead>
-                            </thead>
                             <tbody>
                                 <tr><td>...</td><td></td></tr>
 
@@ -48,7 +48,7 @@
                             </thead>
                             <tbody>
                                 {% set ns = namespace(LineNb=0) %}
-                                {% for el in us.findOrganisationUser(orga) %}
+                                {% for el in us.findUsersInOrganisation(orga) %}
                                     {% if ns.LineNb < 5 %}
                                         {% set ns.LineNb = ns.LineNb + 1 %}
                                         <tr>
@@ -69,7 +69,7 @@
                 </div>
                 <div class="divider">
                     <div class="divider colored">
-                        <h1>Devices {{orga}}</h1>
+                        <h1>Devices</h1>
 
                         <table>
                             <thead>
@@ -86,7 +86,7 @@
                                         {% set ns.LineNb = ns.LineNb + 1 %}
                                         <tr>
                                             <td> {{ el['IP_adress'] }} </td>
-                                            <td class="{% if el['state'] == 'active' %}green{% elif el['state'] == 'offline' %}red{% endif %}">
+                                            <td class="{% if el['state'] == 'ONLINE' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
                                                 {{ el['state'] }}
                                             </td>
                                             <td> {{ el['name_place'] }}</td>
@@ -100,8 +100,8 @@
                                 {% endfor %}
 
                                 <tr>
-                                    <td> Offline : <span class="red">Nb</span></td>
-                                    <td> Playing : <span class="green">Nb</span></td>
+                                    <td> Offline : <span class="red"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'OFFLINE') }}</span></td>
+                                    <td> Playing : <span class="green"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'ONLINE') }}</span></td>
                                     <td></td>
                                 </tr>
 
@@ -110,6 +110,36 @@
                     </div>
                     <div class="divider colored">
                         <h1>Logs</h1>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Text</th>
+                                    <th>Date Logged</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in los.getLogsByOrganisation(ogs.getIdByName(orga)) %}
+                                    {% if ns.LineNb < 5 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{el['text_log']}} </td>
+                                            <td> {{el['date_log']}} </td>
+                                            <td> {{el['type_log']}} </td>
+                                        </tr>
+
+
+                                    {% endif %}
+                                {% endfor %}
+
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 5) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -121,9 +151,67 @@
                 <div class="divider">
                     <div class="divider colored">
                         <h1>Devices</h1>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ip</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in sps.findAllByOrganisation(ogs.getIdByName(orga))  %}
+                                    {% if ns.LineNb < 4 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{ el['IP_adress'] }} </td>
+                                            <td class="{% if el['state'] == 'ONLINE' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
+                                                {{ el['state'] }}
+                                            </td>
+                                            <td> {{ el['name_place'] }}</td>
+                                        </tr>
+                                    {%endif%}
+                                {% endfor %}
+                                    
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 4) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+
+                                <tr>
+                                    <td> Offline : <span class="red"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'OFFLINE') }}</span></td>
+                                    <td> Playing : <span class="green"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'ONLINE') }}</span></td>
+                                    <td></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
                     </div>
                     <div class="divider colored">
                         <h1>Upload</h1>
+                        <form method="POST" enctype="multipart/form-data" class="form">
+                            <div class="uploadfile">
+                                <input type="file" id="file" name="uploadfile" accept=".mp3" class="input-hidden">
+
+                                <label for="file" class="btn-design">
+                                    Choose file
+                                </label>
+
+                                <div id="file-name" style="margin-top: 10px; color: #aaa; font-size: 0.9em;"></div>
+                            </div>
+
+                            <div>
+                                <p> When ? </p>
+                                <input type="time" id="heure_event" name="heure_choisie" class="input-pill" required>
+                                <input type="date" id="date_event" name="date_choisie" class="input-pill" required>
+                            </div>
+                        
+                            <button type="submit" class="btn-upload">
+                                Upload
+                            </button>
+                        </form>
                     </div>
                 </div>
             
@@ -135,9 +223,67 @@
                 <div class="divider">
                     <div class="divider colored">
                         <h1>Devices</h1>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ip</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in sps.findAllByOrganisation(ogs.getIdByName(orga))  %}
+                                    {% if ns.LineNb < 4 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{ el['IP_adress'] }} </td>
+                                            <td class="{% if el['state'] == 'ONLINE' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
+                                                {{ el['state'] }}
+                                            </td>
+                                            <td> {{ el['name_place'] }}</td>
+                                        </tr>
+                                    {%endif%}
+                                {% endfor %}
+                                    
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 4) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+
+                                <tr>
+                                    <td> Offline : <span class="red"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'OFFLINE') }}</span></td>
+                                    <td> Playing : <span class="green"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'ONLINE') }}</span></td>
+                                    <td></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
                     </div>
                     <div class="divider colored">
                         <h1>Upload</h1>
+                        <form method="POST" enctype="multipart/form-data" class="form">
+                            <div class="uploadfile">
+                                <input type="file" id="file" name="uploadfile" accept=".mp3" class="input-hidden">
+
+                                <label for="file" class="btn-design">
+                                    Choose file
+                                </label>
+
+                                <div id="file-name" style="margin-top: 10px; color: #aaa; font-size: 0.9em;"></div>
+                            </div>
+
+                            <div>
+                                <p> When ? </p>
+                                <input type="time" id="heure_event" name="heure_choisie" class="input-pill" required>
+                                <input type="date" id="date_event" name="date_choisie" class="input-pill" required>
+                            </div>
+                        
+                            <button type="submit" class="btn-upload">
+                                Upload
+                            </button>
+                        </form>
                     </div>
                 </div>
             
