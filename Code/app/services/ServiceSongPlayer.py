@@ -42,6 +42,47 @@ class SongPlayerService:
             # If the IP is reachable, update the player's state to "PLAYING"
             song_player.UpdateState(state_playing, id_song_player)
 
+    def updateSongPlayer(self, form_data):
+        """
+        Service to update a song player in the database.
+        Only updates fields with values.
+        The player id is never modified.
+        """
+
+        # Get the player id from the form
+        song_player_id = form_data['id_player']
+
+        # Create empty lists for columns and values to update
+        updated_columns = list()
+        values = list()
+
+        # Loop through all items in the form data
+        for key, value in form_data.items():
+
+            # Skip the player id because we do not want to modify it
+            if key == 'id_player':
+                continue
+
+            # Only include fields that have a value
+            if value:
+                # Add the column with placeholder to protect against SQL injection
+                updated_columns.append(f"{key} = ?")
+                # Add the corresponding value
+                values.append(value)
+
+        # If there is nothing to update, exit the function
+        if not updated_columns:
+            return
+
+        # Create a dictionary from columns and values
+        # Keys are like "column = ?", values are the actual data
+        updated_form = dict(zip(updated_columns, values))
+
+        # Call the DAO update method to modify the song player in the database
+        # Using placeholders "?" ensures protection against SQL injection
+        self.spdao.update(updated_form, song_player_id)
+
+    
     def findAllByOrganisationAndStatus(self, id_orga, status):
         return self.spdao.findAllByOrganisationAndStatus(str(id_orga), str(status))
     

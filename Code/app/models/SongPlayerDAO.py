@@ -36,8 +36,34 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
             raise e
         finally:
             conn.close()
+            
+    def update(self, form_data, id_player):
 
+        # Get a database connection
+        conn = self._getDbConnection(form_data.values())
+        
+        #Get all key from the form
+        updated_colums=list(form_data.keys())
 
+        # Get all values from the form
+        values = list(form_data.values())
+
+        # Create the SQL update query
+        # Each column uses "column = ?" to protect against SQL injection
+        requete = f"UPDATE song_player SET {','.join(updated_colums)} WHERE id_player = ?"
+
+        # Execute the query with parameters
+        # Using "?" protects the query from SQL injection
+        conn.execute(requete, tuple(values) + (id_player,))
+
+        # Save changes to the database
+        conn.commit()
+
+        
+    def delete(self,id_song_player):
+        '''sa je fais plus tard psk ya contçole de crypto demain '''
+        pass
+        
     def findByIpAdress(self, ip):
         conn = self._getDbConnection()
         # Use a parameterized query to prevent SQL injection
@@ -115,7 +141,12 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         return []
     
     def UpdateState(self, state, id_player) :
-        ''' Update the state of a song player '''
+        '''
+            Update the state of a song player.
+            This method is different from updateSongPlayer.
+            The state is not chosen by the user.
+            It is set by the system.
+        '''        
         conn = self._getDbConnection()
         conn.execute('UPDATE song_player SET state = ? WHERE id_player =  ?;', (state,id_player))
         conn.commit() 

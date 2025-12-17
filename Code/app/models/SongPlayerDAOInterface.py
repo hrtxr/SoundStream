@@ -4,6 +4,12 @@ class SongPlayerDAOInterface :
         """ Create a new song player in the data base"""
         pass
     
+    def update(self,form_datat):
+        """Update the song player data (name_place place_adress ect)"""
+    
+    def delete(self,id_song_player) :
+        """Deletes the song player from the data base"""
+    
     def findByIpAdress(self, ip) :
         """ Get song player by IP adress """
         pass
