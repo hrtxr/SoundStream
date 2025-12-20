@@ -14,7 +14,11 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         conn.row_factory = sqlite3.Row
         return conn
     
-    def createSongPlayer(self, name_place, IP_adress, state,last_synchronization, place_adress, id_orga):
+    def addSongPlayerInDb(self, data_form_to_form):
+        '''
+            data = tuples (name_place, ip_address, state, last_synchronization, place_address, id_orga)
+
+        '''
         conn = self._getDbConnection()
         try:
             query = '''
@@ -22,14 +26,7 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
             (name_place, ip_address, state, last_synchronization, place_address, id_orga)
             VALUES (?, ?, ?, ?, ?, ?);
             '''
-            conn.execute(query, (
-            name_place,
-            IP_adress,
-            state,
-            last_synchronization,
-            place_adress,
-            id_orga
-            ))
+            conn.execute(query, data_from_to_form)
             conn.commit()
         except Exception as e:
             conn.rollback()
@@ -37,10 +34,10 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         finally:
             conn.close()
             
-    def update(self, form_data, id_player):
+    def updateDbSongPlayer(self, form_data, id_player):
 
         # Get a database connection
-        conn = self._getDbConnection(form_data.values())
+        conn = self._getDbConnection()
         
         #Get all key from the form
         updated_colums=list(form_data.keys())
@@ -60,9 +57,14 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         conn.commit()
 
         
-    def delete(self,id_song_player):
-        '''sa je fais plus tard psk ya contçole de crypto demain '''
-        pass
+    def deleteSongPlayerInDb(self,id_song_player):
+        conn = self._getDbConnection()
+
+        requete = '''DELETE FROM song_player WHERE id_player = ?'''
+        conn.execute(requete,(id_song_player,))
+
+        conn.commit()
+
         
     def findByIpAdress(self, ip):
         conn = self._getDbConnection()

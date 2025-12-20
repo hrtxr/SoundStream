@@ -80,9 +80,30 @@ class SongPlayerService:
 
         # Call the DAO update method to modify the song player in the database
         # Using placeholders "?" ensures protection against SQL injection
-        self.spdao.update(updated_form, song_player_id)
+        self.spdao.updateDbSongPlayer(updated_form, song_player_id)
 
-    
+
+    def deleteSongPlayer(self,id_song_player):
+
+        self.deleteSongPlayerInDb(id_song_player)
+
+    #Je veux que on indique seulement l'ip du player puis que les info du player soit ajouter automatique dans la bd 
+    '''def addSongPlayer(self,form):
+
+        # L'ordre du tuple doit correspondre EXACTEMENT à ton INSERT SQL
+        song_player_tuple = (
+        request.form['name_place'],
+        request.form['IP_adress'],
+        request.form['state'],
+        request.form['place_adress'],
+        request.form['id_orga']
+        )
+
+        self.addSongPlayerInDb(song_player_tuple)'''
+
+    def allSongPlayer(self):
+        return  self.findAll()
+     
     def findAllByOrganisationAndStatus(self, id_orga, status):
         return self.spdao.findAllByOrganisationAndStatus(str(id_orga), str(status))
     

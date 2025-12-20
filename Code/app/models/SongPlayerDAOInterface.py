@@ -1,13 +1,13 @@
 class SongPlayerDAOInterface :
     
-    def createSongPlayer(self, name_place, IP_adress, state, last_synchronization, place_address , name_orga) :
-        """ Create a new song player in the data base"""
+    def addSongPlayerInDb(self, name_place, IP_adress, state, last_synchronization, place_address , name_orga) :
+        """ add a new song player in the data base"""
         pass
     
-    def update(self,form_datat):
+    def updateDbSongPlayer(self,form_datat):
         """Update the song player data (name_place place_adress ect)"""
     
-    def delete(self,id_song_player) :
+    def deleteSongPlayerInDb(self,id_song_player) :
         """Deletes the song player from the data base"""
     
     def findByIpAdress(self, ip) :
