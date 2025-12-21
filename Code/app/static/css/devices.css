@@ -1,0 +1,89 @@
+body {
+    background-image: url("../images/bg-Dark.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.devices {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-size: 2vh;
+    margin:0px;
+} 
+
+.bento {
+    display: flex;
+    height: 92vh;
+    width: 100vw;
+
+    gap: 2vh;
+    padding: 2vh;
+    box-sizing: border-box;
+}
+
+.divider {
+    display: flex;
+    flex-direction: column; 
+    gap: 2vh; 
+    flex: 1;
+    box-sizing: border-box;
+}
+
+.colored{
+    background-color: rgba(217, 217, 217, 0.09);
+    flex: 1;
+    border-radius: 25px;
+}
+
+h1 {
+    color: white;
+    font-family: 'HelveticaNeueUltraLight';
+    text-align: right;
+    margin-right: 4vh;
+    margin-bottom: -1vh;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0px;
+}
+
+/* Style des cellules pour aérer un peu */
+td, th {
+    padding: 1.5vh;
+    text-align: left;
+    font-size: 2.15vh;
+}
+
+thead tr:nth-child(odd) {
+    background-color: rgba(217, 217, 217, 0.09);
+}
+
+tbody {
+    font-family: 'HelveticaNeueThin';
+}
+
+tbody tr:nth-child(even) {
+    background-color: rgba(217, 217, 217, 0.09);
+}
+
+tbody tr:nth-child(odd) {
+    background-color: rgba(217, 217, 217, 0.05);
+}
+
+.green{
+    color:#00FF44;
+}
+
+.red{
+    color:#FF0004;
+}
+

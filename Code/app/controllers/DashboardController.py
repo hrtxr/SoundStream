@@ -4,7 +4,7 @@ from app import app
 from app.controllers.LoginController import LoggedIn, reqrole
 from app.services.UserService import UserService
 from app.services.TimeTableService import TimetableService
-from app.services.ServiceSongPlayer import SongPlayerService
+from app.services.SongPlayerService import SongPlayerService
 from app.services.OrganisationService import OrganisationService
 from app.services.LogService import LogService
 

@@ -68,8 +68,10 @@
                     </div>
                 </div>
                 <div class="divider">
-                    <div class="divider colored">
-                        <h1>Devices</h1>
+
+                    <div class="divider colored" style="position: relative;"> 
+                    <a href="{{ url_for('devices', nom_orga=orga) }}">
+                        <h1>Devices</h1> 
 
                         <table>
                             <thead>
@@ -107,6 +109,7 @@
 
                             </tbody>
                         </table>
+                    </a>
                     </div>
                     <div class="divider colored">
                         <h1>Logs</h1>
@@ -146,10 +149,12 @@
             <!-- ############## COMMUNICATION ############## -->
             {% elif session.get('role') == 'communication' %}
                 <div class="divider colored">
-                        <h1>Timetable</h1>
-                </div>
+                    <h1>Timetable</h1>
+                    </div>
+                    
                 <div class="divider">
                     <div class="divider colored">
+                    <a href="{{ url_for('devices', nom_orga=orga) }}">
                         <h1>Devices</h1>
 
                         <table>
@@ -188,6 +193,7 @@
 
                             </tbody>
                         </table>
+                    </a>
                     </div>
                     <div class="divider colored">
                         <h1>Upload</h1>
@@ -222,6 +228,7 @@
                 </div>
                 <div class="divider">
                     <div class="divider colored">
+                    <a href="{{ url_for('devices', nom_orga=orga) }}">
                         <h1>Devices</h1>
 
                         <table>
@@ -260,6 +267,7 @@
 
                             </tbody>
                         </table>
+                    </a>
                     </div>
                     <div class="divider colored">
                         <h1>Upload</h1>
