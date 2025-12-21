@@ -1,6 +1,6 @@
 from flask import render_template, session, redirect, url_for, request
 from app import app
-from app.models.SongPlayerService import SongPlayerService
+from app.services.ServiceSongPlayer import SongPlayerService
 from app.controllers.LoginController import LoggedIn, reqrole
 
 sps = SongPlayerService()
@@ -16,7 +16,7 @@ class SongPlayerController :
 
         all_devices = sps.allSongPlayer()
 
-        return render_template('devices.html', all_devices=all_devices)
+        return render_template('devices.html', metadata=metadata)
 
 
     @app.route('/alldevices/delete/<int:id_player>', methods=['POST'])
