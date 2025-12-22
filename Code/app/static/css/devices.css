@@ -86,4 +86,48 @@ tbody tr:nth-child(odd) {
 .red{
     color:#FF0004;
 }
+ /* 
+####################
+## Upload section ##
+####################
+*/
+/* Styles pour les boutons Delete et Update */
+.actions-cell {
+    padding: 1vh !important;
+}
 
+.buttons-wrapper {
+    display: flex;
+    gap: 1vh;
+    justify-content: left;
+    align-items: center;
+}
+
+.custom-btn {
+    padding: 1.2vh 3.5vh;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 2vh;
+    text-align: left;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-red {
+    background-color: #FF0000;
+    color: white;
+}
+
+.btn-red:hover {
+    background-color: #CC0000;
+}
+
+.btn-yellow {
+    background-color: #FFFF00;
+    color: #000000;
+}
+
+.btn-yellow:hover {
+    background-color: #CCCC00;
+}
