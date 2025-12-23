@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/logs.css') }}"> 
+
+
+    <div class="devices">
+        {% include 'header.html' %}
+        <div class="bento">
+            <div class="divider colored">
+                        <h1>Logs</h1>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Text</th>
+                                    <th>Date Logged</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in los.getLogsByOrganisation(ogs.getIdByName(orga)) %}
+                                    {% if ns.LineNb < 14 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{el['text_log']}} </td>
+                                            <td> {{el['date_log']}} </td>
+                                            <td> {{el['type_log']}} </td>
+                                        </tr>
+
+
+                                    {% endif %}
+                                {% endfor %}
+
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 14) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+        </div>
+    </div>
+{% endblock %}

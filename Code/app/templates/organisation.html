@@ -9,10 +9,12 @@
                 <h2> Organisations </h2>
                 <ul>
                     {% for orga in userorga %}
+                    <li>
                         <a href="{{ url_for('dashboard', nom_orga=orga) }}" class="el">
-                            <!-- À CHANGER --> <img src="{{ url_for('static', filename='images/organisation_icon.jpg') }}" alt="Organisation Icon" class="orgicon"> <!-- À CHANGER -->
+                            <img src="{{ url_for('static', filename='images/organisation_icon.jpg') }}" alt="Icon" class="orgicon">
                             {{ orga }}
                         </a>
+                    </li>
                     {% endfor %}
                 </ul>
             </div>

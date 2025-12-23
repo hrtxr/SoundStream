@@ -8,16 +8,17 @@
             <a href="/organisation"><p class="icon"> 🔉 </p></a>
             
             {% if session['role'] == 'admin' %}
-                <a href="/tools/{{ orga }}" class="navbtn">TOOLS</a>
-                
                 <a href="/devices/{{ orga }}" class="navbtn">DEVICES</a>
                 <a href="/timetable/{{ orga }}" class="navbtn">TIMETABLE</a>
+                <a href="/logs/{{ orga }}" class="navbtn">LOGS</a>
+                <a href="/tools/{{ orga }}" class="navbtn">TOOLS</a>
 
             {% elif session['role'] == 'manager' %}
                 <a href="/devices/{{ orga }}" class="navbtn">DEVICES</a>
                 <a href="/timetable/{{ orga }}" class="navbtn">TIMETABLE</a>
             
-            {% elif session['role'] == 'commercial' %}
+            {% elif session['role'] == 'communication' %}
+                <a href="/devices/{{ orga }}" class="navbtn">DEVICES</a>
                 <a href="/timetable/{{ orga }}" class="navbtn">TIMETABLE</a>
 
             {% endif %}
