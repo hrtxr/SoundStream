@@ -1,5 +1,6 @@
 from app.models.SongPlayerDAO import SongPlayerDAO
 import subprocess
+import threading
 
 class SongPlayerService:
     
@@ -7,7 +8,7 @@ class SongPlayerService:
         self.spdao = SongPlayerDAO()
     
    
-    def ping(ip: str) ->bool :
+    def ping(self,ip: str) ->bool :
         # ici le try except est obliger 
         try :
             command = ["ping","-c","1","-w","1",ip]
@@ -23,95 +24,55 @@ class SongPlayerService:
             return False
         
 
-    def changeState(self, ip):
+    def changeState(self, id_player):
         # Define the two possible states: "PLAYING" and "OFFLINE"
-        state_playing = "PLAYING"
+        state_playing = "ONLINE"
         state_offline = "OFFLINE"
     
-        # Retrieve the song player associated with the given IP address from the database
-        song_player = self.spdao.findByIpAdress(ip)
+        # Retrieve the song player associated with the given id from the database
+        song_player = self.spdao.findByID(id_player)
+        if song_player:
+            # Get the Ip adress of the song player
+            ip=song_player.IP_adress
     
-        # Get the ID of the song player
-        id_song_player = song_player.id_player 
-    
-        # Check if the IP is reachable (ping the IP)
-        if self.ping(ip) == False:
-            # If the IP is not reachable, update the player's state to "OFFLINE"
-            song_player.UpdateState(state_offline, id_song_player)
-        else:
-            # If the IP is reachable, update the player's state to "PLAYING"
-            song_player.UpdateState(state_playing, id_song_player)
-
-    def updateSongPlayer(self, form_data):
-        """
-        Service to update a song player in the database.
-        Only updates fields with values.
-        The player id is never modified.
-        """
-
-        # Get the player id from the form
-        song_player_id = form_data['id_player']
-
-        # Create empty lists for columns and values to update
-        updated_columns = list()
-        values = list()
-
-        # Loop through all items in the form data
-        for key, value in form_data.items():
-
-            # Skip the player id because we do not want to modify it
-            if key == 'id_player':
-                continue
-
-            # Only include fields that have a value
-            if value:
-                # Add the column with placeholder to protect against SQL injection
-                updated_columns.append(f"{key} = ?")
-                # Add the corresponding value
-                values.append(value)
-
-        # If there is nothing to update, exit the function
-        if not updated_columns:
+            # Check if the IP is reachable (ping the IP)
+            if self.ping(ip) == False:
+                # If the IP is not reachable, update the player's state to "OFFLINE"
+                self.spdao.UpdateState(state_offline, id_player)
+            else:
+                # If the IP is reachable, update the player's state to "PLAYING"
+                self.spdao.UpdateState(state_playing, id_player)
+        else :
             return
-
-        # Create a dictionary from columns and values
-        # Keys are like "column = ?", values are the actual data
-        updated_form = dict(zip(updated_columns, values))
-
-        # Call the DAO update method to modify the song player in the database
-        # Using placeholders "?" ensures protection against SQL injection
-        self.spdao.updateDbSongPlayer(updated_form, song_player_id)
 
 
     def deleteSongPlayer(self,id_song_player):
 
-        self.deleteSongPlayerInDb(id_song_player)
-
-    #Je veux que on indique seulement l'ip du player puis que les info du player soit ajouter automatique dans la bd 
-    '''def addSongPlayer(self,form):
-
-        # L'ordre du tuple doit correspondre EXACTEMENT à ton INSERT SQL
-        song_player_tuple = (
-        request.form['name_place'],
-        request.form['IP_adress'],
-        request.form['state'],
-        request.form['place_adress'],
-        request.form['id_orga']
-        )
-
-        self.addSongPlayerInDb(song_player_tuple)'''
+        self.spdao.deleteSongPlayerInDb(id_song_player)
 
     def allSongPlayer(self):
         return  self.findAll()
-     
+ 
     def findAllByOrganisationAndStatus(self, id_orga, status):
         return self.spdao.findAllByOrganisationAndStatus(str(id_orga), str(status))
     
     def CountAllByOrganisationAndStatus(self, id_orga, status):
         return len(self.spdao.findAllByOrganisationAndStatus(str(id_orga), str(status)))
                                             
-    def findAllByOrganisation(self, id_orga):
-        return self.spdao.findAllByOrganisation(id_orga)
+    def findAllSongPlayerByOrganisation(self, id_orga):
+        # Fetch initial list of players from the database
+        players = self.spdao.findAllByOrganisationInBd(id_orga)
+
+        # Update each player's status by pinging their IP address
+        for p in players:
+            self.changeState(p.id_player)
+    
+        # Return the refreshed list with updated statuses
+        return self.spdao.findAllByOrganisationInBd(id_orga)
     
     def findAllOffline(self):
         return self.spdao.findAllOffline()
+
+    #Je veux que on indique seulement l'ip du player puis que les info du player soit ajouter automatique dans la bd 
+    #def addSongPlayer(self,form):
+        

@@ -66,10 +66,10 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         conn.commit()
 
         
-    def findByIpAdress(self, ip):
+    def findByID(self, id_player):
         conn = self._getDbConnection()
         # Use a parameterized query to prevent SQL injection
-        res = conn.execute('SELECT * FROM song_player WHERE IP_adress = ?;', (ip,)).fetchone()
+        res = conn.execute('SELECT * FROM song_player WHERE id_player = ?;', (id_player,)).fetchone()
         conn.close()
 
         if res:
@@ -102,7 +102,7 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         return []
     
 
-    def findAllByOrganisation(self, id_orga):
+    def findAllByOrganisationInBd(self, id_orga):
         conn = self._getDbConnection()
         songplayers = conn.execute("""SELECT * FROM song_player WHERE id_orga = ?;""", (id_orga,)).fetchall()
         songplayerList = list()

@@ -83,7 +83,7 @@
                             </thead>
                             <tbody>
                                 {% set ns = namespace(LineNb=0) %}
-                                {% for el in sps.findAllByOrganisation(ogs.getIdByName(orga))  %}
+                                {% for el in sps.findAllSongPlayerByOrganisation(ogs.getIdByName(orga))  %}
                                     {% if ns.LineNb < 4 %}
                                         {% set ns.LineNb = ns.LineNb + 1 %}
                                         <tr>

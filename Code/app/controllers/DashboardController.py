@@ -23,6 +23,8 @@ class DashboardController:
     def dashboard(nom_orga):
         metadata= {'title': 'Dashboard'}
 
-        print(sps.findAllByOrganisation(ogs.getIdByName(nom_orga)))
+        print(sps.findAllSongPlayerByOrganisation(ogs.getIdByName(nom_orga)))
+
+        #ici au lieux d'utiliser une metjode qui fait du SQL est qui lourde  tu peux juste faire comme dans le devicesContoller
     
         return render_template('dashboard.html', metadata=metadata, orga=nom_orga, us=us, tts=tts, sps=sps, ogs=ogs, los=los)
