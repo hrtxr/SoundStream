@@ -25,7 +25,7 @@
                                 {% set ns.LineNb = ns.LineNb + 1 %}
                                 <tr>
                                     <td> {{ el['IP_adress'] }} </td>
-                                    <td class="{% if el['state'] == 'ONLINE' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
+                                    <td id="status-{{ el['id_player'] }}" class="{% if el['state'] == 'ONLINE' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
                                         {{ el['state'] }}
                                     </td>
                                     <td> {{ el['name_place'] }}</td>
@@ -46,7 +46,7 @@
                         <tr>
                             <td> Offline : <span class="red"> {{ nb_off }}</span></td>
                             <td> Playing : <span class="green"> {{ nb_on }}</span></td>
-                            <td></td>
+                            <td> <p style="font-size: 0.8em; font-style: italic; margin-bottom: 10px; color: gray;"> Last update: <span id="last-update-time">--:--:--</span></p></td>
                             <td>&nbsp;</td>
                         </tr>
                     </tbody>
@@ -54,4 +54,55 @@
             </div>
         </div>
     </div>
+<script>
+    // On définit le nom de l'organisation (donnée par le controller)
+    const orga_name = "{{orga_name}}".trim();
+
+    //cette fonction permet de mettre a jour les statut sans recharger tout la page 
+    function refreshStatuses() {
+        console.log("Démarrage de la mise à jour automatique...");
+        // la fonction fait un appel au controleur
+        fetch(`/auto_update_status/${orga_name}`)
+            .then(response => response.json()) // reponse est la requête http entière nous on la veut en json
+            .then(data => {
+                // data est le JSON (qui pour chaque devices on un dico de type {id_player':id_player,'state':state})
+                console.log("Données reçues du serveur :", data);
+                data.forEach(device => {
+                    // device est un objet JavaScript qui est contenu dans data qui un Json
+                    // On cherche la cellule <td> par son ID 
+                    const statusTd = document.getElementById(`status-${device.id_player}`);
+                    
+                    if (statusTd) {
+                        // Mise à jour du texte
+                        statusTd.textContent = device.state;
+
+                        // Mise à jour de la couleur 
+                        // car le if dans la class de la balise td ne se fait q'un fois au chargement de la page
+                        if (device.state === 'ONLINE') {
+                            statusTd.className = 'green';
+                        } else if (device.state === 'OFFLINE') {
+                            statusTd.className = 'red';
+                        }
+                    }
+                });
+
+                const now = new Date();
+
+                // On récupère les valeurs brutes
+                const h = now.getHours();
+                const m = now.getMinutes();
+                const s = now.getSeconds();
+
+                // On assemble avec les barres verticales
+                const displayTime = `${h}:${m}:${s}`;
+
+                document.getElementById('last-update-time').textContent = displayTime;
+            })
+            .catch(err => console.error("Erreur auto-update:", err)); 
+            // si il y a une erreur elle s'affichera dans la console sans ça on ne pouras pas savoir que sa na pas marcher 
+    }
+
+    // Lancer le rafraîchissement toutes les 25 secondes
+    setInterval(refreshStatuses, 25000);
+</script>
 {% endblock %}

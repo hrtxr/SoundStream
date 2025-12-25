@@ -1,4 +1,4 @@
-from flask import render_template, session, redirect, url_for, request
+from flask import render_template, session, redirect, url_for, request , jsonify
 from functools import wraps
 from app import app
 from app.controllers.LoginController import LoggedIn, reqrole
@@ -17,7 +17,7 @@ class DevicesController :
         #c'est en fr pour l'instant pour expliquer mes choix
         metadata= {'title': 'Devices'}
         # On récupère l'ID de l'organisation une seule fois pour optimiser
-        orga = ogs.getIdByName(nom_orga)
+        id_orga = ogs.getIdByName(nom_orga)
     
         # On initialise nos compteurs et notre liste
         nb_on = 0
@@ -25,7 +25,7 @@ class DevicesController :
         liste_song_player_dict = []
 
         # On récupère les objets depuis le service
-        liste_song_player_object = sps.findAllSongPlayerByOrganisation(orga)
+        liste_song_player_object = sps.findAllSongPlayerByOrganisation(id_orga)
     
         # On centralise la logique ici : on transforme en dict ET on compte les états
         # en un seul passage (boucle unique) pour de meilleures performances.
@@ -39,7 +39,7 @@ class DevicesController :
                 nb_on += 1
             elif p.state == 'OFFLINE':
                 nb_off += 1
-        return render_template('devices.html', metadata=metadata, liste_song_player=liste_song_player_dict, nb_on=nb_on, nb_off=nb_off)
+        return render_template('devices.html', metadata=metadata, liste_song_player=liste_song_player_dict, nb_on=nb_on, nb_off=nb_off,orga_name=nom_orga)
         
 
     @app.route('/update/<int:id_player>', methods=['POST','GET'])
@@ -61,6 +61,34 @@ class DevicesController :
 
         # Stay on the current page to confirm the player is gone from the list
         return redirect(request.referrer)
+
+
+
+    #Ici c'est normal qu'il n'y ai pas de GET/POST car cette route ne fait transiter que du JSON 
+    #Elle sert a l'auto rafaichisement des statut (c'est une requête AJAX)
+    @app.route('/auto_update_status/<nom_orga>') 
+    @LoggedIn
+    def get_status(nom_orga):
+        
+        #on recupère l'id de lorganisation
+        id_orga = ogs.getIdByName(nom_orga)
+
+        # Récupération de la liste des players de l'organisation
+        players = sps.findAllSongPlayerByOrganisation(id_orga)
+        status_data = []
+    
+        for p in players:
+            # On déclenche le ping pour chaque player pour mettre à jour la base
+            sps.changeState(p.id_player)
+            
+            # On prépare les données minimales à envoyer au JavaScript
+            status_data.append({
+                'id_player': p.id_player,
+                'state': p.state
+            })
+    
+        # Transformation de la liste en format JSON pour le front-end
+        return jsonify(status_data)
 
 
 

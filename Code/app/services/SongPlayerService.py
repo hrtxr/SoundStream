@@ -65,7 +65,7 @@ class SongPlayerService:
 
         # Update each player's status by pinging their IP address
         for p in players:
-            self.changeState(p.id_player)
+           self.changeState(p.id_player)
     
         # Return the refreshed list with updated statuses
         return self.spdao.findAllByOrganisationInBd(id_orga)
