@@ -83,3 +83,82 @@ class DevicesController :
 
 
 # ici y manque juste la logique pour ajouter un device est cette page seras fini  
+    @app.route('/edit/<int:id_player>', methods=['GET', 'POST'])
+    @LoggedIn
+    def edit_player(id_player):
+        """
+        Route pour modifier les informations d'un lecteur
+        
+        EXPLICATION mes loulous que j'aime:
+        
+        Cette route permet à un utilisateur connecté de modifier les infos d'un lecteur.
+        
+        Comment ça marche en bien gui , putain le senegal a fait match nul?
+        1. L'utilisateur clique sur "Modifier" dans devices.html
+        2. GET /edit/123 → On affiche un formulaire pré-rempli avec les données actuelles
+        3. L'utilisateur modifie les champs qu'il veut
+        4. POST /edit/123 → On enregistre les nouvelles valeurs dans la BDD
+        5. Redirection vers la page devices pour voir le résultat
+        
+        Paramètres:
+            id_player (int): L'ID du lecteur à modifier
+        
+        Retourne:
+            - Si GET : Page HTML avec formulaire d'édition
+            - Si POST : Redirection vers la page devices après modification
+        """
+        
+        if request.method == 'POST':
+            #  TRAITEMENT DU FORMULAIRE (POST)
+            
+            # Récupération des données envoyées par le formulaire
+            # request.form contient tout ce que l'utilisateur a tapé
+            name_place = request.form.get('name_place')
+            ip_address = request.form.get('ip_address')
+            place_address = request.form.get('place_address')
+            
+            # Vérification que tous les champs sont remplis
+            # Si un champ est vide (None ou ""), on retourne une erreur
+            if not name_place or not ip_address or not place_address:
+                return "Erreur : Tous les champs sont obligatoires", 400
+            
+            # Préparation des données pour la mise à jour
+            # ATTENTION : Dans la BDD c'est IP_adress et place_adress (avec 1 seul d, donc belek faut modifier)
+            # C'est une faute de frappe dans le schema.sql mais on doit utiliser ces noms
+            form_data = {
+                'name_place': name_place,
+                'IP_adress': ip_address,      # ← Attention à l'orthographe
+                'place_adress': place_address  # ← Attention à l'orthographe
+            }
+            
+            # Appel du service pour mettre à jour dans la base de données
+            # sps = SongPlayerService (défini en haut du fichier)
+            # sps.spdao = SongPlayerDAO (le DAO qui parle à la BDD)
+            # updateDbSongPlayer() va faire un UPDATE SQL
+            sps.spdao.updateDbSongPlayer(form_data, id_player)
+            
+            # Redirection vers la page d'où on vient (devices)
+            # request.referrer contient l'URL de la page précédente
+            return redirect(request.referrer)
+        
+        else:
+            #  AFFICHAGE DU FORMULAIRE (GET) 
+            
+            # Récupération des informations actuelles du lecteur
+            # On cherche dans la BDD avec l'ID
+            player = sps.spdao.findByID(id_player)
+            
+            # Si le lecteur n'existe pas dans la BDD
+            if not player:
+                return "Lecteur non trouvé", 404
+            
+            # Récupération du nom de l'organisation pour le header
+            # player.id_orga contient l'ID de l'organisation
+            orga = ogs.getIdByName  # On va chercher le nom
+            
+            # Affichage du formulaire pré-rempli
+            metadata = {'title': 'Modifier Lecteur'}
+            return render_template('edit_player.html', 
+                                 metadata=metadata, 
+                                 player=player,
+                                 orga='Harman_Kardon')  # Pour le header
