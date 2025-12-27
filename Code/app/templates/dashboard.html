@@ -83,7 +83,7 @@
                             </thead>
                             <tbody>
                                 {% set ns = namespace(LineNb=0) %}
-                                {% for el in sps.findAllSongPlayerByOrganisation(ogs.getIdByName(orga))  %}
+                                {% for el in liste_song_player %}
                                     {% if ns.LineNb < 4 %}
                                         {% set ns.LineNb = ns.LineNb + 1 %}
                                         <tr>
@@ -102,8 +102,8 @@
                                 {% endfor %}
 
                                 <tr>
-                                    <td> Offline : <span class="red"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'OFFLINE') }}</span></td>
-                                    <td> Playing : <span class="green"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'ONLINE') }}</span></td>
+                                    <td> Offline : <span class="red"> {{ nb_off }}</span></td>
+                                    <td> Playing : <span class="green"> {{ nb_on }}</span></td>
                                     <td></td>
                                 </tr>
 
@@ -169,7 +169,7 @@
                             </thead>
                             <tbody>
                                 {% set ns = namespace(LineNb=0) %}
-                                {% for el in sps.findAllByOrganisation(ogs.getIdByName(orga))  %}
+                                {% for el in liste_song_player  %}
                                     {% if ns.LineNb < 4 %}
                                         {% set ns.LineNb = ns.LineNb + 1 %}
                                         <tr>
@@ -188,8 +188,8 @@
                                 {% endfor %}
 
                                 <tr>
-                                    <td> Offline : <span class="red"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'OFFLINE') }}</span></td>
-                                    <td> Playing : <span class="green"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'ONLINE') }}</span></td>
+                                    <td> Offline : <span class="red"> {{ nb_off }}</span></td>
+                                    <td> Playing : <span class="green"> {{ nb_on }}</span></td>
                                     <td></td>
                                 </tr>
 
@@ -243,7 +243,7 @@
                             </thead>
                             <tbody>
                                 {% set ns = namespace(LineNb=0) %}
-                                {% for el in sps.findAllByOrganisation(ogs.getIdByName(orga))  %}
+                                {% for el in liste_song_player  %}
                                     {% if ns.LineNb < 4 %}
                                         {% set ns.LineNb = ns.LineNb + 1 %}
                                         <tr>
@@ -262,8 +262,8 @@
                                 {% endfor %}
 
                                 <tr>
-                                    <td> Offline : <span class="red"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'OFFLINE') }}</span></td>
-                                    <td> Playing : <span class="green"> {{ sps.CountAllByOrganisationAndStatus(ogs.getIdByName(orga), 'ONLINE') }}</span></td>
+                                    <td> Offline : <span class="red"> {{ nb_off }}</span></td>
+                                    <td> Playing : <span class="green"> {{ nb_on }}</span></td>
                                     <td></td>
                                 </tr>
 

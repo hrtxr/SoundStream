@@ -14,31 +14,21 @@ class DevicesController :
     @app.route('/devices/<nom_orga>', methods =['GET'])
     @LoggedIn
     def devices(nom_orga):
-        #c'est en fr pour l'instant pour expliquer mes choix
+        
         metadata= {'title': 'Devices'}
-        # On récupère l'ID de l'organisation une seule fois pour optimiser
+        # Get organization ID once to optimize database queries
         id_orga = ogs.getIdByName(nom_orga)
-    
-        # On initialise nos compteurs et notre liste
-        nb_on = 0
-        nb_off = 0
-        liste_song_player_dict = []
 
-        # On récupère les objets depuis le service
-        liste_song_player_object = sps.findAllSongPlayerByOrganisation(id_orga)
-    
-        # On centralise la logique ici : on transforme en dict ET on compte les états
-        # en un seul passage (boucle unique) pour de meilleures performances.
-        for p in liste_song_player_object:
-            # Transformation en dictionnaire pour faciliter l'accès dans la template Jinja
-            liste_song_player_dict.append(vars(p))
+        # Get all players for this organization as a list of dictionaries
+        liste_song_player_dict = sps.findAllSongPlayerByOrganisation(id_orga)
 
-            # Calcul des compteurs en Python plutôt qu'en SQL ou dans la template
-            # Cela garantit que les chiffres affichés correspondent exactement à la liste
-            if p.state == 'ONLINE':
-                nb_on += 1
-            elif p.state == 'OFFLINE':
-                nb_off += 1
+        # Retrieve the count of online and offline players for this organization
+        nb_on_and_nb_off = sps.countNumberOfSongPlayerOnlineAndOffline(id_orga)
+        
+        # Unpack counters from the result list/tuple
+        nb_on = nb_on_and_nb_off[0]
+        nb_off = nb_on_and_nb_off[1]
+
         return render_template('devices.html', metadata=metadata, liste_song_player=liste_song_player_dict, nb_on=nb_on, nb_off=nb_off,orga_name=nom_orga)
         
 

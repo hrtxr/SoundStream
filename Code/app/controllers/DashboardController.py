@@ -25,6 +25,29 @@ class DashboardController:
 
         print(sps.findAllSongPlayerByOrganisation(ogs.getIdByName(nom_orga)))
 
-        #ici au lieux d'utiliser une metjode qui fait du SQL est qui lourde  tu peux juste faire comme dans le devicesContoller
-    
-        return render_template('dashboard.html', metadata=metadata, orga=nom_orga, us=us, tts=tts, sps=sps, ogs=ogs, los=los)
+        # Get organization ID once to optimize database queries
+        id_orga = ogs.getIdByName(nom_orga)
+
+        # Get all players for this organization as a list of dictionaries
+        liste_song_player_dict = sps.findAllSongPlayerByOrganisation(id_orga)
+
+        # Retrieve the count of online and offline players for this organization
+        nb_on_and_nb_off = sps.countNumberOfSongPlayerOnlineAndOffline(id_orga)
+        
+        # Unpack counters from the result list/tuple
+        nb_on = nb_on_and_nb_off[0]
+        nb_off = nb_on_and_nb_off[1]
+
+
+        # Render the dashboard with all collected metrics and player data
+        return render_template('dashboard.html', 
+                                metadata=metadata, 
+                                orga=nom_orga, 
+                                us=us, 
+                                tts=tts, 
+                                sps=sps, 
+                                ogs=ogs, 
+                                los=los,
+                                nb_on=nb_on,
+                                nb_off=nb_off, 
+                                liste_song_player=liste_song_player_dict)
