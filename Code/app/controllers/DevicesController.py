@@ -69,12 +69,12 @@ class DevicesController :
     
         for p in players:
             # On déclenche le ping pour chaque player pour mettre à jour la base
-            sps.changeState(p.id_player)
+            sps.changeState(p['id_player'])
             
             # On prépare les données minimales à envoyer au JavaScript
             status_data.append({
-                'id_player': p.id_player,
-                'state': p.state
+                'id_player': p['id_player'],
+                'state': p['id_player']
             })
     
         # Transformation de la liste en format JSON pour le front-end
