@@ -33,7 +33,7 @@
                                         <div class="buttons-wrapper">
                                             <a href="/delete/{{ el['id_player'] }}" class="custom-btn btn-red" onclick="return confirm('Confirm deletion?')">Delete</a>
                                             <a href="/update/{{ el['id_player'] }}" class="custom-btn btn-yellow" onclick="return confirm('Confirm update?')">Update</a>
-                                            <a href="/edit/{{ el['id_player'] }}" class="custom-btn btn-green" onclick="return confirm('Confirm edition?')">Edit</a>
+                                            <a href="/edit/{{ el['id_player'] }}" class="custom-btn btn-green">Edit</a>
                                         </div>
                                     </td>
                                 </tr>
@@ -47,7 +47,9 @@
                         <tr>
                             <td> Offline : <span class="red"> {{ nb_off }}</span></td>
                             <td> Playing : <span class="green"> {{ nb_on }}</span></td>
-                            <td> <p style="font-size: 0.8em; font-style: italic; margin-bottom: 10px; color: gray;"> Last auto-update: <span id="last-update-time">--:--:--</span></p></td>
+
+                            <!-- Pitié saif si tu veux utiliser l'ia fait le bien, là c'est cracra de fou je suis sur que tu comprends meme pas la moitié...Et d'ailleurs pourquoi c'est là ca ;-; -->
+                            <td> <p style="font-size: 0.8em; font-style: italic; margin-bottom: 10px; color: gray;"> Last auto-update: <span id="last-update-time">--:--:--</span></p></td> 
                             <td>&nbsp;</td>
                         </tr>
                     </tbody>

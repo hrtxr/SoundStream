@@ -125,15 +125,6 @@ tbody tr:nth-child(odd) {
     background-color: #CC0000;
 }
 
-.btn-yellow {
-    background-color: #FFFF00;
-    color: #000000;
-}
-
-.btn-yellow:hover {
-    background-color: #CCCC00;
-}
-
 .btn-green {
     background-color: #00FF44;
     color: #000000;
