@@ -74,7 +74,7 @@ class DevicesController :
             # On prépare les données minimales à envoyer au JavaScript
             status_data.append({
                 'id_player': p['id_player'],
-                'state': p['id_player']
+                'state': p['state']
             })
     
         # Transformation de la liste en format JSON pour le front-end
