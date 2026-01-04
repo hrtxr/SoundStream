@@ -6,11 +6,11 @@ class OrganisationDAO(OrganisationDAOInterface):
     def __init__(self):
         self.databasename = app.static_folder + '/database/database.db'
 
-    def createOrganisation(self, name_orga, subsidiary) :
+    def createOrganisation(self, name_orga) :
         conn = self._getDbConnection()
         try:
-            query = "INSERT INTO organisation (name_orga, subsidiary) VALUES (?, ?);"
-            conn.execute(query, (name_orga,subsidiary))
+            query = "INSERT INTO organisation (name_orga) VALUES (?);"
+            conn.execute(query, (name_orga,))
             conn.commit()
         except Exception as e:
             conn.rollback()

@@ -6,4 +6,7 @@ class SongPlayer :
         self.state = dico['state']
         self.last_synchronization = dico['last_synchronization']
         self.place_adress = dico['place_adress']
-        self.name_orga = dico['id_orga']
+        self.place_city = dico['place_city']
+        self.place_postcode = dico['place_postcode']
+        self.place_building_name = dico['place_building_name']
+        self.id_orga = dico['id_orga']

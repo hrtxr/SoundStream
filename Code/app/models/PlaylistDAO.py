@@ -27,14 +27,14 @@ class PlaylistDAO(PlaylistDAOInterface):
             WHERE pl.day_ = ?
             ORDER BY c.track_rank ASC 
         """
-        return self.conn.execute(query, (day_name,)).fetchall()
+        return conn.execute(query, (day_name,)).fetchall()
     
     def findAll(self):
         conn = self._getDbConnection()
         playlists = conn.execute('SELECT * FROM playlist;').fetchall()
         playlistList = list()
         for playlist in playlists : 
-            playlistList.append(SongPlayer(dict(songplayer)))
+            playlistList.append(Playlist(dict(playlist)))
         conn.close()
 
         if playlistList :

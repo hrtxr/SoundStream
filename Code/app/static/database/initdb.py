@@ -1,7 +1,17 @@
 import sqlite3
+import os
 
-conn = sqlite3.connect('database.db')
-with open ('schema.sql') as f:
+# Récupère le dossier où se trouve le fichier initdb.py
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Construit les chemins complets
+DB_PATH = os.path.join(BASE_DIR, 'database.db')
+SCHEMA_PATH = os.path.join(BASE_DIR, 'schema.sql')
+
+# Connexion
+conn = sqlite3.connect(DB_PATH)
+
+with open(SCHEMA_PATH) as f:
     conn.executescript(f.read())
 
 
@@ -14,30 +24,48 @@ from datetime import datetime, timedelta
 
 def populate_database():
     print("--- Démarrage de l'insertion des données factices ---")
-    
+
+    #initialization of roles and type tables insertions
+
+    roles = [
+        ('admin', 'Administrator of the web app'),
+        ('marketing', 'they create the base of the playlists and fix it to week days'),
+        ('sales', 'they manage the song player and the messages to insert in the playlists')
+    ]
+
+    conn.executemany("INSERT INTO role (role, description) VALUES (?, ?)", roles)
+    print("✅ Roles insérés.")
+
+    type = [
+        ('mp3',)
+    ]
+
+    conn.executemany("INSERT INTO type (type) VALUES (?)", type)
+    print("✅ Types insérés.")
+
     # 1. UTILISATEURS & ORGANISATIONS (Ton code existant)
     password_clair = '12345'
     hashed_pw = bcrypt.hashpw(password_clair.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
     users = [
-        (1, "Romain", 'admin', hashed_pw),
-        (2, "Tristan", 'communication', hashed_pw),
-        (3, "Abou", 'commercial', hashed_pw)
+        ( "Romain", 'admin', hashed_pw),
+        ( "Tristan", 'marketing', hashed_pw),
+        ( "Abou", 'sales', hashed_pw)
     ]
-    conn.executemany("INSERT INTO user_ (id_user, username, role, password) VALUES (?, ?, ?, ?)", users)
+    conn.executemany("INSERT INTO user_ (username, role, password) VALUES (?, ?, ?)", users)
 
     orgas = [
-        (111, 'JBL', 'Harman'),
-        (112, 'Harman_Kardon', 'Harman'),
-        (113, 'Samsung', 'Harman'),
-        (114, 'AKG', 'Harman')
+        ('JBL',),
+        ('Harman_Kardon',),
+        ('Samsung',),
+        ('AKG',)
     ]
-    conn.executemany("INSERT INTO organisation (id_orga, name_orga, subsidiary) VALUES (?, ?, ?)", orgas)
+    conn.executemany("INSERT INTO organisation (name_orga) VALUES (?)", orgas)
 
     links = [
-        (1, 111), (1, 112),
-        (2, 112), (2, 113),
-        (3, 112), (3, 113)
+        (1, 1), (1, 2),
+        (2, 2), (2, 3),
+        (3, 2), (3, 3)
     ]
     conn.executemany("INSERT INTO work_link (id_user, id_orga) VALUES (?, ?)", links)
     print("✅ Users, Orgas & Links insérés.")
@@ -46,12 +74,12 @@ def populate_database():
     # On simule des fichiers MP3
     now = datetime.now()
     files = [
-        (1, 'Summer_Vibes_Intro.mp3', '/mnt/data/music/summer_intro.mp3', '00:03:45', now),
-        (2, 'JBL_Promo_Spot.mp3', '/mnt/data/ads/jbl_promo.mp3', '00:00:30', now),
-        (3, 'Ambient_Lounge.mp3', '/mnt/data/music/ambient.mp3', '00:05:20', now),
-        (4, 'Samsung_Galaxy_Ad.mp3', '/mnt/data/ads/samsung_ad.mp3', '00:00:45', now)
+        ('Summer_Vibes_Intro.mp3', '/mnt/data/music/summer_intro.mp3', '00:03:45', now, 'mp3'),
+        ('JBL_Promo_Spot.mp3', '/mnt/data/ads/jbl_promo.mp3', '00:00:30', now, 'mp3'),
+        ('Ambient_Lounge.mp3', '/mnt/data/music/ambient.mp3', '00:05:20', now, 'mp3'),
+        ('Samsung_Galaxy_Ad.mp3', '/mnt/data/ads/samsung_ad.mp3', '00:00:45', now, 'mp3')
     ]
-    conn.executemany("INSERT INTO file (id_file, name, path, time_length, upload_date) VALUES (?, ?, ?, ?, ?)", files)
+    conn.executemany("INSERT INTO file (name, path, time_length, upload_date, type) VALUES (?, ?, ?, ?, ?)", files)
     print("✅ Files insérés.")
 
     # 3. PLANNING (Jours de la semaine)
@@ -83,12 +111,12 @@ def populate_database():
     # 6. SONG_PLAYER (Les boitiers physiques)
     # Note: id_orga doit correspondre aux organisations existantes (111, 113, etc.)
     players = [
-        (501, 'Showroom Paris', '192.168.1.10', 'ONLINE', now, '12 Rue de Rivoli, Paris', 111), # JBL
-        (502, 'Boutique Lyon', '192.168.1.15', 'OFFLINE', now - timedelta(days=1), '5 Place Bellecour, Lyon', 113), # Samsung
-        (503, 'Corner Fnac', '10.0.0.55', 'ONLINE', now, 'Centre Commercial, Lille', 112), # Harman
-        (504,'los angeles', '8.8.8.8', 'OFFLINE',now,'LA commercial',112)
+        ('Showroom Paris', '192.168.1.10', 'ONLINE', now, '12 Rue de Rivoli','75000', 'Paris', 'centre commercial', 1), # JBL
+        ('Boutique Lyon', '192.168.1.15', 'OFFLINE', now - timedelta(days=1),'5 Place Bellecour','69000', 'Lyon', 'boutique', 3), # Samsung
+        ('Corner Fnac', '10.0.0.55', 'ONLINE', now, '1 rue Jules Joffrin','59000', 'Lille', 'centre commercial', 2), # Harman
+        ('Givenchy', '8.8.8.8', 'OFFLINE',now,'LA commercial','06000','Nice','centre commercial', 2)
     ]
-    conn.executemany("INSERT INTO song_player (id_player, name_place, IP_adress, state, last_synchronization, place_adress, id_orga) VALUES (?, ?, ?, ?, ?, ?, ?)", players)
+    conn.executemany("INSERT INTO song_player (name_place, IP_adress, state, last_synchronization, place_adress, place_postcode, place_city, place_building_name, id_orga) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", players)
     print("✅ Players insérés.")
 
     # 7. PLANNED (Quel jour joue quelle playlist ?)
@@ -102,9 +130,9 @@ def populate_database():
 
     # 8. LOGS (Historique)
     logs = [
-        (1, 'INFO', 'Démarrage du player 501', now - timedelta(hours=2), 111),
-        (2, 'ERROR', 'Échec de synchro player 502', now - timedelta(hours=1), 113),
-        (3, 'WARNING', 'Mise à jour firmware requise', now, 112)
+        (1, 'INFO', 'Démarrage du player 501', now - timedelta(hours=2), 1),
+        (2, 'ERROR', 'Échec de synchro player 502', now - timedelta(hours=1), 3),
+        (3, 'WARNING', 'Mise à jour firmware requise', now, 2)
     ]
     conn.executemany("INSERT INTO log (id_log, type_log, text_log, date_log, id_orga) VALUES (?, ?, ?, ?, ?)", logs)
     print("✅ Logs insérés.")

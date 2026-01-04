@@ -16,15 +16,15 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
     
     def addSongPlayerInDb(self, data_form_to_form):
         '''
-            data = tuples (name_place, ip_address, state, last_synchronization, place_address, id_orga)
+            data = tuples (name_place, ip_address, state, last_synchronization, place_address, place_city, place_postcode, place_building_name, id_orga)
 
         '''
         conn = self._getDbConnection()
         try:
             query = '''
             INSERT INTO song_player
-            (name_place, ip_address, state, last_synchronization, place_address, id_orga)
-            VALUES (?, ?, ?, ?, ?, ?);
+            (name_place, ip_address, state, last_synchronization, place_address, place_city, place_postcode, place_building_name, id_orga)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
             '''
             conn.execute(query, data_form_to_form)
             conn.commit()

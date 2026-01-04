@@ -1,15 +1,17 @@
-DROP TABLE IF EXISTS composition;
-DROP TABLE IF EXISTS interaction;
 DROP TABLE IF EXISTS planned;
+DROP TABLE IF EXISTS interaction;
+DROP TABLE IF EXISTS composition;
 DROP TABLE IF EXISTS work_link;
-DROP TABLE IF EXISTS song_player;
 DROP TABLE IF EXISTS log;
-
-DROP TABLE IF EXISTS playlist;
-DROP TABLE IF EXISTS file;
+DROP TABLE IF EXISTS song_player;
 DROP TABLE IF EXISTS user_;
+DROP TABLE IF EXISTS file;
+
+DROP TABLE IF EXISTS type;
+DROP TABLE IF EXISTS role;
 DROP TABLE IF EXISTS Planning;
 DROP TABLE IF EXISTS organisation;
+DROP TABLE IF EXISTS playlist;
 
 CREATE TABLE IF NOT EXISTS playlist(
    id_playlist INTEGER PRIMARY KEY,
@@ -20,37 +22,33 @@ CREATE TABLE IF NOT EXISTS playlist(
    UNIQUE(name)
 );
 
-CREATE TABLE IF NOT EXISTS user_(
-   id_user INTEGER PRIMARY KEY,
-   username VARCHAR(25) NOT NULL,
-   role VARCHAR(50) NOT NULL,
-   password TEXT NOT NULL,
-   UNIQUE(username)
-);
-
 CREATE TABLE IF NOT EXISTS organisation(
    id_orga INTEGER PRIMARY KEY,
    name_orga TEXT NOT NULL,
-   subsidiary TEXT NOT NULL,
    UNIQUE(name_orga)
 );
 
-CREATE TABLE IF NOT EXISTS  file (
+CREATE TABLE IF NOT EXISTS file(
    id_file INTEGER PRIMARY KEY,
    name TEXT NOT NULL,
    path TEXT NOT NULL,
    time_length TIME NOT NULL,
    upload_date DATETIME NOT NULL,
-   UNIQUE(name)
+   type VARCHAR(50) NOT NULL,
+   UNIQUE(name),
+   FOREIGN KEY(type) REFERENCES type(type)
 );
 
 CREATE TABLE IF NOT EXISTS song_player(
    id_player INTEGER PRIMARY KEY,
-   name_place TEXT UNIQUE NOT NULL,
+   name_place TEXT NOT NULL,
    IP_adress TEXT NOT NULL,
    state VARCHAR(50) NOT NULL,
    last_synchronization DATETIME,
    place_adress TEXT NOT NULL,
+   place_postcode DECIMAL(5,0) NOT NULL,
+   place_city VARCHAR(50) NOT NULL,
+   place_building_name TEXT,
    id_orga INT NOT NULL,
    UNIQUE(IP_adress),
    FOREIGN KEY(id_orga) REFERENCES organisation(id_orga)
@@ -59,6 +57,20 @@ CREATE TABLE IF NOT EXISTS song_player(
 CREATE TABLE IF NOT EXISTS Planning(
    day_ VARCHAR(50),
    PRIMARY KEY(day_)
+);
+
+CREATE TABLE IF NOT EXISTS role(
+   role TEXT PRIMARY KEY,
+   description VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS user_(
+   id_user INTEGER PRIMARY KEY,
+   username VARCHAR(25) NOT NULL,
+   password TEXT NOT NULL,
+   role TEXT NOT NULL,
+   UNIQUE(username),
+   FOREIGN KEY(role) REFERENCES role(role)
 );
 
 CREATE TABLE IF NOT EXISTS log(
@@ -102,3 +114,7 @@ CREATE TABLE IF NOT EXISTS planned(
    FOREIGN KEY(day_) REFERENCES Planning(day_)
 );
 
+CREATE TABLE IF NOT EXISTS type(
+   type VARCHAR(50),
+   PRIMARY KEY(type)
+);

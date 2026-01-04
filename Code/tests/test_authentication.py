@@ -25,8 +25,8 @@ def test_authentication():
     # Liste des utilisateurs à tester
     test_users = [
         {"username": "Romain", "password": "12345", "expected_role": "admin"},
-        {"username": "Tristan", "password": "12345", "expected_role": "communication"},
-        {"username": "Abou", "password": "12345", "expected_role": "commercial"}
+        {"username": "Tristan", "password": "12345", "expected_role": "marketing"},
+        {"username": "Abou", "password": "12345", "expected_role": "sales"}
     ]
     
     # Compteurs de résultats
