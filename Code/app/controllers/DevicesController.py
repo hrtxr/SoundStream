@@ -45,6 +45,7 @@ class DevicesController :
 
     @app.route('/delete/<int:id_player>',methods=['POST','GET'])
     @LoggedIn
+    @reqrole(['admin'])
     def delete(id_player):
         # Permanently remove the player from the database using the service layer
         sps.deleteSongPlayer(id_player)

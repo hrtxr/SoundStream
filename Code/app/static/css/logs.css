@@ -8,7 +8,7 @@ body {
     overflow: hidden;
 }
 
-.devices {
+.logs {
     display: flex;
     flex-direction: column;
     align-items: center;

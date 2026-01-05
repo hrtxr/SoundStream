@@ -25,7 +25,6 @@ class PlaylistDAO(PlaylistDAOInterface):
             JOIN playlist p ON c.id_playlist = p.id_playlist
             JOIN planned pl ON p.id_playlist = pl.id_playlist
             WHERE pl.day_ = ?
-            ORDER BY c.track_rank ASC 
         """
         return conn.execute(query, (day_name,)).fetchall()
     

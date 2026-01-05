@@ -10,6 +10,10 @@ class UserService():
         """ Get all the users of an organisation """
         return self.udao.findUsersInOrganisation(organisation)
     
+    def deleteByUsername(self, username):
+        """ Delete user by username """
+        return self.udao.deleteByUsername(username)
+    
     def findByUsername(self, username):
         """ Get user by username  """
         return self.udao.findByUsername(username)

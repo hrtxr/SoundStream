@@ -97,6 +97,36 @@ class UserDAO(UserDAOInterface) :
         conn.commit()
         conn.close()
 
+    def updateUserRole(self, username, new_role):
+        """Update user role"""
+        conn = self._getDbConnection()
+        query = 'UPDATE user_ SET role = ? WHERE username = ?'
+        conn.execute(query, (new_role, username))
+        conn.commit()
+        conn.close()
+
+    def getOrganisationByUsername(self, username):
+        """Get the organisation name of a user"""
+        conn = self._getDbConnection()
+        query = """
+            SELECT o.name_orga 
+            FROM organisation o
+            JOIN work_link w ON o.id_orga = w.id_orga
+            JOIN user_ u ON w.id_user = u.id_user
+            WHERE u.username = ?
+        """
+        result = conn.execute(query, (username,)).fetchone()
+        conn.close()
+    
+        return result[0] if result else None
+
+    def getAllRoles(self):
+        """Get all available roles from the role table"""
+        conn = self._getDbConnection()
+        query = 'SELECT role FROM role'
+        results = conn.execute(query).fetchall()
+        conn.close()
+        return [row[0] for row in results]
 
     def findAll(self):
         """ Get all users """
