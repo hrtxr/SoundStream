@@ -29,7 +29,7 @@ class DevicesController :
         nb_on = nb_on_and_nb_off[0]
         nb_off = nb_on_and_nb_off[1]
 
-        return render_template('devices.html', metadata=metadata, liste_song_player=liste_song_player_dict, nb_on=nb_on, nb_off=nb_off,orga=nom_orga)
+        return render_template('devices.html', metadata=metadata, liste_song_player=liste_song_player_dict, nb_on=nb_on, nb_off=nb_off, orga=nom_orga)
         
 
     @app.route('/update/<int:id_player>', methods=['POST','GET'])

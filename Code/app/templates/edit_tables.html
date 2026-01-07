@@ -1,0 +1,93 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/edit_tables.css') }}"> 
+
+<div class="devices">
+    {% include 'header.html' %}
+     <div class="bento">
+        <div class="divider">
+            <div class="divider colored">
+                <h1>Current Playlist</h1>
+                <h3>Playlist : {{ plst.playlist_name }}</h3>
+                <div class="tabdiv">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Options</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for el in range(0,115, 1)%}
+                                <tr>
+                                    <td> {{el}}</td>
+
+                                    <td class="actions-cell">
+                                        <div class="buttons-wrapper">
+                                            <a href="/deleteFromPlaylist/{{ el }}" class="custom-btn btn-red" onclick="return confirm('Confirm deletion?')">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>   
+        </div>
+        <div class="divider">
+            <div class="divider colored">
+                <h1>Playlist Choice </h1>
+
+                <div class="form">
+                    <select name="choix" class="btn-design">
+                            <option value="">-- Choose a playlist --</option>
+                        {% for el in range(0,4) %}
+                            <option value="option1">Option 1</option>
+                            <option value="option2">Option 2</option>
+                            <option value="option3">Option 3</option>
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit" class="btn-upload">
+                        Choose Playlist
+                    </button>
+                </div>
+
+            </div>   
+
+            <div class="divider colored">
+                <h1>Upload Song</h1>
+
+                <form method="POST" enctype="multipart/form-data" class="form">
+                    <div class="uploadfile">
+                        <input type="file" id="file" name="uploadfile" accept=".mp3" class="input-hidden">
+                        <label for="file" class="btn-design">
+                            Choose file
+                        </label>
+                        <div id="file-name" style="margin-top: 10px; color: #aaa; font-size: 0.9em;"></div>
+                    </div>
+
+                    <button type="submit" class="btn-upload">
+                        Upload
+                    </button>
+
+                </form>
+
+            </div>
+            
+            <div class="divider colored">
+                <h1>Misc</h1>
+
+                <div class="misc">
+                    <p> Number of titles : <strong> {{ plst.title_count }} </strong></p>
+                    <p> Number of ads : <strong> {{ plst.ads_count }} </strong></p>
+                    <p> Last Updated : <strong> {{ plst.last_updated }} </strong></p>
+                </div>
+            </div>
+        </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/edit_tables.js') }}"></script>
+
+{% endblock %}

@@ -54,14 +54,33 @@ h1 {
     margin-bottom: -1vh;
     padding-top: 2vh;
 }
+h3 {
+    margin:0px 4vh -1vh 0px;
+    padding:0px;
+    color: rgb(161, 161, 161);
+    font-family: 'HelveticaNeueUltraLight';
+    text-align: right;
+}
+
+.tabdiv{
+    overflow-y: auto;
+    gap:0px;
+}
 
 table {
     width: 100%;
     border-collapse: collapse;
-    margin: 0px;
-    margin-top: 2vh;
+    margin: 2vh 0px 0px 0px;
 }
-/* Style des cellules pour aérer un peu */
+
+thead{
+    position: sticky; 
+    top: 0;
+    z-index: 10;
+    --webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+}
+
 td, th {
     padding: 1.5vh;
     text-align: left;
@@ -79,12 +98,40 @@ tbody tr:nth-child(even) {
 tbody tr:nth-child(odd) {
     background-color: rgba(217, 217, 217, 0.05);
 }
-.green{
-    color:#00FF44;
+
+.actions-cell {
+    padding: 1vh !important;
 }
-.red{
-    color:#FF0004;
+
+.buttons-wrapper {
+    display: flex;
+    gap: 1vh;
+    justify-content: left;
+    align-items: center;
+    max-width: 5vw;
 }
+
+.custom-btn {
+    padding: 1.2vh 3.5vh;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 2vh;
+    text-align: left;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-red {
+    background-color: #FF0000;
+    gap:2vh;
+    color: white;
+}
+
+.btn-red:hover {
+    background-color: #CC0000;
+}
+
 /* 
 ####################
 ## Upload section ##
@@ -93,13 +140,14 @@ tbody tr:nth-child(odd) {
 .form {
     display: flex;
     flex-direction: column;
-    padding:3vw;
+    padding:0.5vw 3vw ;
     font-size: 2.5vh;
     font-family: HelveticaNeueLight;
 }
 .input-hidden {
     display: none;
 }
+
 .uploadfile {
     display: flex;
     flex-direction: column;
@@ -114,6 +162,8 @@ tbody tr:nth-child(odd) {
     width: 50%;
     text-align: center;
     font-family: HelveticaNeueLight;
+    font-size: 2.25vh;;
+    border:none;
     
     cursor: pointer;
     display: inline-block;
@@ -122,10 +172,7 @@ tbody tr:nth-child(odd) {
 .btn-design:hover {
     background-color: #FFFFFF22;
 }
-.form p {
-    padding: 0vh;
-    margin: 0vh;
-}
+
 .btn-upload {
     background-color: #ffffff; 
     color: black;
@@ -145,26 +192,22 @@ tbody tr:nth-child(odd) {
 .btn-upload:hover {
     background-color: #FFFFFF22;
 }
-.inputs-row {
+
+option {
+    width:25%
+}
+
+.misc {
     display: flex;
-    gap: 10px; 
-    justify-content: flex-start;
+    flex-direction: column;
+    font-family: HelveticaNeueLight;
 }
-.input-pill {
-    background-color: #FFFFFF16; 
-    color: white;
-    border-radius: 5vw; 
-    padding: 1.5vh 2vw;
-    font-size: 2vh;
-    
-    border: none;
-    outline: none;
-    font-family: HelveticaNeueLight;    
-    color-scheme: dark; 
-    
-    cursor: text;
-    transition: background-color 0.2s;
+
+.misc p { 
+    margin: 1vh 0px 0px 2vh;
 }
-.input-pill:focus {
-    background-color: #FFFFFF22; 
+
+.misc  strong {
+    font-family: HelveticaNeue;
+    color: #adadad;
 }

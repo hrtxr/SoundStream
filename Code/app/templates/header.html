@@ -11,13 +11,13 @@
                 <a href="/devices/{{ orga }}" class="navbtn">DEVICES</a>
                 <a href="/timetable/{{ orga }}" class="navbtn">TIMETABLE</a>
                 <a href="/logs/{{ orga }}" class="navbtn">LOGS</a>
-                <a href="/tools/{{ orga }}" class="navbtn">TOOLS</a>
+                <!-- <a href="/tools/{{ orga }}" class="navbtn">TOOLS</a> -->
 
-            {% elif session['role'] == 'manager' %}
+            {% elif session['role'] == 'marketing' %}
                 <a href="/devices/{{ orga }}" class="navbtn">DEVICES</a>
                 <a href="/timetable/{{ orga }}" class="navbtn">TIMETABLE</a>
             
-            {% elif session['role'] == 'communication' %}
+            {% elif session['role'] == 'sales' %}
                 <a href="/devices/{{ orga }}" class="navbtn">DEVICES</a>
                 <a href="/timetable/{{ orga }}" class="navbtn">TIMETABLE</a>
 

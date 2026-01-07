@@ -37,7 +37,7 @@ body {
 }
 
 .colored{
-    background-color: rgba(217, 217, 217, 0.09);
+    background-color: #d9d9d917;
     flex: 1;
     border-radius: 25px;
 }
@@ -59,7 +59,38 @@ h1 {
     color:#FF0004;
 }
 
+ /* ################
+## Button section ##
+##################*/
 
+.buttons-wrapper {
+    display: flex;
+    gap: 1vh;
+    justify-content: left;
+    align-items: center;
+}
+
+.custom-btn {
+    font-family: HelveticaNeueThin;
+    padding: 1.2vh 3.5vh;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 2vh;
+    text-align: left;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-yellow {
+    background-color: #FFFF00;
+    color: #000000;
+    margin-left: 1vh;
+}
+
+.btn-yellow:hover {
+    background-color: #CCCC00;
+}
 
 /*##############
 ### CALENDAR ###
@@ -67,13 +98,13 @@ h1 {
 
 /*CALENDAR VARIABLES */
 :root {
-    --violet: #a78bfa;
-    --violet-dark: #8b5cf6;
-    --bg: #0a0a0a;
-    --surface: #171717;
-    --border: #262626;
+    --violet: #9900ff;
+    --violet-dark: #49007a;
+    --bg: #d9d9d917;
+    --surface: #d9d9d917;
+    --border: #d9d9d917;
     --text: #ffffff;
-    --text-dim: #737373;
+    --text-dim: #b2b2b2;
     --hour-height: 500px;
 }
 
@@ -154,14 +185,14 @@ h1 {
     left: 2px;
     right: 2px;
     background: var(--violet);
-    color: var(--bg);
+    color: var(--text);
     border-radius: 4px;
     padding: 6px 8px;
     font-size: 11px;
     font-weight: 600;
     cursor: pointer;
     z-index: 1;
-    min-height: 20px; /* Hauteur minimale pour voir le texte */
+    min-height: 20px; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -169,10 +200,12 @@ h1 {
 
 .event:hover {
     opacity: 0.9;
+    color: var(--text);
 }
 
 .event-violet-dark {
     background: var(--violet-dark);
+    color: var(--text);
 }
 
 .event-gray {
