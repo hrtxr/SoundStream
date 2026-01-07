@@ -1,27 +1,66 @@
 from app import app
+from typing import *
+from datetime import datetime
 import sqlite3
 from app.models.LogDAOInterface import LogDAOInterface
+from app.models.Log import Log
 
-class LogDAO(LogDAOInterface):
-
-    def __init__(self):
+class LogSqliteDAO(LogDAOInterface):
+    ''' This class will manage the datas of the log table in the Sqlite3 database
+    to facilitate the manipulation of the logs in the LogService class.
+    '''
+    def __init__(self) -> None:
         self.databasename = app.static_folder + '/database/database.db'
 
-    def _getDbConnection(self):
+    def _getDbConnection(self) -> sqlite3.Connection:
         """ Connect to the database. Returns the connection object """
         conn = sqlite3.connect(self.databasename)
         conn.row_factory = sqlite3.Row
         return conn
-
-    def findAllByOrganisation(self, id_orga):
+    
+    def findAll(self) -> list[Log] :
+        ''' Return the list of the all the logs without any sorting'''
+        
         conn = self._getDbConnection()
-        query = "SELECT * FROM log WHERE id_orga = ?"
+        query = "SELECT * FROM log ;"
 
-        cursor = conn.execute(query, (id_orga,))
-        rows = cursor.fetchall()
+        logs = conn.execute(query).fetchall()
+        logs_instances = list()
 
-        result = [dict(row) for row in rows]
+        for log in logs :
+            logs_instances.append(Log(dict(log)))
 
         conn.close()
 
-        return result
+        return logs_instances
+
+
+    def findAllByOrganization(self, id_orga: int) -> list[Log]:
+        ''' Return the list of the all the logs by the organization id in argument'''
+        
+        conn = self._getDbConnection()
+        query = "SELECT * FROM log WHERE id_orga = ? ;"
+
+        logs = conn.execute(query, (id_orga,)).fetchall()
+        logs_instances = list()
+
+        for log in logs :
+            logs_instances.append(Log(dict(log)))
+
+        conn.close()
+
+        return logs_instances
+    
+    def createLog(self, type_log: str, text_log: str, date_log: datetime , id_orga: int) -> bool:
+        ''' Insert a new log in the database '''
+        conn = self._getDbConnection()
+        query = 'INSERT INTO log (type_log, text_log, date_log, id_orga) VALUES (?, ?, ?, ?) ;'
+        try :
+            conn.execute(query, (type_log, text_log, date_log, id_orga))
+            conn.commit()
+            conn.close()
+        except :
+            return False
+
+        else : 
+            return True

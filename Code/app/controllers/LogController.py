@@ -6,8 +6,8 @@ from app.services.UserService import UserService
 from app.services.OrganisationService import OrganisationService
 from app.services.LogService import LogService
 
-ogs=OrganisationService()
-los=LogService()
+orga=OrganisationService()
+log=LogService()
 
 
 class LogController :
@@ -16,8 +16,8 @@ class LogController :
     @LoggedIn
     @reqrole(['admin'])
     def logs(nom_orga):
-        metadata= {'title': 'Logs'}
-
-        return render_template('logs.html', metadata=metadata, ogs=ogs, los=los, orga=nom_orga)
+        metadata = {'title' : 'log'}
+        log_list = log.getLogsByOrganisation(orga.getIdByName(nom_orga))
+        return render_template('logs.html', log_list = log_list, metadata = metadata)
 
     
