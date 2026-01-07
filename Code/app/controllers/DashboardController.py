@@ -22,6 +22,7 @@ class DashboardController:
     @LoggedIn
     def dashboard(nom_orga):
         metadata= {'title': 'Dashboard'}
+        session['organisation_name'] = nom_orga
 
         print(sps.findAllSongPlayerByOrganisation(ogs.getIdByName(nom_orga)))
 

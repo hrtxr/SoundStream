@@ -81,3 +81,49 @@ class UserController :
                                  user=user,
                                  orga=orga_name,
                                  roles=available_roles)  # <- Passage des rôles au template
+        
+
+    @app.route('/addUser', methods=['GET', 'POST'])
+    @LoggedIn
+    @reqrole(['admin'])
+    def addUser():
+        
+        if request.method == 'POST':
+            # Récupération des données du formulaire
+            username = request.form.get('username')
+            password = request.form.get('password')
+            role = request.form.get('role')
+
+            # Récupérer l'organisation pour redirection et association au nouvel utilisateur
+            orga_name = session.get('organisation_name')
+            
+            # Récupérer tous les rôles disponibles pour validation
+            available_roles = us.udao.getAllRoles()
+            
+            # Vérification du rôle
+            if not role or role not in available_roles:
+                return "Erreur : Rôle invalide", 400
+            
+            # Création de l'utilisateur
+            us.udao.createUser(username, password, role, orga_name)
+            
+            return redirect(url_for('users', nom_orga=orga_name))
+        
+        else:
+            # AFFICHAGE DU FORMULAIRE (GET)
+            
+            # Récupérer l'organisation de où se situe
+            orga_name = session.get('organisation_name')
+            
+            if not orga_name:
+                orga_name = 'Harman_Kardon'
+            
+            # Récupérer tous les rôles disponibles
+            available_roles = us.udao.getAllRoles()
+            
+            # Affichage du formulaire pré-rempli
+            metadata = {'title': 'Ajouter Utilisateur'}
+            return render_template('add_user.html', 
+                                 metadata=metadata, 
+                                 orga=orga_name,
+                                 roles=available_roles)  # <- Passage des rôles au template

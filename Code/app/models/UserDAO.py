@@ -23,7 +23,10 @@ class UserDAO(UserDAOInterface) :
         password_hashed = hashed_bytes.decode('utf-8')
         return password_hashed
     
-    def createUser(self, username, password, role):
+    def createUser(self, username, password, role, organisation):
+        if username in self.findUsersInOrganisation(organisation):
+            raise ValueError("Username already exists")
+        
         """ Create a new user """
         conn  = self._getDbConnection()
         """ Hash the password before storing """
@@ -31,6 +34,39 @@ class UserDAO(UserDAOInterface) :
         """ Insert the new user """
         query = 'INSERT INTO user_(username, password, role) VALUES (?,?,?)'
         conn.execute(query, (username,hashed_password,role))
+
+        conn.commit()
+        conn.close()
+
+        self.createLinkUserOrganisation(username, organisation)
+
+    def createLinkUserOrganisation(self, username, organisation):
+        """ Create a link between a user and an organisation """
+        conn  = self._getDbConnection()
+
+        query_idUser = """
+            SELECT u.id_user
+            FROM user_ u
+            WHERE u.username = ?
+        """
+        user_id = conn.execute(query_idUser, (username,)).fetchone()[0]
+        conn.commit()
+        conn.close()
+
+        conn  = self._getDbConnection()
+        query_idOrga = """
+            SELECT o.id_orga
+            FROM organisation o
+            WHERE o.name_orga = ?
+        """
+        orga_id = conn.execute(query_idOrga, (organisation,)).fetchone()[0]
+        conn.commit()
+        conn.close()
+
+        conn  = self._getDbConnection()
+        links = (user_id, orga_id)
+        conn.execute("INSERT INTO work_link (id_user, id_orga) VALUES (?, ?)", links)
+
         conn.commit()
         conn.close()
         
@@ -89,6 +125,14 @@ class UserDAO(UserDAOInterface) :
 
     def deleteByUsername(self,username):
         """ Delete a user by username""" 
+        conn = self._getDbConnection()
+
+        # Delete the work_link entries first
+        query = 'DELETE FROM work_link WHERE id_user = (SELECT id_user FROM user_ WHERE username = ?)'
+        conn.execute(query,(username,))
+        conn.commit()
+        conn.close()
+
         conn = self._getDbConnection()
 
         # Delete the user 
