@@ -1,5 +1,8 @@
 class OrganisationDAOInterface:
     
+    def createOrganisation(self, name_orga) :
+        pass
+     
     def getIdByName(self, orga_name):
         pass
 

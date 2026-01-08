@@ -1,11 +1,14 @@
 class UserDAOInterface :
     def createUser(self, username, password, role) :
         pass
-    
-    def findAll(self) :
+
+    def createLinkUserOrganisation(self, username, organisation):
         pass
-    
+
     def findByUsername(self, username):
+        pass
+
+    def findUsersInOrganisation(self, organisation):
         pass
     
     def verifyUser(self, username, password) :
@@ -17,6 +20,14 @@ class UserDAOInterface :
     def deleteByUsername(self, username):
         pass
 
-    def findUsersInOrganisation(self, organisation):
+    def updateUserRole(self, username, new_role):
+        pass
+
+    def getOrganisationByUsername(self, username):
         pass
     
+    def getAllRoles(self):
+        pass
+
+    def findAll(self) :
+        pass

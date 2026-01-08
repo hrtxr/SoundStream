@@ -27,11 +27,8 @@ class UserDAO(UserDAOInterface) :
         if username in self.findUsersInOrganisation(organisation):
             raise ValueError("Username already exists")
         
-        """ Create a new user """
         conn  = self._getDbConnection()
-        """ Hash the password before storing """
         hashed_password = self._generatePWDHash(password)
-        """ Insert the new user """
         query = 'INSERT INTO user_(username, password, role) VALUES (?,?,?)'
         conn.execute(query, (username,hashed_password,role))
 
@@ -74,7 +71,6 @@ class UserDAO(UserDAOInterface) :
     def findByUsername(self, username):
         """ Get user by username """
         conn = self._getDbConnection()
-        # Use a parameterized query to prevent SQL injection
         res = conn.execute('SELECT * FROM user_ WHERE username = ?', (username,)).fetchone()
         conn.close()
 
@@ -94,7 +90,7 @@ class UserDAO(UserDAOInterface) :
         """
         res = conn.execute(query, (organisation,)).fetchall()
         conn.close()
-        return [row[0] for row in res]
+        return [row[0] for row in res] ### À VERIFIER ###
     
 
     def verifyUser(self,username, password):
@@ -131,9 +127,6 @@ class UserDAO(UserDAOInterface) :
         query = 'DELETE FROM work_link WHERE id_user = (SELECT id_user FROM user_ WHERE username = ?)'
         conn.execute(query,(username,))
         conn.commit()
-        conn.close()
-
-        conn = self._getDbConnection()
 
         # Delete the user 
         query = 'DELETE FROM user_ WHERE username = ?'
