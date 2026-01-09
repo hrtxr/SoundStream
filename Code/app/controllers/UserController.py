@@ -4,7 +4,10 @@ from app import app
 from app.controllers.LoginController import LoggedIn, reqrole
 from app.services.UserService import UserService
 from app.services.OrganisationService import OrganisationService
+from app.services.LogService import LogService
+import datetime
 
+log = LogService()
 ogs=OrganisationService()
 us=UserService()
 
@@ -23,6 +26,14 @@ class UserController :
     @LoggedIn
     @reqrole(['admin'])
     def deleteUsn(username):
+
+        # Create the log before and insert it in the database before delete the user
+        user_orga = us.udao.getOrganisationByUsername(username)
+        orga_id = ogs.getIdByName(user_orga)
+        log.ldao.createLog("DELETE", f"l'utilisateur {username} a été supprimé de la base de données.",
+                           datetime.datetime.now(), orga_id)
+        
+
         us.deleteByUsername(username)
         return redirect(request.referrer)
     
@@ -94,6 +105,7 @@ class UserController :
             password = request.form.get('password')
             role = request.form.get('role')
 
+
             # Récupérer l'organisation pour redirection et association au nouvel utilisateur
             orga_name = session.get('organisation_name')
             
@@ -104,8 +116,13 @@ class UserController :
             if not role or role not in available_roles:
                 return "Erreur : Rôle invalide", 400
             
+            
             # Création de l'utilisateur
             us.udao.createUser(username, password, role, orga_name)
+            # Create the log and insert it in the database
+            orga_id = ogs.getIdByName(orga_name)
+            log.ldao.createLog("ADD", f"l'utilisateur {username} a été implémenté dans la base de données.",
+                           datetime.datetime.now(), orga_id)
             
             return redirect(url_for('users', nom_orga=orga_name))
         

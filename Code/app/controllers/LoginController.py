@@ -4,7 +4,6 @@ from app import app
 from app.models.User import User
 from app.models.UserDAO import UserDAO
 import bcrypt
-
 ####################################
 ## DECORATEURS D'AUTHENTIFICATION ##
 ####################################

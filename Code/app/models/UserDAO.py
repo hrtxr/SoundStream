@@ -131,9 +131,6 @@ class UserDAO(UserDAOInterface) :
         query = 'DELETE FROM work_link WHERE id_user = (SELECT id_user FROM user_ WHERE username = ?)'
         conn.execute(query,(username,))
         conn.commit()
-        conn.close()
-
-        conn = self._getDbConnection()
 
         # Delete the user 
         query = 'DELETE FROM user_ WHERE username = ?'
