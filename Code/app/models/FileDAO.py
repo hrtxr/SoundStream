@@ -20,7 +20,7 @@ class FileDAO(FileDAOInterface) :
     def findFileById(self,id_file :int) -> Optional[File]:
         """Return a file from the database using its unique identifier."""
         conn = self._getDbConnection()
-        query = "SELECT * FROM file WHERE id_file = ?"
+        query = "SELECT * FROM file WHERE id_file = ?;"
 
         file=conn.execute(query,(id_file,)).fetchone()
 
@@ -29,5 +29,72 @@ class FileDAO(FileDAOInterface) :
             return File(dict(file))
         else :
             return None
+        
+    def findByName(self, name: str) -> Optional[File]:
+        '''Return a file from the database using its name'''
+        conn = self._getDbConnection()
+        query = "SELECT * FROM file WHERE name = ?;"
+        
+        row = conn.execute(query, (name,)).fetchone()
+        conn.close()
+
+        if row:
+            return File(dict(row))
+        return None
+    
+    def findAllFile(self)->list[File]:
+        '''Return all files stored in the database'''
+        conn = self._getDbConnection()
+
+        all_file=conn.execute("SELECT * FROM file ;").fetchall()
+
+        conn.close()
+        
+        instance_file=[]
+        if all_file :
+            instance_file=[]
+            for file in all_file:
+                instance_file.append(File(dict(file)))
+        return instance_file
+
+    def createFile(self,name:str ,path:str ,time_length:str, type_file:str ) -> int :
+        '''Insert a new file entry into the database'''
+        conn = self._getDbConnection()
+        query = "INSERT INTO file (name, path, time_length, upload_date, type_file) VALUES (?, ?, ?, ?, ?);"
+        data = (name, path, time_length, datetime.now(), type_file)
+        try:
+            cursor=conn.execute(query,data)
+            conn.commit()
+            # important davoir l'id du fichier créer our l'associer a la playlist
+            new_id = cursor.lastrowid
+            return new_id
+        except:
+            return -1
+        finally:
+            conn.close()
+
+    def deleteFile(self,id_file:int) -> bool :
+        '''Delete a file and its associations from the database'''
+        conn = self._getDbConnection()
+        query_composition_table = "DELETE FROM composition WHERE id_file = ?;"
+        query_file_table= "DELETE FROM file WHERE id_file=?;"
+
+        try :
+            conn.execute(query_composition_table,(id_file,))
+            conn.commit()
+
+            conn.execute(query_file_table,(id_file,))
+            conn.commit()
+        except :
+            return False
+        else :
+            return True
+        finally:
+            conn.close()
+
+
+
+        
+
         
 

@@ -11,3 +11,6 @@ class FileDAOInterface :
 
     def findFileById(self,id_file):
         pass
+
+    def findByName(self, name) :
+        pass
