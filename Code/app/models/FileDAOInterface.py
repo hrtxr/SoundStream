@@ -1,13 +1,13 @@
 class FileDAOInterface :
 
-    def create(self,data):
+    def createFile(self,data):
         pass
 
-    def delete(self,id_file):
+    def deleteFile(self,id_file):
         pass
 
-    def findAll(self):
+    def findAllFile(self):
         pass
 
-    def findById(self,id_file):
+    def findFileById(self,id_file):
         pass
