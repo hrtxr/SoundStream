@@ -25,7 +25,7 @@ class UserController :
     @app.route('/deleteUsn/<username>',methods=['POST','GET'])
     @LoggedIn
     @reqrole(['admin'])
-    def deleteUsn(username):
+    def deleteUser(username):
 
         # Create the log before and insert it in the database before delete the user
         user_orga = us.udao.getOrganisationByUsername(username)
@@ -40,7 +40,7 @@ class UserController :
     @app.route('/editUsn/<username>', methods=['GET', 'POST'])
     @LoggedIn
     @reqrole(['admin'])
-    def editUsn(username):
+    def editUser(username):
         
         if request.method == 'POST':
             # Récupération des données du formulaire
