@@ -109,6 +109,7 @@ CREATE TABLE IF NOT EXISTS interaction(
 CREATE TABLE IF NOT EXISTS planned(
    id_playlist INT,
    day_ VARCHAR(50),
+   start_time TIME,
    PRIMARY KEY(id_playlist, day_),
    FOREIGN KEY(id_playlist) REFERENCES playlist(id_playlist),
    FOREIGN KEY(day_) REFERENCES Planning(day_)
