@@ -90,3 +90,9 @@ class TimeTableService:
         self.dao.removeAllPlaylistsFromDay(day_name)
         if playlist_id is not None and start_time:
             self.dao.addPlaylistToDay(playlist_id, day_name, start_time)
+
+    def getPlaylistNameById(self, playlist_id):
+        playlist =self.dao.findById(playlist_id)
+        if playlist:
+            return playlist.name
+        return None

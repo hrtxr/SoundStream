@@ -3,9 +3,13 @@ from flask import render_template, session, redirect, url_for, request
 from functools import wraps
 from app import app
 from app.services.TimeTableService import TimeTableService
+from app.services.LogService import LogService
+from app.services.OrganisationService import OrganisationService
+import datetime
 
+orga = OrganisationService()
+log = LogService()
 ts = TimeTableService()
-
 class TimetableController:
 
     @app.route('/timetable/<nom_orga>', methods =['GET'])
@@ -58,12 +62,30 @@ class TimetableController:
         file_type = request.form.get('file_type', 'mp3')
         if filename:
             ts.addFileToPlaylist(playlist_id, filename, file_type)
+
+        username = session.get('username')
+        orga_id = orga.getIdByName(session.get('organisation_name'))
+        playlist_name = ts.getPlaylistNameById(playlist_id)
+
+        log.ldao.createLog("ADD_FILE",
+                            f"l'utilisateur {username} a ajouté le fichier {filename} dans la playlist {playlist_name}.",
+                           datetime.datetime.now(),
+                             orga_id)
         
         return redirect(url_for('editPlaylist', nom_orga=nom_orga, playlist_id=playlist_id))
 
     @app.route('/deleteFileFromPlaylist/<nom_orga>/<int:playlist_id>/<int:file_id>', methods=['GET'])
     def deleteFileFromPlaylist(nom_orga, playlist_id, file_id):
-        ts.removeFileFromPlaylist(playlist_id, file_id)
+        username = session.get('username')
+        orga_id = orga.getIdByName(session.get('organisation_name'))
+        playlist_name = ts.getPlaylistNameById(playlist_id)
+
+        log.ldao.createLog("REMOVE_FILE",
+                            f"l'utilisateur {username} a enlevé le fichier {file_id} de la playlist {playlist_name}.",
+                           datetime.datetime.now(),
+                             orga_id)
+        
+        ts.dao.removeFileFromPlaylist(playlist_id, file_id)
         return redirect(url_for('editPlaylist', nom_orga=nom_orga, playlist_id=playlist_id))
     
 
@@ -93,5 +115,12 @@ class TimetableController:
         else:
             playlist_id = None 
         ts.updateDaySchedule(day_name, playlist_id, start_time)
+
+        username = session.get('username')
+        orga_id = orga.getIdByName(session.get('organisation_name'))
+        log.ldao.createLog("SCHEDULE_UPDATE",
+                            f"l'utilisateur {username} a mis à jour la plannificationde de la playlist {playlist_id}.",
+                           datetime.datetime.now(),
+                             orga_id)
         
         return redirect(url_for('editTables', nom_orga=nom_orga))
