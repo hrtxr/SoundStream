@@ -1,7 +1,7 @@
 # 🔉 SoundStream
 
 ### Livrable pour les évaluations des Compétences :
-## Compétance 4 :
+## Compétence 4 :
 [livrable compétences 4](00-Documents/Compte_rendu_compétence_4.pdf)
 
 ### Qu'est ce que SoundStream
