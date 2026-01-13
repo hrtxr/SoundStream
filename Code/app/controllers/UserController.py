@@ -58,9 +58,20 @@ class UserController :
             if new_password and new_password.strip():
                 us.udao.changePassword(username, new_password)
             
+            user_name_session = session.get('username')
+            orga_id = session.get('organisation_name')
+            log.ldao.createLog("EDIT_USER",
+                               f"Le mot de passe de l'utilisateur {username} a été changé par {user_name_session}",
+                               datetime.datetime.now(),
+                               orga_id
+                            )
             # Mise à jour du rôle
             us.udao.updateUserRole(username, new_role)
-            
+            log.ldao.createLog("EDIT_USER",
+                               f"Le rôle de l'utilisateur {username} a été changé en {new_role} par {user_name_session}",
+                               datetime.datetime.now(),
+                               orga_id
+                            )
             # Récupérer l'organisation pour redirection
             orga_name = us.udao.getOrganisationByUsername(username)
             
