@@ -116,6 +116,18 @@ tbody tr:nth-child(odd) {
     cursor: pointer;
 }
 
+.custom-btn-add {
+    padding: 1.2vh 3.5vh;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 2vh;
+    text-align: left;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    margin-right: -70px;
+}
+
 .btn-red {
     background-color: #FF0000;
     color: white;

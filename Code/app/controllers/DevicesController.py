@@ -155,11 +155,51 @@ class DevicesController :
             
             # Récupération du nom de l'organisation pour le header
             # player.id_orga contient l'ID de l'organisation
-            orga = ogs.getIdByName  # On va chercher le nom
+            orga = ogs.getIdByName(session.get("organisation_name"))  # On va chercher le nom
             
             # Affichage du formulaire pré-rempli
             metadata = {'title': 'Modifier Lecteur'}
             return render_template('edit_player.html', 
                                  metadata=metadata, 
                                  player=player,
-                                 orga='Harman_Kardon')  # Pour le header
+                                 orga=orga)  # Pour le header
+    
+    @app.route('/addPlayer', methods=['GET', 'POST'])
+    @LoggedIn
+    @reqrole(['admin'])
+    def addPlayer():
+        
+        if request.method == 'POST':
+            # Récupération des données du formulaire
+            name_place = request.form.get('name_place')
+            ip_address = request.form.get('ip_address')
+            state = request.form.get('state')
+            #last_synchronization = ... obtenir la date actuelle => fais dans le DAO en PostgreSQL avec CURRENT_TIMESTAMP
+            place_address = request.form.get('place_address')
+            place_city = request.form.get('place_city')
+            place_postcode = request.form.get('place_postcode')
+            place_building_name = request.form.get('place_building_name')
+
+            # Récupérer l'organisation pour redirection et association au nouveau device
+            orga_name = session.get('organisation_name')
+
+            orga_id = ogs.getIdByName(orga_name)
+            
+            # Création du device
+            sps.spdao.createDevice(name_place, ip_address, state, place_address, place_city, place_postcode, place_building_name, orga_id)
+            
+            return redirect(url_for('devices', nom_orga=orga_name))
+        
+        else:
+            #  AFFICHAGE DU FORMULAIRE (GET) 
+            
+            # Récupération du nom de l'organisation pour le header
+            # player.id_orga contient l'ID de l'organisation
+            orga = ogs.getIdByName(session.get('organisation_name'))  # On va chercher l'id de l'organisation
+            available_buildings = sps.spdao.findAllBuildingNames()
+            # Affichage du formulaire pré-rempli
+            metadata = {'title': 'Ajouter Lecteur'}
+            return render_template('add_player.html',
+                                metadata=metadata,
+                                orga=orga,
+                                buildings=available_buildings)  # Pour le header

@@ -1,22 +1,19 @@
 class SongPlayerDAOInterface :
-    
-    def addSongPlayerInDb(self, name_place, IP_adress, state, last_synchronization, place_address , name_orga) :
+
+    def createDevice(self, name_place, ip_address, place_address, place_city, place_postcode, place_building_name, orga_id):
         """
-        Adds a new song player to the database.
+        Create a new song player in the database.
 
             Args:
-                name_place (str): The name of the location
-                IP_address (str): The IP address of the player (e.g., '192.168.1.1')
-                state (str): The current state ('ONLINE' or 'OFFLINE')
-                last_synchronization (str | None): Timestamp of the last sync or None
-                place_address (str): The physical address of the place
-                name_orga (str): The name of the organization
+                name_place (str): The name of the place
+                ip_address (str): The IP address of the song player
+                place_city (str): The city of the place
+                place_postcode (str): The postcode of the place
+                place_building_name (str): The building name of the place
+                orga_id (int): The ID of the organization
             Returns:
                 None
         """
-        pass
-
-    
     def deleteSongPlayerInDb(self,id_song_player):
         """
         Delete a song player to the database 
@@ -63,6 +60,14 @@ class SongPlayerDAOInterface :
         """
         pass
 
+    def findAllBuildingNames(self):
+        """
+        Get all distinct building names from the song players.
+
+            Returns:
+                List[str]: A list of distinct building names.
+        """
+        pass
 
     def findAll(self) :
         """

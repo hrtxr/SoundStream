@@ -15,7 +15,7 @@
                             <th>Ip</th>
                             <th>Status</th>
                             <th>Location</th>
-                            <th> Actions </th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -39,6 +39,16 @@
                                 </tr>
                             {%endif%}
                         {% endfor %}
+                        <tr>
+                            <td class = "actions-cell">
+                                <div class ="buttons-wrapper">
+                                    <a href="/addPlayer" class="custom-btn-add btn-green">Add Player</a>
+                                </div>
+                            </td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
                             
                         <!-- Completion of empty lines -->
                         {% for i in range(ns.LineNb, 13) %}

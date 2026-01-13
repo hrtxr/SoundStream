@@ -13,7 +13,23 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         conn = sqlite3.connect(self.databasename)
         conn.row_factory = sqlite3.Row
         return conn
-    
+
+    def createDevice(self, name_place, ip_address, state, place_address, place_city, place_postcode, place_building_name, orga_id):
+        conn = self._getDbConnection()
+        try:
+            query = '''
+            INSERT INTO song_player
+            (name_place, IP_adress, state, last_synchronization, place_adress, place_city, place_postcode, place_building_name, id_orga)
+            VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?);
+            '''
+            conn.execute(query, (name_place, ip_address, state, place_address, place_city, place_postcode, place_building_name, orga_id))
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()
+
     def addSongPlayerInDb(self, data_form_to_form):
         '''
             data = tuples (name_place, ip_address, state, last_synchronization, place_address, place_city, place_postcode, place_building_name, id_orga)
@@ -141,6 +157,20 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         if songplayerList :
             return songplayerList
         return []
+    
+    def findAllBuildingNames(self):
+        conn = self._getDbConnection()
+        query = "SELECT DISTINCT place_building_name FROM song_player;"
+        cursor = conn.execute(query)
+        results_query = cursor.fetchall()
+        conn.close()
+        
+        # Extract building names from the result set
+        building_names = []
+        for row_query in results_query:
+            building_names.append(row_query['place_building_name'])
+
+        return building_names
     
     def UpdateState(self, state, id_player) :
         '''
