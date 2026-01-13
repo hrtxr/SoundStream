@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from app.models.PlaylistDAO import PlaylistDAO
 
-class TimetableService:
+class TimeTableService:
 
     def __init__(self):
         self.dao = PlaylistDAO()
@@ -39,3 +39,60 @@ class TimetableService:
             cursor_time = endhour
 
         return playlist_finale
+    
+    ####################
+    ## EDIT PLAYLISTS ##
+    ####################
+    
+    def getAllPlaylists(self):
+        return self.dao.findAll()
+    
+    def getPlaylistById(self, playlist_id):
+        return self.dao.findById(playlist_id)
+    
+    def getPlaylistDetails(self, playlist_id):
+        playlist = self.dao.findById(playlist_id)
+        if not playlist:
+            return None
+        files = self.dao.getFilesInPlaylist(playlist_id)
+        
+        title_count = sum(1 for f in files if f['type_file'] == 'mp3')
+        ads_count = sum(1 for f in files if f['type_file'] == 'ad')
+        
+        return {
+            'playlist': playlist,
+            'files': files,
+            'title_count': title_count,
+            'ads_count': ads_count
+        }
+
+    ############################
+    ## EDIT PLAYLIST FOR DAYS ##
+    ############################
+
+    def getAllDaysWithPlaylists(self):
+        days = self.dao.getAllDays()
+        days_data = []
+
+        for day in days:
+            day_name = day['day_'] 
+            playlists = self.dao.getPlannedPlaylistsForDay(day_name)
+            
+            days_data.append({
+                'day_name': day_name,
+                'details': day,
+                'playlists': playlists
+            })
+            
+        return days_data
+    
+    def updateDaySchedule(self, day_name, playlist_id, start_time):
+        self.dao.removeAllPlaylistsFromDay(day_name)
+        if playlist_id is not None and start_time:
+            self.dao.addPlaylistToDay(playlist_id, day_name, start_time)
+
+    def getPlaylistNameById(self, playlist_id):
+        playlist =self.dao.findById(playlist_id)
+        if playlist:
+            return playlist.name
+        return None

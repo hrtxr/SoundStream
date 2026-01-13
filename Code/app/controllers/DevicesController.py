@@ -5,7 +5,10 @@ from app.controllers.LoginController import LoggedIn, reqrole
 from app.services.UserService import UserService
 from app.services.SongPlayerService import SongPlayerService
 from app.services.OrganisationService import OrganisationService
+from app.services.LogService import LogService
 
+
+log = LogService()
 sps=SongPlayerService()
 ogs=OrganisationService()
 

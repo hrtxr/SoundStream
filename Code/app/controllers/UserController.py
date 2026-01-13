@@ -4,7 +4,10 @@ from app import app
 from app.controllers.LoginController import LoggedIn, reqrole
 from app.services.UserService import UserService
 from app.services.OrganisationService import OrganisationService
+from app.services.LogService import LogService
+import datetime
 
+log = LogService()
 ogs=OrganisationService()
 us=UserService()
 
@@ -22,14 +25,22 @@ class UserController :
     @app.route('/deleteUsn/<username>',methods=['POST','GET'])
     @LoggedIn
     @reqrole(['admin'])
-    def deleteUsn(username):
+    def deleteUser(username):
+
+        # Create the log before and insert it in the database before delete the user
+        user_orga = us.udao.getOrganisationByUsername(username)
+        orga_id = ogs.getIdByName(user_orga)
+        log.ldao.createLog("DELETE", f"l'utilisateur {username} a été supprimé de la base de données.",
+                           datetime.datetime.now(), orga_id)
+        
+
         us.deleteByUsername(username)
         return redirect(request.referrer)
     
     @app.route('/editUsn/<username>', methods=['GET', 'POST'])
     @LoggedIn
     @reqrole(['admin'])
-    def editUsn(username):
+    def editUser(username):
         
         if request.method == 'POST':
             # Récupération des données du formulaire
@@ -47,9 +58,20 @@ class UserController :
             if new_password and new_password.strip():
                 us.udao.changePassword(username, new_password)
             
+            user_name_session = session.get('username')
+            orga_id = session.get('organisation_name')
+            log.ldao.createLog("EDIT_USER",
+                               f"Le mot de passe de l'utilisateur {username} a été changé par {user_name_session}",
+                               datetime.datetime.now(),
+                               orga_id
+                            )
             # Mise à jour du rôle
             us.udao.updateUserRole(username, new_role)
-            
+            log.ldao.createLog("EDIT_USER",
+                               f"Le rôle de l'utilisateur {username} a été changé en {new_role} par {user_name_session}",
+                               datetime.datetime.now(),
+                               orga_id
+                            )
             # Récupérer l'organisation pour redirection
             orga_name = us.udao.getOrganisationByUsername(username)
             
@@ -94,6 +116,7 @@ class UserController :
             password = request.form.get('password')
             role = request.form.get('role')
 
+
             # Récupérer l'organisation pour redirection et association au nouvel utilisateur
             orga_name = session.get('organisation_name')
             
@@ -104,8 +127,13 @@ class UserController :
             if not role or role not in available_roles:
                 return "Erreur : Rôle invalide", 400
             
+            
             # Création de l'utilisateur
             us.udao.createUser(username, password, role, orga_name)
+            # Create the log and insert it in the database
+            orga_id = ogs.getIdByName(orga_name)
+            log.ldao.createLog("ADD", f"l'utilisateur {username} a été implémenté dans la base de données.",
+                           datetime.datetime.now(), orga_id)
             
             return redirect(url_for('users', nom_orga=orga_name))
         
