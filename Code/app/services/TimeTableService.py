@@ -56,8 +56,8 @@ class TimeTableService:
             return None
         files = self.dao.getFilesInPlaylist(playlist_id)
         
-        title_count = sum(1 for f in files if f['type'] == 'mp3')
-        ads_count = sum(1 for f in files if f['type'] == 'ad')
+        title_count = sum(1 for f in files if f['type_file'] == 'mp3')
+        ads_count = sum(1 for f in files if f['type_file'] == 'ad')
         
         return {
             'playlist': playlist,

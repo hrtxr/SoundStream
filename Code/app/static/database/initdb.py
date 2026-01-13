@@ -40,7 +40,7 @@ def populate_database():
         ('mp3',)
     ]
 
-    conn.executemany("INSERT INTO type (type) VALUES (?)", type)
+    conn.executemany("INSERT INTO type_file (type_file) VALUES (?)", type)
     print("✅ Types insérés.")
 
     # 1. UTILISATEURS & ORGANISATIONS (Ton code existant)
@@ -79,7 +79,7 @@ def populate_database():
         ('Ambient_Lounge.mp3', '/mnt/data/music/ambient.mp3', '00:05:20', now, 'mp3'),
         ('Samsung_Galaxy_Ad.mp3', '/mnt/data/ads/samsung_ad.mp3', '00:00:45', now, 'mp3')
     ]
-    conn.executemany("INSERT INTO file (name, path, time_length, upload_date, type) VALUES (?, ?, ?, ?, ?)", files)
+    conn.executemany("INSERT INTO file (name, path, time_length, upload_date, type_file) VALUES (?, ?, ?, ?, ?)", files)
     print("✅ Files insérés.")
 
     # 3. PLANNING (Jours de la semaine)

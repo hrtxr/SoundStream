@@ -34,9 +34,9 @@ CREATE TABLE IF NOT EXISTS file(
    path TEXT NOT NULL,
    time_length TIME NOT NULL,
    upload_date DATETIME NOT NULL,
-   type VARCHAR(50) NOT NULL,
+   type_file VARCHAR(50) NOT NULL,
    UNIQUE(name),
-   FOREIGN KEY(type) REFERENCES type(type)
+   FOREIGN KEY(type_file) REFERENCES type(type_file)
 );
 
 CREATE TABLE IF NOT EXISTS song_player(
@@ -115,7 +115,7 @@ CREATE TABLE IF NOT EXISTS planned(
    FOREIGN KEY(day_) REFERENCES Planning(day_)
 );
 
-CREATE TABLE IF NOT EXISTS type(
-   type VARCHAR(50),
-   PRIMARY KEY(type)
+CREATE TABLE IF NOT EXISTS type_file(
+   type_file VARCHAR(50),
+   PRIMARY KEY(type_file)
 );
