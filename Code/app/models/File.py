@@ -5,4 +5,4 @@ class File :
         self.path = dico['path']
         self.time_length = dico['time_length']
         self.upload_date = dico['upload_date']
-        self.type = dico['type']
+        self.type_file = dico['type_file']

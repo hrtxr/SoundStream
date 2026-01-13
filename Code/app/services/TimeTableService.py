@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta
 from app.models.PlaylistDAO import PlaylistDAO
+from app.models.FileDAO import FileDAO
 
 class TimeTableService:
 
     def __init__(self):
         self.dao = PlaylistDAO()
+        self.fdao = FileDAO() # car comme on doit accéder a la table file on utilise le FileDAO
 
     def getCompleteProg(self, datehour, id_orga):
         """ Get programmation of the day :"""
@@ -50,14 +52,20 @@ class TimeTableService:
     def getPlaylistById(self, playlist_id):
         return self.dao.findById(playlist_id)
     
+    def addFileInPlaylist(self,playlist_id,id_file) -> bool: 
+        return self.dao.addFileToPlaylist(playlist_id,id_file)
+    
+    def deleteFileFromPlaylist(self,playlist_id,id_file) -> bool :
+        return self.dao.removeFileFromPlaylist(playlist_id,id_file)
+    
     def getPlaylistDetails(self, playlist_id):
         playlist = self.dao.findById(playlist_id)
         if not playlist:
             return None
-        files = self.dao.getFilesInPlaylist(playlist_id)
+        files = self.fdao.getFilesInPlaylist(playlist_id)
         
-        title_count = sum(1 for f in files if f['type_file'] == 'mp3')
-        ads_count = sum(1 for f in files if f['type_file'] == 'ad')
+        title_count = sum(1 for f in files if f.type_file.lower() == 'mp3')
+        ads_count = sum(1 for f in files if f.type_file.lower() == 'ad')
         
         return {
             'playlist': playlist,

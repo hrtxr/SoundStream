@@ -10,6 +10,7 @@
             <div class="divider colored">
                 <h1>Current Playlist</h1>
                 
+                
                 {% if selected_playlist %}
                     <h3>Playlist : {{ selected_playlist.name }}</h3>
                     
@@ -28,7 +29,7 @@
                                     {% for file in files %}
                                         <tr>
                                             <td>{{ file.name }}</td>
-                                            <td>{{ file.type }}</td>
+                                            <td>{{ file.type_file }}</td>
                                             <td>{{ file.time_length }}</td>
                                             <td class="actions-cell">
                                                 <div class="buttons-wrapper">
@@ -87,7 +88,7 @@
                 <div class="divider colored">
                     <h1>Upload Song</h1>
 
-                    <form method="POST" action="{{ url_for('addFileToPlaylist', nom_orga=orga, playlist_id=selected_playlist.id_playlist) }}" class="form">
+                    <form method="POST" action="{{ url_for('addFileToPlaylist', nom_orga=orga, playlist_id=selected_playlist.id_playlist) }}" enctype="multipart/form-data" class="form">
                         <div class="uploadfile">
                             <input type="file" id="file" name="uploadfile" accept=".mp3" class="input-hidden" required>
                             <label for="file" class="btn-design"  id="file-name">

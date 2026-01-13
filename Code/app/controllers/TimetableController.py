@@ -5,11 +5,14 @@ from app import app
 from app.services.TimeTableService import TimeTableService
 from app.services.LogService import LogService
 from app.services.OrganisationService import OrganisationService
+from app.services.FileService import FileService
 import datetime
 
 orga = OrganisationService()
 log = LogService()
 ts = TimeTableService()
+file_service = FileService()
+
 class TimetableController:
 
     @app.route('/timetable/<nom_orga>', methods =['GET'])
@@ -50,42 +53,66 @@ class TimetableController:
                              files=files,
                              title_count=title_count,
                              ads_count=ads_count)
+    
 
     @app.route('/choosePlaylist/<nom_orga>', methods=['POST'])
     def choosePlaylist(nom_orga):
         playlist_id = request.form.get('playlist_id')
         return redirect(url_for('editPlaylist', nom_orga=nom_orga, playlist_id=playlist_id))
+    
 
     @app.route('/addFileToPlaylist/<nom_orga>/<int:playlist_id>', methods=['POST'])
     def addFileToPlaylist(nom_orga, playlist_id):
-        filename = request.form.get('filename')
-        file_type = request.form.get('file_type', 'mp3')
-        if filename:
-            ts.addFileToPlaylist(playlist_id, filename, file_type)
+    
+        if 'uploadfile' not in request.files:
+            return redirect(url_for('editPlaylist', nom_orga=nom_orga, playlist_id=playlist_id))
 
-        username = session.get('username')
-        orga_id = orga.getIdByName(session.get('organisation_name'))
-        playlist_name = ts.getPlaylistNameById(playlist_id)
+        file_storage = request.files['uploadfile']
+        form = request.form
 
-        log.ldao.createLog("ADD_FILE",
-                            f"l'utilisateur {username} a ajouté le fichier {filename} dans la playlist {playlist_name}.",
-                           datetime.datetime.now(),
-                             orga_id)
+        # Handles physical save (disk) and database entry creation
+        # Using camelCase as requested
+        file_id = file_service.createFileFromForm(form, file_storage)
         
+        # Proceed only if the file upload was successful
+        if file_id != -1:
+        
+            # Link file to playlist via TimeTableService
+            ts.addFileInPlaylist(playlist_id, file_id)
+
+            # Logging (Executed only on success)
+            username = session.get('username')
+            orga_id = orga.getIdByName(session.get('organisation_name'))
+            playlist_name = ts.getPlaylistNameById(playlist_id)
+        
+            log.ldao.createLog(
+                "ADD_FILE",
+                f"User {username} added file {file_storage.filename} to playlist {playlist_name}.",
+                datetime.datetime.now(),
+                orga_id
+            )
+
         return redirect(url_for('editPlaylist', nom_orga=nom_orga, playlist_id=playlist_id))
 
     @app.route('/deleteFileFromPlaylist/<nom_orga>/<int:playlist_id>/<int:file_id>', methods=['GET'])
     def deleteFileFromPlaylist(nom_orga, playlist_id, file_id):
-        username = session.get('username')
-        orga_id = orga.getIdByName(session.get('organisation_name'))
-        playlist_name = ts.getPlaylistNameById(playlist_id)
+    
+        # Attempt to remove the file via Service
+        is_removed = ts.deleteFileFromPlaylist(playlist_id, file_id)
 
-        log.ldao.createLog("REMOVE_FILE",
-                            f"l'utilisateur {username} a enlevé le fichier {file_id} de la playlist {playlist_name}.",
-                           datetime.datetime.now(),
-                             orga_id)
-        
-        ts.dao.removeFileFromPlaylist(playlist_id, file_id)
+        # Log only if the deletion was successful
+        if is_removed:
+            username = session.get('username')
+            orga_id = orga.getIdByName(session.get('organisation_name'))
+            playlist_name = ts.getPlaylistNameById(playlist_id)
+
+            log.ldao.createLog(
+                "REMOVE_FILE",
+                f"User {username} removed file {file_id} from playlist {playlist_name}.",
+                datetime.datetime.now(),
+                orga_id
+            )
+    
         return redirect(url_for('editPlaylist', nom_orga=nom_orga, playlist_id=playlist_id))
     
 

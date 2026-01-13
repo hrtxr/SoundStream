@@ -3,6 +3,7 @@ import sqlite3
 from app import app
 from app.models.Playlist import Playlist
 from app.models.PlaylistDAOInterface import PlaylistDAOInterface
+import os
 
 class PlaylistDAO(PlaylistDAOInterface):
 
@@ -54,68 +55,78 @@ class PlaylistDAO(PlaylistDAOInterface):
     ####################
     ## EDIT PLAYLISTS ##
     ####################
-
-    def getFilesInPlaylist(self, playlist_id):
-        conn = self._getDbConnection()
-        files = conn.execute('''
-            SELECT f.*
-            FROM file f
-            JOIN composition c ON f.id_file = c.id_file
-            WHERE c.id_playlist = ?
-            ORDER BY f.name
-        ''', (playlist_id,)).fetchall()
-        conn.close()
-        return files
     
-    def addFileToPlaylist(self, playlist_id, filename, file_type='mp3', lengt='00:03:00'):
+    def addFileToPlaylist(self, id_playlist: int, id_file: int) -> bool:
+        """
+        Links an existing file to a playlist in the database.
+        It checks for duplicates before inserting into the 'composition' table.
+
+        Args:
+            id_file (int): The unique ID of the file to add.
+            id_playlist (int): The unique ID of the target playlist.
+
+        Returns:
+            bool: True if the file was successfully added.
+                  False if the file was already in the playlist or if an error occurred.
+        """
+        conn = self._getDbConnection()
+
+        try:
+            #  Check if the link already exists to prevent duplicates
+            query_check = "SELECT * FROM composition WHERE id_playlist = ? AND id_file = ?;"
+            exists = conn.execute(query_check, (id_playlist, id_file)).fetchone()
+
+            if not exists:
+                #  Create the link in the association table
+                query = "INSERT INTO composition (id_playlist, id_file) VALUES (?, ?);"
+                conn.execute(query, (id_playlist, id_file))
+                conn.commit()
+                return True
+            
+            # The file is already in the playlist
+            return False
+
+        except Exception as e:
+            print(f"Error linking file to playlist: {e}")
+            return False    
+        finally:
+            # Always close the connection to avoid memory leaks
+            conn.close()  
+    
+    
+    def removeFileFromPlaylist(self, playlist_id: int, file_id: int) -> bool:
+        """
+        Removes a file from a playlist (deletes the link) and updates the modification date.
+
+        Args:
+            playlist_id (int): The ID of the playlist.
+            file_id (int): The ID of the file to remove.
+
+        Returns:
+            bool: True if the operation was successful, False otherwise.
+        """
         conn = self._getDbConnection()
         
-        file = conn.execute(
-            'SELECT id_file FROM file WHERE name = ?',
-            (filename,)
-        ).fetchone()
-        
-        if file:
-            file_id = file['id_file']
-        else:
-            cursor = conn.execute('''
-                INSERT INTO file (name, path, time_length, upload_date, type)
-                VALUES (?, ?, ?, ?, ?)
-            ''', (filename, f'/mnt/data/music/{filename}', lengt, datetime.now(), file_type))
-            file_id = cursor.lastrowid
-        
-        exists = conn.execute('''
-            SELECT * FROM composition 
-            WHERE id_playlist = ? AND id_file = ?
-        ''', (playlist_id, file_id)).fetchone()
-        
-        if not exists:
-            conn.execute('''
-                INSERT INTO composition (id_playlist, id_file)
-                VALUES (?, ?)
-            ''', (playlist_id, file_id))
+        try:
+            # 1. Remove the link in the join table
+            query_remove ="DELETE FROM composition WHERE id_playlist = ? AND id_file = ?"
+            conn.execute(query_remove, (playlist_id, file_id))
+            
+            # 2. Update the playlist timestamp
+            query_update ="UPDATE playlist SET last_update_date = ? WHERE id_playlist = ?"
+            conn.execute(query_update, (datetime.now(), playlist_id))
             
             conn.commit()
-        
-        conn.close()
-        print(file_id)
-        return file_id
-    
-    def removeFileFromPlaylist(self, playlist_id, file_id):
-        conn = self._getDbConnection()
-        conn.execute('''
-            DELETE FROM composition 
-            WHERE id_playlist = ? AND id_file = ?
-        ''', (playlist_id, file_id))
-        
-        conn.execute('''
-            UPDATE playlist 
-            SET last_update_date = ? 
-            WHERE id_playlist = ?
-        ''', (datetime.now(), playlist_id))
-        
-        conn.commit()
-        conn.close()
+            return True
+            
+        except Exception as e:
+            print(f"Error removing file from playlist: {e}")
+            conn.rollback() # Cancel changes if an error occurs
+            return False
+            
+        finally:
+            # CRITICAL: Always close the connection, even if it crashes
+            conn.close()
 
     ############################
     ## EDIT PLAYLIST FOR DAYS ##
