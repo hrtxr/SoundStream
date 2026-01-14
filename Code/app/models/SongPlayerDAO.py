@@ -14,15 +14,15 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         conn.row_factory = sqlite3.Row
         return conn
 
-    def createDevice(self, name_place, ip_address, state, place_address, place_city, place_postcode, place_building_name, orga_id):
+    def createDevice(self, name_place, ip_address, state, place_address, place_postcode, place_city, place_building_name, orga_id):
         conn = self._getDbConnection()
         try:
             query = '''
             INSERT INTO song_player
-            (name_place, IP_adress, state, last_synchronization, place_adress, place_city, place_postcode, place_building_name, id_orga)
+            (name_place, IP_adress, state, last_synchronization, place_adress, place_postcode, place_city, place_building_name, id_orga)
             VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?);
             '''
-            conn.execute(query, (name_place, ip_address, state, place_address, place_city, place_postcode, place_building_name, orga_id))
+            conn.execute(query, (name_place, ip_address, state, place_address, place_postcode, place_city, place_building_name, orga_id))
             conn.commit()
         except Exception as e:
             conn.rollback()

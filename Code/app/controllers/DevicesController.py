@@ -189,7 +189,7 @@ class DevicesController :
             orga_id = ogs.getIdByName(orga_name)
             
             # Création du device
-            sps.spdao.createDevice(name_place, ip_address, state, place_address, place_city, place_postcode, place_building_name, orga_id)
+            sps.spdao.createDevice(name_place, ip_address, state, place_address, place_postcode, place_city, place_building_name, orga_id)
             
             return redirect(url_for('devices', nom_orga=orga_name))
         
