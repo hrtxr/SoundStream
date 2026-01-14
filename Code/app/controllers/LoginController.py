@@ -1,8 +1,15 @@
 from flask import render_template, session, redirect, url_for, request
 from functools import wraps
 from app import app
-from app.models.User import User
-from app.models.UserDAO import UserDAO
+from app.services.LogService import LogService
+from app.services.OrganisationService import OrganisationService
+from app.services.UserService import UserService
+import datetime
+
+usr = UserService()
+orga = OrganisationService()
+log = LogService()
+
 import bcrypt
 ####################################
 ## DECORATEURS D'AUTHENTIFICATION ##
@@ -53,8 +60,7 @@ class LoginController:
             password = request.form['password']
             
             # Recherche de l'utilisateur dans la base de données
-            dao = UserDAO()
-            user = dao.findByUsername(username)
+            user = usr.findByUsername(username)
             
             if user:
                 # Vérification du mot de passe -> à implémenter dans le UserDAO                
@@ -72,7 +78,6 @@ class LoginController:
                     return render_template('login.html', metadata=metadata, error="Mot de passe incorrect")
             else:
                 return render_template('login.html', metadata=metadata, error="Utilisateur inconnu")
-
         return render_template('login.html', metadata=metadata)
     
     @app.route('/logout')

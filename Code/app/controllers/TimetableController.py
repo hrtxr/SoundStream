@@ -80,6 +80,8 @@ class TimetableController:
             # Link file to playlist via TimeTableService
             ts.addFileInPlaylist(playlist_id, file_id)
 
+            ts.updateM3uFile(playlist_id)
+
             # Logging (Executed only on success)
             username = session.get('username')
             orga_id = orga.getIdByName(session.get('organisation_name'))
@@ -105,6 +107,8 @@ class TimetableController:
             username = session.get('username')
             orga_id = orga.getIdByName(session.get('organisation_name'))
             playlist_name = ts.getPlaylistNameById(playlist_id)
+
+            ts.updateM3uFile(playlist_id)
 
             log.ldao.createLog(
                 "REMOVE_FILE",
