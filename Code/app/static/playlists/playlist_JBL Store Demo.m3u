@@ -1,0 +1,7 @@
+#EXTM3U
+#EXTINF:0,JBL_Promo_Spot.mp3
+/mnt/data/ads/jbl_promo.mp3
+#EXTINF:3,Summer_Vibes_Intro.mp3
+/mnt/data/music/summer_intro.mp3
+#EXTINF:167,lavender_town.mp3
+audio/lavender_town.mp3
