@@ -158,3 +158,6 @@ class TimeTableService:
             f.write(content)
 
         return True
+    
+    def autoCleanPlaylists(self):
+        return self.pdao.deleteExpiredPlaylists()

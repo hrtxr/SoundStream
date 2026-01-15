@@ -205,3 +205,33 @@ class PlaylistDAO(PlaylistDAOInterface):
         conn.execute('DELETE FROM planned WHERE day_ = ?', (day_name,))
         conn.commit()
         conn.close()
+
+    def deleteObsoletePlaylists(self) -> int:
+        """ Delete playlists that have expired """
+        conn = self._getDbConnection()
+        try:
+            # 1. On cible les playlists périmées (Date d'expiration < Maintenant)
+            subquery = "SELECT id_playlist FROM playlist WHERE expiration_date < datetime('now')"
+
+            # 2. On supprime les dépendances (Nettoyage en cascade manuel)
+            conn.execute(f"DELETE FROM planned WHERE id_playlist IN ({subquery})")
+            conn.execute(f"DELETE FROM composition WHERE id_playlist IN ({subquery})")
+            conn.execute(f"DELETE FROM interaction WHERE id_playlist IN ({subquery})")
+            
+            # 3. On supprime enfin la playlist elle-même
+            cursor = conn.execute(f"DELETE FROM playlist WHERE expiration_date < datetime('now')")
+            
+            count = cursor.rowcount # Nombre de playlists supprimées
+            conn.commit()
+            
+            if count > 0:
+                print(f"AUTO-CLEANUP : {count} playlists obsolètes supprimées.")
+                
+            return count
+
+        except Exception as e:
+            print(f"Erreur lors du nettoyage automatique : {e}")
+            conn.rollback()
+            return 0
+        finally:
+            conn.close()
