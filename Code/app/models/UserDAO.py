@@ -78,7 +78,7 @@ class UserDAO(UserDAOInterface) :
             return User(dict(res))
         return None
     
-    def findUsersInOrganisation(self, organisation) -> list:
+    def findUsersInOrganisation(self, organisation) -> list[str]:
         """ Get all the users of an organisation """
         conn = self._getDbConnection()
         query = """

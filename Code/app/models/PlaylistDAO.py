@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import sqlite3
 from app import app
 from app.models.Playlist import Playlist
@@ -128,6 +128,29 @@ class PlaylistDAO(PlaylistDAOInterface):
         finally:
             # CRITICAL: Always close the connection, even if it crashes
             conn.close()
+
+    def createPlaylist(self, name: str) -> None:
+        """ Create a new playlist with the given name """
+        conn = self._getDbConnection()
+        print('Creating playlist in DAO:', name)
+        conn.execute(
+            '''INSERT INTO playlist (name, creation_date, last_update_date, expiration_date) 
+            VALUES (?, ?, ?, ?)''',
+            (name, datetime.now(), datetime.now(), datetime.now() + timedelta(days=30))
+        )
+        conn.commit()
+        conn.close()
+
+    def deletePlaylist(self, playlist_id: int) -> None:
+        """ Delete a playlist by its ID """
+        conn = self._getDbConnection()
+        print('Deleting playlist in DAO:', playlist_id)
+        conn.execute('DELETE FROM composition WHERE id_playlist = ?', (playlist_id,))
+        conn.execute('DELETE FROM interaction WHERE id_playlist = ?', (playlist_id,))
+        conn.execute('DELETE FROM planned WHERE id_playlist = ?', (playlist_id,))
+        conn.execute('DELETE FROM playlist WHERE id_playlist = ?', (playlist_id,))
+        conn.commit()
+        conn.close()
 
     ############################
     ## EDIT PLAYLIST FOR DAYS ##

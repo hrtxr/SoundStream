@@ -27,6 +27,10 @@ class PlaylistDAOInterface :
         """ Remove a file from a playlist """
         pass
 
+    def createPlaylist(self, name: str) -> None:
+        """ Create a new playlist with the given name """
+        pass
+
     ############################
     ## EDIT PLAYLIST FOR DAYS ##
     ############################

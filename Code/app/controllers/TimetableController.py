@@ -25,6 +25,12 @@ class TimetableController:
     ## EDIT PLAYLISTS ##
     ####################
 
+    @app.route('/createPlaylist/<nom_orga>', methods=['POST'])
+    def createPlaylist(nom_orga):
+        playlist_name = request.form.get('playlist_name')
+        ts.createPlaylist(playlist_name)
+        return redirect(url_for('editPlaylist', nom_orga=nom_orga))
+
     @app.route('/editPlaylist/<nom_orga>', methods=['GET'])
     def editPlaylist(nom_orga):
         metadata = {'title': 'Edit Playlist'}
@@ -95,6 +101,14 @@ class TimetableController:
             )
 
         return redirect(url_for('editPlaylist', nom_orga=nom_orga, playlist_id=playlist_id))
+    
+    @app.route('/deletePlaylist/<nom_orga>', methods=['POST'])
+    def deletePlaylist(nom_orga):
+        playlist_id = request.form.get('playlist_id')
+
+        ts.deletePlaylist(playlist_id)
+
+        return redirect(url_for('editPlaylist', nom_orga=nom_orga))
 
     @app.route('/deleteFileFromPlaylist/<nom_orga>/<int:playlist_id>/<int:file_id>', methods=['GET'])
     def deleteFileFromPlaylist(nom_orga, playlist_id, file_id):
