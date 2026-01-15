@@ -1,6 +1,9 @@
+from app.models import SongPlayer
+
+
 class SongPlayerDAOInterface :
 
-    def createDevice(self, name_place, ip_address, place_address, place_city, place_postcode, place_building_name, orga_id):
+    def createDevice(self, name_place, ip_address, place_address, place_city, place_postcode, place_building_name, orga_id) -> None:
         """
         Create a new song player in the database.
 
@@ -14,30 +17,33 @@ class SongPlayerDAOInterface :
             Returns:
                 None
         """
-    def deleteSongPlayerInDb(self,id_song_player):
-        """
-        Delete a song player to the database 
-
-            Args:
-                id_song_player(int): The ID of the song player to be deleted
-            Returns:
-                None
-        """
-
-
-    def findByID(self, id_song_player):
-        """ 
-        Get song player by the id of the song player
-
-            Args:
-                id_player(int): The ID of the song player to fetch
-            Returns:
-                SongPlayer: An instance of the SongPlayer object
-        """
         pass
 
+    def addSongPlayerInDb(self, data_form_to_form) -> None:
+        """ Add a new song player to the database. """
+        pass
 
-    def findAllByOrganisationInBd(self, id_orga):
+    def updateDbSongPlayer(self, form_data, id_player) -> None:
+        """ Update a song player in the database. """
+        pass
+
+    def deleteSongPlayerInDb(self,id_song_player) -> None:
+        """ Delete a song player to the database """
+        pass
+
+    def findByID(self, id_song_player) -> SongPlayer:
+        """ Get song player by the id of the song player """
+        pass
+
+    def findByOrganisation(self, name_orga) -> SongPlayer:
+        """ Get song player by organisation name """
+        pass
+
+    def findByState(self, state) -> SongPlayer:
+        """ Get song player by state """
+        pass
+
+    def findAllByOrganisationInBd(self, id_orga) -> list:
         """
         Get all song players belonging to the same organization.
 
@@ -46,30 +52,13 @@ class SongPlayerDAOInterface :
             Returns:
                 List[SongPlayer] : A list of SongPlayer instances
         """
+        pass    
+
+    def findAllByOrganisationAndStatus(self, id_orga, status) -> list:
+        """ find all song players by organisation and status """
         pass
 
-
-    def findByState(self, state) :
-        """
-        Get all song players with a specific state.
-
-            Args:
-                state (str): The state to filter by ( 'ONLINE' or 'OFFLINE').
-            Returns:
-                List[SongPlayer]: A list of SongPlayer instances.
-        """
-        pass
-
-    def findAllBuildingNames(self):
-        """
-        Get all distinct building names from the song players.
-
-            Returns:
-                List[str]: A list of distinct building names.
-        """
-        pass
-
-    def findAll(self) :
+    def findAll(self) -> list[SongPlayer]:
         """
         Get all song players from the database.
 
@@ -78,13 +67,10 @@ class SongPlayerDAOInterface :
         """
         pass
 
-    
-    def UpdateState(self, state, id_song_player) :
-        """
-        Update the state of a specific song player.
+    def findAllBuildingNames(self) -> list:
+        """Get all distinct building names from the song players."""
+        pass
 
-            Args:
-                state (str): The new state to set (e.g., 'ONLINE', 'OFFLINE').
-                id_song_player (int): The unique ID of the song player to update.
-        """
+    def UpdateState(self, state, id_song_player) -> None :
+        """ Update the state of a specific song player """
         pass

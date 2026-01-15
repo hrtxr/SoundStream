@@ -7,6 +7,7 @@ class SQLValue(TypedDict):
 
 
 class Organisation:
+    
     def __init__(self, dico: Dict[str, SQLValue] ) -> None :
         self.id_orga=dico['id_orga']
         self.name_orga=dico['name_orga']

@@ -13,7 +13,6 @@ class SQLValue(TypedDict):
     place_building_name: str
     id_orga: int
     
-
 class SongPlayer : 
     def __init__(self, dico: Dict[str, SQLValue]) -> None :
         self.id_player = dico['id_player']

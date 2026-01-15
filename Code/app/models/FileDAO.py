@@ -11,7 +11,6 @@ class FileDAO(FileDAOInterface) :
     def __init__(self) -> None:
         self.databasename = app.static_folder + '/database/database.db'
     
-
     def _getDbConnection(self) -> sqlite3.Connection:
         """ Connect to the database. Returns the connection object """
         conn = sqlite3.connect(self.databasename)

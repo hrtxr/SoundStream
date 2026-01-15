@@ -7,15 +7,15 @@ import os
 
 class PlaylistDAO(PlaylistDAOInterface):
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.databasename = app.static_folder + '/database/database.db'
 
-    def _getDbConnection(self):
+    def _getDbConnection(self) -> sqlite3.Connection:
         conn = sqlite3.connect(self.databasename)
         conn.row_factory = sqlite3.Row
         return conn
 
-    def getTracksForDay(self, day_name):
+    def getTracksForDay(self, day_name) -> list:
         """ JE PENSE QUE CA SERT A RIEN CA NON PLUS A REVOIR PLUS TARD """
         conn = self._getDbConnection()
         query = """
@@ -28,7 +28,8 @@ class PlaylistDAO(PlaylistDAOInterface):
         """
         return conn.execute(query, (day_name,)).fetchall()
     
-    def findAll(self):
+    def findAll(self) -> list[Playlist]|None:
+        """ Get all playlists  """
         conn = self._getDbConnection()
         playlists = conn.execute('SELECT * FROM playlist;').fetchall()
         playlistList = list()
@@ -40,7 +41,8 @@ class PlaylistDAO(PlaylistDAOInterface):
             return playlistList
         return None
 
-    def findById(self, playlist_id):
+    def findById(self, playlist_id) -> Playlist|None:
+        """ Get a playlist by its ID """
         conn = self._getDbConnection()
         playlist = conn.execute(
             'SELECT * FROM playlist WHERE id_playlist = ?',
@@ -92,8 +94,7 @@ class PlaylistDAO(PlaylistDAOInterface):
         finally:
             # Always close the connection to avoid memory leaks
             conn.close()  
-    
-    
+       
     def removeFileFromPlaylist(self, playlist_id: int, file_id: int) -> bool:
         """
         Removes a file from a playlist (deletes the link) and updates the modification date.
@@ -132,13 +133,14 @@ class PlaylistDAO(PlaylistDAOInterface):
     ## EDIT PLAYLIST FOR DAYS ##
     ############################
 
-    def getAllDays(self):
+    def getAllDays(self) -> list:
+        """ Get all days in the planning """
         conn = self._getDbConnection()
         days = conn.execute('SELECT * FROM Planning ORDER BY day_').fetchall()
         conn.close()
         return days
     
-    def getPlannedPlaylistsForDay(self, day_name):
+    def getPlannedPlaylistsForDay(self, day_name) -> list:
         conn = self._getDbConnection()
         playlists = conn.execute('''
             SELECT p.*, pl.start_time
@@ -150,7 +152,8 @@ class PlaylistDAO(PlaylistDAOInterface):
         conn.close()
         return playlists
     
-    def addPlaylistToDay(self, playlist_id, day_name, start_time):
+    def addPlaylistToDay(self, playlist_id, day_name, start_time) -> None:
+        """ Get all playlists planned for a specific day """
         conn = self._getDbConnection()
         
         exists = conn.execute('''
@@ -173,7 +176,8 @@ class PlaylistDAO(PlaylistDAOInterface):
         conn.commit()
         conn.close()
 
-    def removeAllPlaylistsFromDay(self, day_name):
+    def removeAllPlaylistsFromDay(self, day_name) -> None:
+        """ Remove all playlists from a specific day """
         conn = self._getDbConnection()
         conn.execute('DELETE FROM planned WHERE day_ = ?', (day_name,))
         conn.commit()

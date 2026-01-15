@@ -14,7 +14,7 @@ class OrganisationDAO(OrganisationDAOInterface):
         conn.row_factory = sqlite3.Row
         return conn
     
-    def createOrganisation(self, name_orga: str):
+    def createOrganisation(self, name_orga: str) -> None:
         conn = self._getDbConnection()
         try:
             query = "INSERT INTO organisation (name_orga) VALUES (?);"
