@@ -2,7 +2,7 @@
 
 ### Livrable pour les évaluations des Compétences :
 ## Compétence 4 :
-[livrable compétences 4](00-Documents/Compte_rendu_compétence_4(1).pdf)
+[livrable compétences 4](00-Documents/Compte_rendu_compétence_4%20(1).pdf)
 
 ### Qu'est ce que SoundStream
 SoundStream est un projet que nous sommes en train de réaliser dans le cadre de la SAÉ S301 (SAÉ = projet évalué qui regroupe un ensemble de compétances afin de pouvoir appliquer les principes théoriques vus en cours). Elle est réalisée en groupe et consiste en le développement d'une application web complète.
