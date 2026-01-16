@@ -160,4 +160,4 @@ class TimeTableService:
         return True
     
     def autoCleanPlaylists(self):
-        return self.pdao.deleteExpiredPlaylists()
+        return self.pdao.deleteObsoletePlaylists()
