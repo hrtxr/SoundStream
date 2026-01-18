@@ -1,4 +1,4 @@
-from app.models import User
+from app.models.User import User
 
 
 class UserDAOInterface :
