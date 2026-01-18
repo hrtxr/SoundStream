@@ -1,0 +1,82 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/devices.css') }}"> 
+
+<div class="devices">
+    {% include 'header.html' %}
+    
+    <div class="bento">
+        <div class="divider colored" style="padding: 4vh;">
+            <h1>Modifier Lecteur</h1>
+            
+            <form method="POST" style="max-width: 600px; margin: 2vh auto;">
+                
+                <!-- Champ Nom du lieu -->
+                <div style="margin-bottom: 2vh;">
+                    <label for="name_place" style="display: block; margin-bottom: 0.5vh; color: white;">
+                        Nom du lieu :
+                    </label>
+                    <input 
+                        type="text" 
+                        id="name_place" 
+                        name="name_place" 
+                        value="{{ player.name_place }}"
+                        required
+                        style="width: 100%; padding: 1vh; border-radius: 5px; border: 1px solid #ccc; background: rgba(255,255,255,0.1); color: white;"
+                    >
+                </div>
+                
+                <!-- Champ Adresse IP -->
+                <div style="margin-bottom: 2vh;">
+                    <label for="ip_address" style="display: block; margin-bottom: 0.5vh; color: white;">
+                        Adresse IP :
+                    </label>
+                    <input 
+                        type="text" 
+                        id="ip_address" 
+                        name="ip_address" 
+                        value="{{ player.IP_adress }}"
+                        required
+                        pattern="^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$"
+                        title="Format : 192.168.1.1"
+                        style="width: 100%; padding: 1vh; border-radius: 5px; border: 1px solid #ccc; background: rgba(255,255,255,0.1); color: white;"
+                    >
+                </div>
+                
+                <!-- Champ Adresse physique -->
+                <div style="margin-bottom: 2vh;">
+                    <label for="place_address" style="display: block; margin-bottom: 0.5vh; color: white;">
+                        Adresse physique :
+                    </label>
+                    <input 
+                        type="text" 
+                        id="place_address" 
+                        name="place_address" 
+                        value="{{ player.place_adress }}"
+                        required
+                        style="width: 100%; padding: 1vh; border-radius: 5px; border: 1px solid #ccc; background: rgba(255,255,255,0.1); color: white;"
+                    >
+                </div>
+                
+                <!-- Boutons -->
+                <div style="display: flex; gap: 2vh; justify-content: center; margin-top: 3vh;">
+                    <a href="{{ request.referrer or url_for('devices', nom_orga='Harman_Kardon') }}" 
+                       class="custom-btn btn-yellow"
+                       style="text-decoration: none; padding: 1.2vh 3.5vh;">
+                        Annuler
+                    </a>
+                    
+                    <button type="submit" class="custom-btn" 
+                            style="background-color: #00FF44; color: black; padding: 1.2vh 3.5vh; border: none; cursor: pointer;">
+                        Enregistrer
+                    </button>
+                </div>
+                
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}

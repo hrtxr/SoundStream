@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/logs.css') }}"> 
+
+
+    <div class="logs">
+        {% include 'header.html' %}
+        <div class="bento">
+            <div class="divider colored">
+                        <h1>Logs</h1>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Text</th>
+                                    <th>Date Logged</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in log_list %}
+                                <tr>
+                                    <td>{{log.text_log}}</td>
+                                    <td>{{log.date_log}}</td>
+                                    <td>{{log.type_log}}</td>
+                                </tr>
+                                {% else %}
+                                <tr>
+                                    <td> Aucun log n'a été enregistré</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                               
+            </div>
+        </div>
+    </div>
+{% endblock %}

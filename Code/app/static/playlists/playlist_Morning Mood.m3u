@@ -1,0 +1,5 @@
+#EXTM3U
+#EXTINF:5,Ambient_Lounge.mp3
+/mnt/data/music/ambient.mp3
+#EXTINF:3,Summer_Vibes_Intro.mp3
+/mnt/data/music/summer_intro.mp3
