@@ -18,3 +18,7 @@ class UserService():
         """ Get user by username  """
         return self.udao.findByUsername(username)
     
+    def findAllUsername(self) -> list[str]:
+        """ Get all usernames """
+        return self.udao.findAllUsername()
+    

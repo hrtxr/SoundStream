@@ -20,4 +20,12 @@ class LogController :
         log_list = log.getLogsByOrganisation(orga.getIdByName(nom_orga))
         return render_template('logs.html', log_list = log_list, metadata = metadata, orga=nom_orga)
 
+    @app.route('/tickets', methods =['GET'])
+    @LoggedIn
+    @reqrole(['admin'])
+    def tickets():
+        metadata = {'title' : 'Tickets'}
+        nom_orga = session.get('organisation_name')
+        ticket_list = log.getTicketLogs()
+        return render_template('tickets.html', ticket_list = ticket_list, metadata = metadata, orga=nom_orga)
     

@@ -38,7 +38,7 @@ class LogSqliteDAO(LogDAOInterface):
         ''' Return the list of the all the logs by the organization id in argument'''
         
         conn = self._getDbConnection()
-        query = "SELECT * FROM log WHERE id_orga = ? ;"
+        query = "SELECT * FROM log WHERE id_orga = ? AND type_log != 'TICKET';"
 
         logs = conn.execute(query, (id_orga,)).fetchall()
         logs_instances = list()
@@ -63,3 +63,19 @@ class LogSqliteDAO(LogDAOInterface):
 
         else : 
             return True
+
+    def findAllTickets(self) -> list[Log]:
+        ''' Return the list of the all the tickets logs'''
+
+        conn = self._getDbConnection()
+        query = "SELECT * FROM log WHERE type_log = 'TICKET' ORDER BY date_log DESC;"
+
+        tickets = conn.execute(query).fetchall()
+        tickets_instances = list()
+
+        for ticket in tickets :
+            tickets_instances.append(Log(dict(ticket)))
+
+        conn.close()
+
+        return tickets_instances

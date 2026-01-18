@@ -1,4 +1,4 @@
-from app.models import User
+from app.models.User import User
 
 
 class UserDAOInterface :
@@ -43,4 +43,8 @@ class UserDAOInterface :
 
     def findAll(self) -> list[User]:
         """ Get all users """
+        pass
+
+    def findAllUsername(self) -> list[str]:
+        """ Get all usernames """
         pass

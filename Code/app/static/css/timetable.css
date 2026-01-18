@@ -82,6 +82,16 @@ h1 {
     cursor: pointer;
 }
 
+.btn-red {
+    background-color: #FF0000;
+    color: white;
+    margin-left: 1vh;
+}
+
+.btn-red:hover {
+    background-color: #CC0000;
+}
+
 .btn-yellow {
     background-color: #FFFF00;
     color: #000000;

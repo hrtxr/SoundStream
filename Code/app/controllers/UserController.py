@@ -162,8 +162,8 @@ class UserController :
             
             # Affichage du formulaire pré-rempli
             metadata = {'title': 'Ajouter Utilisateur'}
-            return render_template('add_user.html', 
-                                 metadata=metadata, 
+            return render_template('add_user.html',
+                                 metadata=metadata,
                                  orga=orga_name,
                                  roles=available_roles)  # <- Passage des rôles au template
         
@@ -171,24 +171,20 @@ class UserController :
     def forgotten():
         metadata = {'title': 'Forgotten Password'}
         if request.method == 'POST':
-            list_users = us.udao.findAll()
+            list_users = us.findAllUsername()
             username = request.form['username']
 
-            msg = Message(subject="Password Reset Request", sender="projectclientticket@gmail.com", recipients=["projectadmticket@gmail.com"])
-
-            msg.body = request.form['email_contains'] 
+            ticket = request.form['email_contains']
 
             # Add username if exists to help admin identify the user and reset the password faster
             if username in list_users:
-                msg.body +=f"\n \n username : {username}"
+                ticket +=f" - username : {username}"
             else:
-                msg.body += "\n \n No user found with this username."
-
-            try:
-                mail.send(msg)
-                flash('Email sent successfully. Please check your inbox.', 'success')
-            except Exception as e:
-                flash('Failed to send email. Please try again later.', 'danger')
+                ticket += " - No user found with this username."
+            
+            orga_id = 0 # We don't need orga_id for this log
+            
+            log.ldao.createLog("TICKET", ticket, datetime.datetime.now(), orga_id)
             
             return redirect(url_for('login'))
         

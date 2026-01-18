@@ -24,3 +24,11 @@ class LogService:
             list_logs.append(log.toDict())
 
         return list_logs
+    
+    def getTicketLogs(self) -> list[dict]:
+        tickets = self.ldao.findAllTickets()  # New method to get ticket logs
+        list_tickets = list()
+        for ticket in tickets :
+            list_tickets.append(ticket.toDict())
+
+        return list_tickets

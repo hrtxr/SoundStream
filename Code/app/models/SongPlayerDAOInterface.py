@@ -1,4 +1,4 @@
-from app.models import SongPlayer
+from app.models.SongPlayer import SongPlayer
 
 
 class SongPlayerDAOInterface :

@@ -169,3 +169,23 @@ class TimetableController:
                              orga_id)
         
         return redirect(url_for('editTables', nom_orga=nom_orga))
+    
+    @app.route('/emergencyMessage/<nom_orga>', methods=['GET', 'POST'])
+    def emergencyMessage(nom_orga):
+        metadata = {'title': 'Add Emergency Message'}
+
+        if request.method == 'POST':
+            file_storage = request.files['uploadfile']
+
+            file = request.form.get('filename')
+
+            username = session.get('username')
+            orga_id = orga.getIdByName(session.get('organisation_name'))
+
+            log.ldao.createLog("EMERGENCY_MESSAGE_ADDED", f"User {username} added an emergency message.", datetime.datetime.now(), orga_id)
+
+            return redirect(url_for('timetable.html', nom_orga=nom_orga))
+        
+        return render_template('emergency_message.html',
+                             metadata=metadata,
+                             orga=nom_orga)

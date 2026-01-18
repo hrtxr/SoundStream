@@ -173,3 +173,13 @@ class UserDAO(UserDAOInterface) :
             userList.append(User(dict(user)))
         conn.close()
         return userList
+    
+    def findAllUsername(self) -> list[str]:
+        """ Get all usernames """
+        conn = self._getDbConnection()
+        users = conn.execute('SELECT username FROM user_ ;').fetchall()
+        usernameList = list()
+        for user in users : 
+            usernameList.append(user['username'])
+        conn.close()
+        return usernameList
