@@ -58,51 +58,7 @@
                         style="width: 100%; padding: 1vh; border-radius: 5px; border: 1px solid #ccc; background: rgba(255,255,255,0.1); color: white;"
                     >
                 </div>
-
-                <!-- Champ Ville -->
-                <div style="margin-bottom: 2vh;">
-                    <label for="place_city" style="display: block; margin-bottom: 0.5vh; color: white;">
-                        Ville :
-                    </label>
-                    <input 
-                        type="text" 
-                        id="place_city" 
-                        name="place_city"
-                        value="{{ player.place_city }}"
-                        required
-                        style="width: 100%; padding: 1vh; border-radius: 5px; border: 1px solid #ccc; background: rgba(255,255,255,0.1); color: white;"
-                    >
-                </div>
-
-                <!-- Champ Code postal -->
-                <div style="margin-bottom: 2vh;">
-                    <label for="place_postcode" style="display: block; margin-bottom: 0.5vh; color: white;">
-                        Code postal :
-                    </label>
-                    <input 
-                        type="text" 
-                        id="place_postcode" 
-                        name="place_postcode"
-                        value = "{{ player.place_postcode }}"
-                        required
-                        style="width: 100%; padding: 1vh; border-radius: 5px; border: 1px solid #ccc; background: rgba(255,255,255,0.1); color: white;"
-                    >
-                </div>
-
-                <!-- Champ Bâtiment -->
-                <div style="margin-bottom: 2vh;">
-                    <label for="place_building_name" style="display: block; margin-bottom: 0.5vh; color: white;">
-                        Bâtiment :
-                    </label>
-                    <select id="place_building_name" name="place_building_name" required style="width:100%; padding:1vh; border-radius:5px; border:1px solid #ccc; background: rgba(255,255,255,0.1); color: white;">
-                        {% for building in buildings %}
-                            <option value="{{ building }}" {% if player.place_building_name == building %}selected{% endif %}>
-                                {{ building.capitalize() }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-
+                
                 <!-- Boutons -->
                 <div style="display: flex; gap: 2vh; justify-content: center; margin-top: 3vh;">
                     <a href="{{ request.referrer or url_for('devices', nom_orga='Harman_Kardon') }}" 

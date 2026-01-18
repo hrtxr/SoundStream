@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 import sqlite3
 from app import app
 from app.models.Playlist import Playlist
@@ -7,15 +7,15 @@ import os
 
 class PlaylistDAO(PlaylistDAOInterface):
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.databasename = app.static_folder + '/database/database.db'
 
-    def _getDbConnection(self) -> sqlite3.Connection:
+    def _getDbConnection(self):
         conn = sqlite3.connect(self.databasename)
         conn.row_factory = sqlite3.Row
         return conn
 
-    def getTracksForDay(self, day_name) -> list:
+    def getTracksForDay(self, day_name):
         """ JE PENSE QUE CA SERT A RIEN CA NON PLUS A REVOIR PLUS TARD """
         conn = self._getDbConnection()
         query = """
@@ -28,8 +28,7 @@ class PlaylistDAO(PlaylistDAOInterface):
         """
         return conn.execute(query, (day_name,)).fetchall()
     
-    def findAll(self) -> list[Playlist]|None:
-        """ Get all playlists  """
+    def findAll(self):
         conn = self._getDbConnection()
         playlists = conn.execute('SELECT * FROM playlist;').fetchall()
         playlistList = list()
@@ -41,8 +40,7 @@ class PlaylistDAO(PlaylistDAOInterface):
             return playlistList
         return None
 
-    def findById(self, playlist_id) -> Playlist|None:
-        """ Get a playlist by its ID """
+    def findById(self, playlist_id):
         conn = self._getDbConnection()
         playlist = conn.execute(
             'SELECT * FROM playlist WHERE id_playlist = ?',
@@ -94,7 +92,8 @@ class PlaylistDAO(PlaylistDAOInterface):
         finally:
             # Always close the connection to avoid memory leaks
             conn.close()  
-       
+    
+    
     def removeFileFromPlaylist(self, playlist_id: int, file_id: int) -> bool:
         """
         Removes a file from a playlist (deletes the link) and updates the modification date.
@@ -129,41 +128,17 @@ class PlaylistDAO(PlaylistDAOInterface):
             # CRITICAL: Always close the connection, even if it crashes
             conn.close()
 
-    def createPlaylist(self, name: str) -> None:
-        """ Create a new playlist with the given name """
-        conn = self._getDbConnection()
-        print('Creating playlist in DAO:', name)
-        conn.execute(
-            '''INSERT INTO playlist (name, creation_date, last_update_date, expiration_date) 
-            VALUES (?, ?, ?, ?)''',
-            (name, datetime.now(), datetime.now(), datetime.now() + timedelta(days=30))
-        )
-        conn.commit()
-        conn.close()
-
-    def deletePlaylist(self, playlist_id: int) -> None:
-        """ Delete a playlist by its ID """
-        conn = self._getDbConnection()
-        print('Deleting playlist in DAO:', playlist_id)
-        conn.execute('DELETE FROM composition WHERE id_playlist = ?', (playlist_id,))
-        conn.execute('DELETE FROM interaction WHERE id_playlist = ?', (playlist_id,))
-        conn.execute('DELETE FROM planned WHERE id_playlist = ?', (playlist_id,))
-        conn.execute('DELETE FROM playlist WHERE id_playlist = ?', (playlist_id,))
-        conn.commit()
-        conn.close()
-
     ############################
     ## EDIT PLAYLIST FOR DAYS ##
     ############################
 
-    def getAllDays(self) -> list:
-        """ Get all days in the planning """
+    def getAllDays(self):
         conn = self._getDbConnection()
         days = conn.execute('SELECT * FROM Planning ORDER BY day_').fetchall()
         conn.close()
         return days
     
-    def getPlannedPlaylistsForDay(self, day_name) -> list:
+    def getPlannedPlaylistsForDay(self, day_name):
         conn = self._getDbConnection()
         playlists = conn.execute('''
             SELECT p.*, pl.start_time
@@ -175,8 +150,7 @@ class PlaylistDAO(PlaylistDAOInterface):
         conn.close()
         return playlists
     
-    def addPlaylistToDay(self, playlist_id, day_name, start_time) -> None:
-        """ Get all playlists planned for a specific day """
+    def addPlaylistToDay(self, playlist_id, day_name, start_time):
         conn = self._getDbConnection()
         
         exists = conn.execute('''
@@ -199,39 +173,36 @@ class PlaylistDAO(PlaylistDAOInterface):
         conn.commit()
         conn.close()
 
-    def removeAllPlaylistsFromDay(self, day_name) -> None:
-        """ Remove all playlists from a specific day """
+    def removeAllPlaylistsFromDay(self, day_name):
         conn = self._getDbConnection()
         conn.execute('DELETE FROM planned WHERE day_ = ?', (day_name,))
         conn.commit()
         conn.close()
+        
 
-    def deleteObsoletePlaylists(self) -> int:
-        """ Delete playlists that have expired """
+    def removePlaylistObsolete(self) -> int:
         conn = self._getDbConnection()
         try:
-            # 1. On cible les playlists périmées (Date d'expiration < Maintenant)
-            subquery = "SELECT id_playlist FROM playlist WHERE expiration_date < datetime('now')"
+            # On vise les playlists périmées (Date d'expiration < Maintenant)
+            query = "SELECT id_playlist FROM playlist WHERE expiration_date < datetime('now')"
+            # on supprime les dependances (nettoyage en cascade)
+            conn.execute(f"DELETE FROM planned WHERE id_playlist IN ({query})")
+            conn.execute(f"DELETE FROM composition WHERE id_playlist IN ({query})")
+            conn.execute(f"DELETE FROM interaction WHERE id_playlist IN ({query})")
 
-            # 2. On supprime les dépendances (Nettoyage en cascade manuel)
-            conn.execute(f"DELETE FROM planned WHERE id_playlist IN ({subquery})")
-            conn.execute(f"DELETE FROM composition WHERE id_playlist IN ({subquery})")
-            conn.execute(f"DELETE FROM interaction WHERE id_playlist IN ({subquery})")
-            
-            # 3. On supprime enfin la playlist elle-même
+            # on supprime la plyalist elle meme
             cursor = conn.execute(f"DELETE FROM playlist WHERE expiration_date < datetime('now')")
-            
-            count = cursor.rowcount # Nombre de playlists supprimées
+            #nombre de playlists supprimées
+            count = cursor.rowcount
             conn.commit()
-            
             if count > 0:
-                print(f"AUTO-CLEANUP : {count} playlists obsolètes supprimées.")
-                
-            return count
-
-        except Exception as e:
-            print(f"Erreur lors du nettoyage automatique : {e}")
+                print(f"suppression : {count} playlists obsolètes supprimées.")
+            conn.close()
+            return count 
+        
+        except Exception as e: 
+            print(f"Erreur lors du nettoyage automatique: {e}")
             conn.rollback()
             return 0
-        finally:
+        finally: 
             conn.close()

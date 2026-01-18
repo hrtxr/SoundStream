@@ -1,15 +1,5 @@
-from typing import TypedDict, Dict
-from datetime import datetime
-
-class SQLValue(TypedDict):
-    id_playlist: int
-    name: str
-    creation_date: datetime
-    expiration_date: datetime
-    last_update_date: datetime
-
 class Playlist : 
-    def __init__(self, dico: Dict[str, SQLValue]) -> None :
+    def __init__(self, dico) :
         self.id_playlist = dico['id_playlist']
         self.name = dico['name']
         self.creation_date = dico['creation_date']

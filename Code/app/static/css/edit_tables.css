@@ -189,7 +189,6 @@ tbody tr:nth-child(odd) {
     border: none; 
     outline: none;
 }
-
 .btn-upload:hover {
     background-color: #FFFFFF22;
 }
@@ -211,39 +210,4 @@ option {
 .misc  strong {
     font-family: HelveticaNeue;
     color: #adadad;
-}
-
-.info-text {
-    font-family: HelveticaNeueLight;
-    color: #adadad;
-    margin: 2vh 4vh;
-    text-align: left;
-}
-
-.mini {
-    font-size: 2vh;
-    border-radius: 2vw; 
-    padding: 1vh;
-    width: 25%;
-    margin: bottom 1vh; ;
-    margin-left: 1vw;
-    border: none;
-}
-
-.choice-playlist {
-        display: flex;
-        flex-direction: column; 
-        gap: 1vh; 
-        margin-left:1vw;
-}
-
-.miniform {
-    display: flex;
-    flex-direction: row; 
-    align-items: center; 
-    gap: 10px;
-}
-
-.deleteplst {
-    margin-top:1vh;
 }

@@ -120,9 +120,6 @@ class DevicesController :
             name_place = request.form.get('name_place')
             ip_address = request.form.get('ip_address')
             place_address = request.form.get('place_address')
-            place_city = request.form.get('place_city')
-            place_postcode = request.form.get('place_postcode')
-            place_building_name = request.form.get('place_building_name')
             
             # Vérification que tous les champs sont remplis
             # Si un champ est vide (None ou ""), on retourne une erreur
@@ -135,10 +132,7 @@ class DevicesController :
             form_data = {
                 'name_place': name_place,
                 'IP_adress': ip_address,      # ← Attention à l'orthographe
-                'place_adress': place_address,  # ← Attention à l'orthographe
-                'place_city': place_city,
-                'place_postcode': place_postcode,
-                'place_building_name': place_building_name
+                'place_adress': place_address  # ← Attention à l'orthographe
             }
             
             # Appel du service pour mettre à jour dans la base de données
@@ -162,19 +156,16 @@ class DevicesController :
             if not player:
                 return "Lecteur non trouvé", 404
             
-            available_buildings = sps.spdao.findAllBuildingNames()
-
             # Récupération du nom de l'organisation pour le header
             # player.id_orga contient l'ID de l'organisation
             orga = ogs.getIdByName(session.get("organisation_name"))  # On va chercher le nom
             
             # Affichage du formulaire pré-rempli
             metadata = {'title': 'Modifier Lecteur'}
-            return render_template('edit_player.html',
-                                 metadata=metadata,
+            return render_template('edit_player.html', 
+                                 metadata=metadata, 
                                  player=player,
-                                 orga=orga,
-                                 buildings=available_buildings)  # Pour le header
+                                 orga=orga)  # Pour le header
     
     @app.route('/addPlayer', methods=['GET', 'POST'])
     @LoggedIn
@@ -185,7 +176,7 @@ class DevicesController :
             # Récupération des données du formulaire
             name_place = request.form.get('name_place')
             ip_address = request.form.get('ip_address')
-            state =  "OFFLINE"  # Par défaut, le nouvel appareil est hors ligne
+            state = request.form.get('state')
             #last_synchronization = ... obtenir la date actuelle => fais dans le DAO en PostgreSQL avec CURRENT_TIMESTAMP
             place_address = request.form.get('place_address')
             place_city = request.form.get('place_city')
@@ -198,7 +189,7 @@ class DevicesController :
             orga_id = ogs.getIdByName(orga_name)
             
             # Création du device
-            sps.spdao.createDevice(name_place, ip_address, state, place_address, place_postcode, place_city, place_building_name, orga_id)
+            sps.spdao.createDevice(name_place, ip_address, state, place_address, place_city, place_postcode, place_building_name, orga_id)
             
             return redirect(url_for('devices', nom_orga=orga_name))
         

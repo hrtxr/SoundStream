@@ -8,10 +8,11 @@ from app.models.File import File
 
 class FileDAO(FileDAOInterface) :
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.databasename = app.static_folder + '/database/database.db'
     
-    def _getDbConnection(self) -> sqlite3.Connection:
+
+    def _getDbConnection(self):
         """ Connect to the database. Returns the connection object """
         conn = sqlite3.connect(self.databasename)
         conn.row_factory = sqlite3.Row
@@ -95,7 +96,7 @@ class FileDAO(FileDAOInterface) :
         finally:
             conn.close()
 
-    def getFilesInPlaylist(self, playlist_id: int) -> List[File]:
+    def getFilesInPlaylist(self, playlist_id: int) -> List['File']:
         """
         Retrieves all file objects associated with a specific playlist.
 

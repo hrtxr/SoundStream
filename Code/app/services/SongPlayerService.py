@@ -4,7 +4,6 @@ from app import app
 from app.models.SongPlayerDAO import SongPlayerDAO
 import subprocess
 import threading
-import platform
 
 class SongPlayerService:
     
@@ -23,18 +22,10 @@ class SongPlayerService:
                 bool: True if the player responds, False otherwise.
         """
         try :
-            if platform.system() == 'Windows':
-                command = ["ping", "-n", "1", "-w", "1000", ip] # Ping command for Windows with 1 echo request and 1 second timeout (in milliseconds)
-                # Or use : command = ["Test-NetConnection","-ComputerName", ip] #Windows specific ping command (Default timeout is 1 second & 1 echo)
+            command = ["ping","-c","1","-w","1",ip]
 
-                result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                return result.returncode == 0
-
-            else:  # For Unix/Linux/Mac
-                command = ["ping","-c","1","-w","1",ip] # Ping command for Linux with 1 echo request and 1 second timeout (in seconds)
-
-                result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                return result.returncode == 0
+            result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            return result.returncode == 0
 
         except subprocess.CalledProcessError:
             # If subprocess fails, return False
@@ -151,6 +142,7 @@ class SongPlayerService:
             elif p['state'] == 'OFFLINE':
                 nb_off += 1
 
+<<<<<<< HEAD
         return (nb_on, nb_off)
         
 
@@ -187,3 +179,6 @@ class SongPlayerService:
         """ Envoie les fichiers vers la vm Debian distante dans des dossiers séparés """
 
         threading.Thread(target=self.run_sync(ip, username)).start()
+=======
+        return (nb_on, nb_off)
+>>>>>>> 00f02c4faec1855d63a55bc97c63c2be1caf8e98

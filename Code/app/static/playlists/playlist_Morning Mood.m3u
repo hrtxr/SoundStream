@@ -1,5 +1,12 @@
 #EXTM3U
+<<<<<<< HEAD
 #EXTINF:182,FREE__Limsa_dAulnay_x_Nekfeu_x_Grunt_boom_bap_type_beat_-_etoile_prod.nausaah_320_kbps.mp3
 audio/FREE__Limsa_dAulnay_x_Nekfeu_x_Grunt_boom_bap_type_beat_-_etoile_prod.nausaah_320_kbps.mp3
 #EXTINF:215,Kaaris_-_Tchoin.mp3
 audio/Kaaris_-_Tchoin.mp3
+=======
+#EXTINF:5,Ambient_Lounge.mp3
+/mnt/data/music/ambient.mp3
+#EXTINF:3,Summer_Vibes_Intro.mp3
+/mnt/data/music/summer_intro.mp3
+>>>>>>> 00f02c4faec1855d63a55bc97c63c2be1caf8e98

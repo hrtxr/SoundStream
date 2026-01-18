@@ -9,33 +9,295 @@
             <!-- ############## ADMIN ############### -->
             {% if session.get('role') == 'admin' %}
                 <div class="divider">
-                    {% include 'module_timetable5.html' %}
-                    {% include 'module_users.html' %}
+                    <div class="divider colored">
+                        <a href="{{ url_for('timetable', nom_orga=orga) }}">
+                        <h1>Timetable</h1>
+
+                        <table>
+                            <tbody>
+                                <tr><td>...</td><td></td></tr>
+
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in getCompleteProg %}
+                                    {% if ns.LineNb < 5 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{el}} </td>
+                                            <td> {{el}} </td>
+                                        </tr>
+                                    {%endif%}
+                                {% endfor %}
+                                    
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 4) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+                                
+                               <tr><td>...</td><td></td></tr>
+                            </tbody>
+                        </table>
+                        </a>
+                    </div>
+                    <div class="divider colored">
+                    <a href="{{ url_for('users', nom_orga=orga) }}">
+                        <h1>Users</h1>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Role</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in us.findUsersInOrganisation(orga) %}
+                                    {% if ns.LineNb < 5 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{el}} </td>
+                                            <td> {{ us.findByUsername(el)['role']}}</td>
+                                        </tr>
+                                    {%endif%}
+                                {% endfor %}
+                                    
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 5) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                    </a>
+                    </div>
                 </div>
                 <div class="divider">
-                    {% include 'module_devices.html' %}
-                    {% include 'module_log.html' %}
+
+                    <div class="divider colored" style="position: relative;"> 
+                    <a href="{{ url_for('devices', nom_orga=orga) }}">
+                        <h1>Devices</h1> 
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ip</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in liste_song_player %}
+                                    {% if ns.LineNb < 4 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{ el['IP_adress'] }} </td>
+                                            <td class="{% if el['state'] == 'ONLINE' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
+                                                {{ el['state'] }}
+                                            </td>
+                                            <td> {{ el['name_place'] }}</td>
+                                        </tr>
+                                    {%endif%}
+                                {% endfor %}
+                                    
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 4) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+
+                                <tr>
+                                    <td> Offline : <span class="red"> {{ nb_off }}</span></td>
+                                    <td> Playing : <span class="green"> {{ nb_on }}</span></td>
+                                    <td></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </a>
+                    </div>
+                    <div class="divider colored">
+                    <a href="{{ url_for('logs', nom_orga=orga) }}">
+                        <h1>Logs</h1>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Text</th>
+                                    <th>Date Logged</th>
+                                    <th>Type</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in los.getLogsByOrganisation(ogs.getIdByName(orga)) %}
+                                    {% if ns.LineNb < 5 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{el['text_log']}} </td>
+                                            <td> {{el['date_log']}} </td>
+                                            <td> {{el['type_log']}} </td>
+                                        </tr>
+
+
+                                    {% endif %}
+                                {% endfor %}
+
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 5) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </a>
+                    </div>
                 </div>
 
             <!-- ############## marketing ############## -->
             {% elif session.get('role') == 'marketing' %}
-
-                <!-- Timetable module manquant de ligne (créer module timetable14 avec des changements sur le nb de ligne qd le module timetable sera fini )-->
-                {% include 'module_timetable5.html' %}
-
+                <div class="divider colored">
+                    <h1>Timetable</h1>
+                </div>
+                    
                 <div class="divider">
-                    {% include 'module_devices.html' %}
-                    {% include 'module_upload.html' %}
+                    <div class="divider colored">
+                    <a href="{{ url_for('devices', nom_orga=orga) }}">
+                        <h1>Devices</h1>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ip</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in liste_song_player  %}
+                                    {% if ns.LineNb < 4 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{ el['IP_adress'] }} </td>
+                                            <td class="{% if el['state'] == 'ONLINE' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
+                                                {{ el['state'] }}
+                                            </td>
+                                            <td> {{ el['name_place'] }}</td>
+                                        </tr>
+                                    {%endif%}
+                                {% endfor %}
+                                    
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 4) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+
+                                <tr>
+                                    <td> Offline : <span class="red"> {{ nb_off }}</span></td>
+                                    <td> Playing : <span class="green"> {{ nb_on }}</span></td>
+                                    <td></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </a>
+                    </div>
+                    <div class="divider colored">
+                        <h1>Upload</h1>
+                        <form method="POST" enctype="multipart/form-data" class="form">
+                            <div class="uploadfile">
+                                <input type="file" id="file" name="uploadfile" accept=".mp3" class="input-hidden">
+
+                                <label for="file" class="btn-design">
+                                    Choose file
+                                </label>
+
+                                <div id="file-name" style="margin-top: 10px; color: #aaa; font-size: 0.9em;"></div>
+                            </div>
+
+                            <div>
+                                <p> When ? </p>
+                                <input type="time" id="heure_event" name="heure_choisie" class="input-pill" required>
+                                <input type="date" id="date_event" name="date_choisie" class="input-pill" required>
+                            </div>
+                        
+                            <button type="submit" class="btn-upload">
+                                Upload
+                            </button>
+                        </form>
+                    </div>
                 </div>
             
             <!-- ############# sales ############ -->
             {% elif session.get('role') == 'sales' %}
-                <!-- Timetable module manquant de ligne (créer module timetable14 avec des changements sur le nb de ligne qd le module timetable sera fini )-->
-                {% include 'module_timetable5.html' %}
-
+                <div class="divider colored">
+                        <h1>Timetable</h1>
+                </div>
                 <div class="divider">
-                    {% include 'module_devices.html' %}
-                    {% include 'module_upload.html' %}
+                    <div class="divider colored">
+                    <a href="{{ url_for('devices', nom_orga=orga) }}">
+                        <h1>Devices</h1>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ip</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set ns = namespace(LineNb=0) %}
+                                {% for el in liste_song_player  %}
+                                    {% if ns.LineNb < 4 %}
+                                        {% set ns.LineNb = ns.LineNb + 1 %}
+                                        <tr>
+                                            <td> {{ el['IP_adress'] }} </td>
+                                            <td class="{% if el['state'] == 'ONLINE' %}green{% elif el['state'] == 'OFFLINE' %}red{% endif %}">
+                                                {{ el['state'] }}
+                                            </td>
+                                            <td> {{ el['name_place'] }}</td>
+                                        </tr>
+                                    {%endif%}
+                                {% endfor %}
+                                    
+                                <!-- Completion of empty lines -->
+                                {% for i in range(ns.LineNb, 4) %}
+                                    <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                                {% endfor %}
+
+                                <tr>
+                                    <td> Offline : <span class="red"> {{ nb_off }}</span></td>
+                                    <td> Playing : <span class="green"> {{ nb_on }}</span></td>
+                                    <td></td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </a>
+                    </div>
+                    <div class="divider colored">
+                        <h1>Upload</h1>
+                        <form method="POST" enctype="multipart/form-data" class="form">
+                            <div class="uploadfile">
+                                <input type="file" id="file" name="uploadfile" accept=".mp3" class="input-hidden">
+
+                                <label for="file" class="btn-design">
+                                    Choose file
+                                </label>
+
+                                <div id="file-name" style="margin-top: 10px; color: #aaa; font-size: 0.9em;"></div>
+                            </div>
+
+                            <div>
+                                <p> When ? </p>
+                                <input type="time" id="heure_event" name="heure_choisie" class="input-pill" required>
+                                <input type="date" id="date_event" name="date_choisie" class="input-pill" required>
+                            </div>
+                        
+                            <button type="submit" class="btn-upload">
+                                Upload
+                            </button>
+                        </form>
+                    </div>
                 </div>
             
             {% endif %}

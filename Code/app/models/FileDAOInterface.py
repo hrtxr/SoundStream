@@ -1,22 +1,16 @@
-from typing import Optional, List
-from app.models.File import File
-
 class FileDAOInterface :
 
-    def createFile(self, name:str, path:str, time_length:str, type_file:str ) -> int :
+    def createFile(self,data):
         pass
 
-    def deleteFile(self, id_file: int) -> bool :
+    def deleteFile(self,id_file):
         pass
 
-    def findAllFile(self) -> List[File]:
+    def findAllFile(self):
         pass
 
-    def findFileById(self,id_file: int) -> Optional[File]:
+    def findFileById(self,id_file):
         pass
 
-    def findByName(self, name: str) -> Optional[File]:
-        pass
-
-    def getFilesInPlaylist(self, playlist_id: int) -> List[File]:
+    def findByName(self, name) :
         pass

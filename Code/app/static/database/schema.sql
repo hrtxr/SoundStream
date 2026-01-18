@@ -1,16 +1,17 @@
-DROP TABLE IF EXISTS planned; 
+DROP TABLE IF EXISTS planned;
 DROP TABLE IF EXISTS interaction;
 DROP TABLE IF EXISTS composition;
 DROP TABLE IF EXISTS work_link;
 DROP TABLE IF EXISTS log;
-DROP TABLE IF EXISTS file;  
-DROP TABLE IF EXISTS user_;     
-DROP TABLE IF EXISTS song_player;  
-DROP TABLE IF EXISTS playlist;
-DROP TABLE IF EXISTS organisation;
-DROP TABLE IF EXISTS Planning;
-DROP TABLE IF EXISTS role;
+DROP TABLE IF EXISTS song_player;
+DROP TABLE IF EXISTS user_;
+DROP TABLE IF EXISTS file;
+
 DROP TABLE IF EXISTS type_file;
+DROP TABLE IF EXISTS role;
+DROP TABLE IF EXISTS Planning;
+DROP TABLE IF EXISTS organisation;
+DROP TABLE IF EXISTS playlist;
 
 CREATE TABLE IF NOT EXISTS playlist(
    id_playlist INTEGER PRIMARY KEY,
@@ -27,6 +28,17 @@ CREATE TABLE IF NOT EXISTS organisation(
    UNIQUE(name_orga)
 );
 
+CREATE TABLE IF NOT EXISTS file(
+   id_file INTEGER PRIMARY KEY,
+   name TEXT NOT NULL,
+   path TEXT NOT NULL,
+   time_length TIME NOT NULL,
+   upload_date DATETIME NOT NULL,
+   type_file VARCHAR(50) NOT NULL,
+   UNIQUE(name),
+   FOREIGN KEY(type_file) REFERENCES type(type_file)
+);
+
 CREATE TABLE IF NOT EXISTS song_player(
    id_player INTEGER PRIMARY KEY,
    name_place TEXT NOT NULL,
@@ -34,7 +46,7 @@ CREATE TABLE IF NOT EXISTS song_player(
    state VARCHAR(50) NOT NULL,
    last_synchronization DATETIME,
    place_adress TEXT NOT NULL,
-   place_postcode  VARCHAR(5) NOT NULL,
+   place_postcode DECIMAL(5,0) NOT NULL,
    place_city VARCHAR(50) NOT NULL,
    place_building_name TEXT,
    id_orga INT NOT NULL,
@@ -50,11 +62,6 @@ CREATE TABLE IF NOT EXISTS Planning(
 CREATE TABLE IF NOT EXISTS role(
    role TEXT PRIMARY KEY,
    description VARCHAR(50) NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS type_file(
-   type_file VARCHAR(50),
-   PRIMARY KEY(type_file)
 );
 
 CREATE TABLE IF NOT EXISTS user_(
@@ -73,17 +80,6 @@ CREATE TABLE IF NOT EXISTS log(
    date_log DATETIME NOT NULL,
    id_orga INT NOT NULL,
    FOREIGN KEY(id_orga) REFERENCES organisation(id_orga)
-);
-
-CREATE TABLE IF NOT EXISTS file(
-   id_file INTEGER PRIMARY KEY,
-   name TEXT NOT NULL,
-   path TEXT NOT NULL,
-   time_length TIME NOT NULL,
-   upload_date DATETIME NOT NULL,
-   type_file VARCHAR(50) NOT NULL,
-   UNIQUE(name),
-   FOREIGN KEY(type_file) REFERENCES type_file(type_file)
 );
 
 CREATE TABLE IF NOT EXISTS work_link(
@@ -117,4 +113,9 @@ CREATE TABLE IF NOT EXISTS planned(
    PRIMARY KEY(id_playlist, day_),
    FOREIGN KEY(id_playlist) REFERENCES playlist(id_playlist),
    FOREIGN KEY(day_) REFERENCES Planning(day_)
+);
+
+CREATE TABLE IF NOT EXISTS type_file(
+   type_file VARCHAR(50),
+   PRIMARY KEY(type_file)
 );
