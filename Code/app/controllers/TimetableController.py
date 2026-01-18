@@ -6,12 +6,14 @@ from app.services.TimeTableService import TimeTableService
 from app.services.LogService import LogService
 from app.services.OrganisationService import OrganisationService
 from app.services.FileService import FileService
+from app.services.SongPlayerService import SongPlayerService
 import datetime
 
 orga = OrganisationService()
 log = LogService()
 ts = TimeTableService()
 file_service = FileService()
+sps = SongPlayerService()
 
 class TimetableController:
 
@@ -87,6 +89,11 @@ class TimetableController:
             ts.addFileInPlaylist(playlist_id, file_id)
 
             ts.updateM3uFile(playlist_id)
+            
+            devices = sps.findAllSongPlayerByOrganisation(orga_id)
+            for device in devices:
+                # On synchronise chaque machine Debian enregistrée dans la BDD
+                sps.sync_to_device(device['IP_adress'], 'tristan')
 
             # Logging (Executed only on success)
             username = session.get('username')
