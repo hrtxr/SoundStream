@@ -9,11 +9,11 @@ from app.services.FileService import FileService
 from app.services.SongPlayerService import SongPlayerService
 import datetime
 
+sps = SongPlayerService()
 orga = OrganisationService()
 log = LogService()
 ts = TimeTableService()
 file_service = FileService()
-sps = SongPlayerService()
 
 class TimetableController:
 
@@ -26,6 +26,12 @@ class TimetableController:
     ####################
     ## EDIT PLAYLISTS ##
     ####################
+
+    @app.route('/createPlaylist/<nom_orga>', methods=['POST'])
+    def createPlaylist(nom_orga):
+        playlist_name = request.form.get('playlist_name')
+        ts.createPlaylist(playlist_name)
+        return redirect(url_for('editPlaylist', nom_orga=nom_orga))
 
     @app.route('/editPlaylist/<nom_orga>', methods=['GET'])
     def editPlaylist(nom_orga):
@@ -83,16 +89,16 @@ class TimetableController:
             ts.addFileInPlaylist(playlist_id, file_id)
 
             ts.updateM3uFile(playlist_id)
-            
-            devices = sps.findAllSongPlayerByOrganisation(orga_id)
-            for device in devices:
-                # On synchronise chaque machine Debian enregistrée dans la BDD
-                sps.sync_to_device(device['IP_adress'], 'tristan')
 
             # Logging (Executed only on success)
             username = session.get('username')
             orga_id = orga.getIdByName(session.get('organisation_name'))
             playlist_name = ts.getPlaylistNameById(playlist_id)
+
+            devices = sps.findAllSongPlayerByOrganisation(orga_id)
+            for device in devices:
+                # On synchronise chaque machine Debian enregistrée dans la BDD
+                sps.sync_to_device(device['IP_adress'], 'tristan')
         
             log.ldao.createLog(
                 "ADD_FILE",
@@ -102,6 +108,14 @@ class TimetableController:
             )
 
         return redirect(url_for('editPlaylist', nom_orga=nom_orga, playlist_id=playlist_id))
+    
+    @app.route('/deletePlaylist/<nom_orga>', methods=['POST'])
+    def deletePlaylist(nom_orga):
+        playlist_id = request.form.get('playlist_id')
+
+        ts.deletePlaylist(playlist_id)
+
+        return redirect(url_for('editPlaylist', nom_orga=nom_orga))
 
     @app.route('/deleteFileFromPlaylist/<nom_orga>/<int:playlist_id>/<int:file_id>', methods=['GET'])
     def deleteFileFromPlaylist(nom_orga, playlist_id, file_id):

@@ -18,6 +18,6 @@ class LogController :
     def logs(nom_orga):
         metadata = {'title' : 'log'}
         log_list = log.getLogsByOrganisation(orga.getIdByName(nom_orga))
-        return render_template('logs.html', log_list = log_list, metadata = metadata)
+        return render_template('logs.html', log_list = log_list, metadata = metadata, orga=nom_orga)
 
     

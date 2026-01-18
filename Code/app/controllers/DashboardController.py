@@ -23,10 +23,6 @@ class DashboardController:
     def dashboard(nom_orga):
         metadata= {'title': 'Dashboard'}
         session['organisation_name'] = nom_orga
-        
-
-        tts.autoCleanPlaylist()
-
 
         print(sps.findAllSongPlayerByOrganisation(ogs.getIdByName(nom_orga)))
 
@@ -43,6 +39,7 @@ class DashboardController:
         nb_on = nb_on_and_nb_off[0]
         nb_off = nb_on_and_nb_off[1]
 
+        tts.autoCleanPlaylists()
         id_orga = ogs.getIdByName(nom_orga)
 
         # Render the dashboard with all collected metrics and player data

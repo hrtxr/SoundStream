@@ -34,7 +34,6 @@ class LogSqliteDAO(LogDAOInterface):
 
         return logs_instances
 
-
     def findAllByOrganization(self, id_orga: int) -> list[Log]:
         ''' Return the list of the all the logs by the organization id in argument'''
         

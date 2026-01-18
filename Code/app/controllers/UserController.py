@@ -1,16 +1,27 @@
-from flask import render_template, session, redirect, url_for, request
+from flask import Flask, render_template, session, redirect, url_for, request, flash
 from functools import wraps
 from app import app
 from app.controllers.LoginController import LoggedIn, reqrole
 from app.services.UserService import UserService
 from app.services.OrganisationService import OrganisationService
 from app.services.LogService import LogService
+from flask_mail import Mail, Message
 import datetime
 
 log = LogService()
 ogs=OrganisationService()
 us=UserService()
 
+# Configure Flask-Mail for forgotten password functionality
+app.config["MAIL_SERVER"] = "smtp.gmail.com"
+app.config["MAIL_PORT"] = 587
+app.config["MAIL_USE_TLS"] = True
+app.config["MAIL_USE_SSL"] = False
+app.config["MAIL_USERNAME"] = "Client"
+app.config["MAIL_PASSWORD"] = "client12345!"
+app.config["MAIL_DEFAULT_SENDER"] = "projectclientticket@gmail.com"
+
+mail = Mail(app)
 
 class UserController :
 
@@ -155,3 +166,32 @@ class UserController :
                                  metadata=metadata, 
                                  orga=orga_name,
                                  roles=available_roles)  # <- Passage des rôles au template
+        
+    @app.route('/forgotten', methods=['GET', 'POST'])
+    def forgotten():
+        metadata = {'title': 'Forgotten Password'}
+        if request.method == 'POST':
+            list_users = us.udao.findAll()
+            username = request.form['username']
+
+            msg = Message(subject="Password Reset Request", sender="projectclientticket@gmail.com", recipients=["projectadmticket@gmail.com"])
+
+            msg.body = request.form['email_contains'] 
+
+            # Add username if exists to help admin identify the user and reset the password faster
+            if username in list_users:
+                msg.body +=f"\n \n username : {username}"
+            else:
+                msg.body += "\n \n No user found with this username."
+
+            try:
+                mail.send(msg)
+                flash('Email sent successfully. Please check your inbox.', 'success')
+            except Exception as e:
+                flash('Failed to send email. Please try again later.', 'danger')
+            
+            return redirect(url_for('login'))
+        
+        else:
+            metadata = {'title': 'Forgotten Password'}
+            return render_template('forgotten.html', metadata=metadata)

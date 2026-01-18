@@ -75,6 +75,13 @@ class TimeTableService:
             'title_count': title_count,
             'ads_count': ads_count
         }
+    
+    def createPlaylist(self, playlist_name) -> None:
+        self.pdao.createPlaylist(playlist_name)
+
+    def deletePlaylist(self, playlist_id) -> None:
+        self.pdao.deletePlaylist(playlist_id)
+
 
     ############################
     ## EDIT PLAYLIST FOR DAYS ##
@@ -128,7 +135,6 @@ class TimeTableService:
 
             filename_only = os.path.basename(file.path)
             m3u_lines.append(filename_only)
-            
         
         #join all the lines to create the string 
         # which represents the conntent of the m3u file 
@@ -154,5 +160,5 @@ class TimeTableService:
 
         return True
     
-    def autoCleanPlaylist(self):
-        return self.pdao.removePlaylistObsolete()
+    def autoCleanPlaylists(self):
+        return self.pdao.deleteObsoletePlaylists()
