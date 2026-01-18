@@ -132,8 +132,9 @@ class TimeTableService:
 
             #add the lines of each file to the m3u file
             m3u_lines.append(f"#EXTINF:{time_in_seconds},{file.name}")
-            m3u_lines.append(file.path)
-            
+
+            filename_only = os.path.basename(file.path)
+            m3u_lines.append(filename_only)
         
         #join all the lines to create the string 
         # which represents the conntent of the m3u file 

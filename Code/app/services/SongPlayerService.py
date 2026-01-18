@@ -2,6 +2,8 @@ from app.models.SongPlayerDAO import SongPlayerDAO
 import subprocess
 import threading
 import platform
+import os
+from app import app
 
 class SongPlayerService:
     
@@ -150,3 +152,37 @@ class SongPlayerService:
 
         return (nb_on, nb_off)
         
+
+    def run_sync(self, ip, username):
+            # Configuration des dossiers
+            # On définit des couples (Source_Locale, Dossier_Destination_Distant)
+            sync_tasks = [
+                (os.path.join(app.static_folder, 'audio/'), "music/"),
+                (os.path.join(app.static_folder, 'playlists/'), "playlists/")
+            ]
+            
+            base_dest_path = f"/home/{username}/SoundStreamDevice/"
+
+            for src, subfolder in sync_tasks:
+                full_remote_path = os.path.join(base_dest_path, subfolder)
+                
+                # 1. Créer le sous-dossier spécifique sur la Debian
+                subprocess.run(["ssh", f"{username}@{ip}", f"mkdir -p {full_remote_path}"])
+
+                # 2. Synchroniser vers ce sous-dossier précis
+                dest = f"{username}@{ip}:{full_remote_path}"
+                cmd = [
+                    "rsync", "-avz", "--delete",
+                    "-e", "ssh",
+                    src, dest
+                ]
+                
+                try:
+                    subprocess.run(cmd, check=True)
+                except Exception as e:
+                    print(f"Erreur synchro {subfolder} vers {ip} : {e}")
+                    
+    def sync_to_device(self, ip, username):
+        """ Envoie les fichiers vers la vm Debian distante dans des dossiers séparés """
+
+        threading.Thread(target=self.run_sync(ip, username)).start()
