@@ -1,20 +1,12 @@
 from app import app
 import sqlite3
 from app.models.OrganisationDAOInterface import OrganisationDAOInterface
-from app.models.Organisation import Organisation
-from typing import List
 
 class OrganisationDAO(OrganisationDAOInterface):
-    def __init__(self) -> None:
+    def __init__(self):
         self.databasename = app.static_folder + '/database/database.db'
-            
-    def _getDbConnection(self) -> sqlite3.Connection:
-        """ Connect to the database. Returns the connection object """
-        conn = sqlite3.connect(self.databasename)
-        conn.row_factory = sqlite3.Row
-        return conn
-    
-    def createOrganisation(self, name_orga: str) -> None:
+
+    def createOrganisation(self, name_orga) :
         conn = self._getDbConnection()
         try:
             query = "INSERT INTO organisation (name_orga) VALUES (?);"
@@ -25,8 +17,14 @@ class OrganisationDAO(OrganisationDAOInterface):
             raise Exception("Error creating organisation : " + str(e)) # On signale l'erreur s'il y a un problème de création (= Exception levée)
         finally:
             conn.close()
+            
+    def _getDbConnection(self):
+        """ Connect to the database. Returns the connection object """
+        conn = sqlite3.connect(self.databasename)
+        conn.row_factory = sqlite3.Row
+        return conn
 
-    def getIdByName(self, orga_name: str) -> int|None:
+    def getIdByName(self, orga_name):
         conn = self._getDbConnection()
         query = """ SELECT id_orga FROM organisation WHERE name_orga = ? """
 
@@ -41,7 +39,7 @@ class OrganisationDAO(OrganisationDAOInterface):
         
         return None
     
-    def findUserOrganisation(self, username: str) -> str:
+    def findUserOrganisation(self, username):
         """ Get the organisation of a user by username """
         conn = self._getDbConnection()
         query = """
@@ -55,7 +53,7 @@ class OrganisationDAO(OrganisationDAOInterface):
         conn.close()
         return [row[0] for row in res]
     
-    def getAllOrganisations(self) -> List[Organisation]:
+    def getAllOrganisations(self):
         conn = self._getDbConnection()
         query = "SELECT * FROM organisation"
 

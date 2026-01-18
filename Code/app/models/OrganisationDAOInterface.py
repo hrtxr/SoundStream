@@ -1,16 +1,13 @@
-from typing import List
-from app.models.Organisation import Organisation
-
 class OrganisationDAOInterface:
     
-    def createOrganisation(self, name_orga: str) -> None :
+    def createOrganisation(self, name_orga) :
         pass
      
-    def getIdByName(self, orga_name: str) -> int|None:
+    def getIdByName(self, orga_name):
         pass
 
-    def findUserOrganisation(self, username: str) -> str:
+    def findUserOrganisation(self, username):
         pass
 
-    def getAllOrganisations(self) -> List[Organisation]:
+    def getAllOrganisations(self):
         pass

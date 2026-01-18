@@ -1,46 +1,33 @@
-from app.models import User
-
-
 class UserDAOInterface :
     def createUser(self, username, password, role) :
-        """ create a new user """
         pass
 
-    def createLinkUserOrganisation(self, username, organisation) -> None:
-        """ Create a link between a user and an organisation """
+    def createLinkUserOrganisation(self, username, organisation):
         pass
 
-    def findByUsername(self, username) -> User:
-        """ Get user by username """
+    def findByUsername(self, username):
         pass
 
-    def findUsersInOrganisation(self, organisation) -> list:
-        """ Get all the users of an organisation """
+    def findUsersInOrganisation(self, organisation):
         pass
     
-    def verifyUser(self, username, password) -> bool:
-        """Verify if username and password are correct"""
+    def verifyUser(self, username, password) :
         pass
 
-    def changePassword(self, username, password) -> None:
-        """Change the password of the user"""
+    def changePassword(self, username, password) :
         pass
     
-    def deleteByUsername(self, username) -> None:
-        """ Delete user by username """
+    def deleteByUsername(self, username):
         pass
 
-    def updateUserRole(self, username, new_role) -> None:
-        """Update user role"""
+    def updateUserRole(self, username, new_role):
         pass
 
-    def getOrganisationByUsername(self, username) -> str:
+    def getOrganisationByUsername(self, username):
         pass
     
-    def getAllRoles(self) -> list:
-        """Get all available roles from the role table"""
+    def getAllRoles(self):
         pass
 
-    def findAll(self) -> list[User]:
-        """ Get all users """
+    def findAll(self) :
         pass

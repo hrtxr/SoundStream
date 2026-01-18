@@ -75,13 +75,6 @@ class TimeTableService:
             'title_count': title_count,
             'ads_count': ads_count
         }
-    
-    def createPlaylist(self, playlist_name) -> None:
-        self.pdao.createPlaylist(playlist_name)
-
-    def deletePlaylist(self, playlist_id) -> None:
-        self.pdao.deletePlaylist(playlist_id)
-
 
     ############################
     ## EDIT PLAYLIST FOR DAYS ##
@@ -159,5 +152,5 @@ class TimeTableService:
 
         return True
     
-    def autoCleanPlaylists(self):
-        return self.pdao.deleteObsoletePlaylists()
+    def autoCleanPlaylist(self):
+        return self.pdao.removePlaylistObsolete()
