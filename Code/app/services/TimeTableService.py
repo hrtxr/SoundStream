@@ -162,3 +162,51 @@ class TimeTableService:
     
     def autoCleanPlaylists(self):
         return self.pdao.deleteObsoletePlaylists()
+
+    ####################################
+    ## Calendar view & Timetable view ##
+    ####################################
+
+    def getDayGrid(self, day_name: str) -> dict:
+        ''' Generate a timetable grid for a specific day '''
+        raw_rows = self.pdao.getRawScheduleForDay(day_name)
+        grid = {}
+        
+        cursor = 0 
+        last_plist_start = 0
+
+        for row in raw_rows:
+            playlist_start = row['playlist_start'] # ex: "09:00"
+            
+            if playlist_start != last_plist_start:
+                last_plist_start = playlist_start
+                cursor = datetime.strptime(playlist_start, "%H:%M")
+
+            duration = row['time_length']
+            if duration:
+                parts = list(map(int, duration.split(':')))
+                if len(parts) == 3: h, m, s = parts
+                elif len(parts) == 2: h, m, s = 0, parts[0], parts[1]
+                else: h, m, s = 0, 0, 0
+                duration_delta = timedelta(hours=h, minutes=m, seconds=s)
+            else:
+                duration_delta = timedelta(0)
+
+            start_key = cursor.strftime("%H:%M") 
+            
+            end_dt = cursor + duration_delta
+            end_display = end_dt.strftime("%H:%M")
+
+            track_info = {
+                "name": row['name'],
+                "start": start_key,
+                "end": end_display
+            }
+
+            if start_key not in grid:
+                grid[start_key] = []
+            grid[start_key].append(track_info)
+
+            cursor = end_dt
+
+        return grid

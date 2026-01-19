@@ -3,10 +3,6 @@ from app.models.Playlist import Playlist
 
 class PlaylistDAOInterface :
 
-    def getTracksForDay(self, day_name) -> list:
-
-        pass
-
     def findAll(self) -> list[Playlist]|None:
         """ Get all playlists  """
         pass
@@ -49,5 +45,13 @@ class PlaylistDAOInterface :
     
     def removeAllPlaylistsFromDay(self, day_name) -> None:
         """ Remove all playlists from a specific day """
+        pass
+
+    ####################################
+    ## Calendar view & Timetable view ##
+    ####################################
+
+    def getRawScheduleForDay(self, day_name: str) -> list:
+        """ Retrieve raw schedule data for a specific day """
         pass
 

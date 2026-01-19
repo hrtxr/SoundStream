@@ -20,8 +20,7 @@ class TimetableController:
     @app.route('/timetable/<nom_orga>', methods =['GET'])
     def timetable(nom_orga):
         metadata= {'title': 'Timetable'}
-        return render_template('timetable.html', metadata=metadata, orga=nom_orga)
-
+        return render_template('timetable.html', metadata=metadata, orga=nom_orga, ts=ts)
     
     ####################
     ## EDIT PLAYLISTS ##
