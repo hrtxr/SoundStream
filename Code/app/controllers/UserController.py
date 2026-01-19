@@ -5,23 +5,11 @@ from app.controllers.LoginController import LoggedIn, reqrole
 from app.services.UserService import UserService
 from app.services.OrganisationService import OrganisationService
 from app.services.LogService import LogService
-from flask_mail import Mail, Message
 import datetime
 
 log = LogService()
 ogs=OrganisationService()
 us=UserService()
-
-# Configure Flask-Mail for forgotten password functionality
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USE_SSL"] = False
-app.config["MAIL_USERNAME"] = "Client"
-app.config["MAIL_PASSWORD"] = "client12345!"
-app.config["MAIL_DEFAULT_SENDER"] = "projectclientticket@gmail.com"
-
-mail = Mail(app)
 
 class UserController :
 
