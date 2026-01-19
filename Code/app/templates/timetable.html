@@ -17,16 +17,18 @@
                         <div class="calendar-container">
                             <div class="calendar-header"> <!-- Typiquement ajouter les dates automatiquement -->
                                 <div class="header-cell"></div>
-                                <div class="header-cell">Lun<br><small>29/11</small></div>
-                                <div class="header-cell">Mar<br><small>30/11</small></div>
-                                <div class="header-cell">Mer<br><small>01/12</small></div>
-                                <div class="header-cell">Jeu<br><small>02/12</small></div>
-                                <div class="header-cell">Ven<br><small>03/12</small></div>
-                                <div class="header-cell">Sam<br><small>04/12</small></div>
-                                <div class="header-cell">Dim<br><small>05/12</small></div>
+                                <div class="header-cell">Mon<br></div>
+                                <div class="header-cell">Tue<br></div>
+                                <div class="header-cell">Wed<br></div>
+                                <div class="header-cell">Thu<br></div>
+                                <div class="header-cell">Fri<br></div>
+                                <div class="header-cell">Sat<br></div>
+                                <div class="header-cell">Sun<br></div>
                             </div>
 
                             <div class="calendar-body">
+
+                                <!-- Time Column -->
                                 <div class="time-column">
                                     {% for i in range(24) %}
                                         <div class="time-slot">
@@ -39,422 +41,173 @@
                                     {% endfor %}
                                 </div>
 
-                                <!-- Lundi -->
+                                <!-- Monday -->
                                 <div class="day-column">
-                                    <div class="hour-slot" data-hour="0"></div>
-                                    <div class="hour-slot" data-hour="1"></div>
-                                    <div class="hour-slot" data-hour="2"></div>
-                                    <div class="hour-slot" data-hour="3"></div>
-                                    <div class="hour-slot" data-hour="4"></div>
-                                    <div class="hour-slot" data-hour="5"></div>
-                                    <div class="hour-slot" data-hour="6"></div>
-                                    <div class="hour-slot" data-hour="7">
-                                        <div class="event" data-start="07:12" data-end="07:15">07:12</div>
-                                        <div class="event event-gray" data-start="07:34" data-end="07:38">07:34</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="8">
-                                        <div class="event event-violet-dark" data-start="08:05" data-end="08:08">08:05</div>
-                                        <div class="event" data-start="08:23" data-end="08:27">08:23</div>
-                                        <div class="event event-gray" data-start="08:51" data-end="08:54">08:51</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="9">
-                                        <div class="event" data-start="09:18" data-end="09:22">09:18</div>
-                                        <div class="event event-violet-dark" data-start="09:43" data-end="09:46">09:43</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="10">
-                                        <div class="event event-gray" data-start="10:07" data-end="10:11">10:07</div>
-                                        <div class="event" data-start="10:39" data-end="10:43">10:39</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="11">
-                                        <div class="event event-violet-dark" data-start="11:15" data-end="11:18">11:15</div>
-                                        <div class="event event-gray" data-start="11:47" data-end="11:52">11:47</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="12">
-                                        <div class="event" data-start="12:03" data-end="12:07">12:03</div>
-                                        <div class="event event-violet-dark" data-start="12:29" data-end="12:33">12:29</div>
-                                        <div class="event event-gray" data-start="12:56" data-end="12:59">12:56</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="13">
-                                        <div class="event" data-start="13:21" data-end="13:25">13:21</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="14">
-                                        <div class="event event-gray" data-start="14:08" data-end="14:11">14:08</div>
-                                        <div class="event event-violet-dark" data-start="14:37" data-end="14:41">14:37</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="15">
-                                        <div class="event" data-start="15:14" data-end="15:18">15:14</div>
-                                        <div class="event event-gray" data-start="15:49" data-end="15:53">15:49</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="16">
-                                        <div class="event event-violet-dark" data-start="16:02" data-end="16:05">16:02</div>
-                                        <div class="event" data-start="16:31" data-end="16:35">16:31</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="17">
-                                        <div class="event event-gray" data-start="17:17" data-end="17:21">17:17</div>
-                                        <div class="event" data-start="17:44" data-end="17:47">17:44</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="18">
-                                        <div class="event event-violet-dark" data-start="18:09" data-end="18:13">18:09</div>
-                                        <div class="event event-gray" data-start="18:38" data-end="18:42">18:38</div>
-                                    </div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
+                                    {% set daily_grid = ts.getDayGrid('Monday') %}
+
+                                    {% for i in range(24) %}
+                                        <div class="hour-slot" data-hour="{{ i }}">
+                                            {% for j in range(60) %}     
+                                                {% set current_key = "%02d:%02d"|format(i, j) %}
+                                                {% if daily_grid[current_key] %}
+                                                    {% for track in daily_grid[current_key] %}
+                                                        <div class="event" 
+                                                             data-start="{{ track.start }}" 
+                                                             data-end="{{ track.end }}"
+                                                             title="{{ track.name }}">
+                                                            {{ track.name }}
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
                                 </div>
 
-                                <!-- Mardi -->
+                                <!-- Tuesday -->
                                 <div class="day-column">
-                                    <div class="hour-slot" data-hour="0"></div>
-                                    <div class="hour-slot" data-hour="1"></div>
-                                    <div class="hour-slot" data-hour="2"></div>
-                                    <div class="hour-slot" data-hour="3"></div>
-                                    <div class="hour-slot" data-hour="4"></div>
-                                    <div class="hour-slot" data-hour="5"></div>
-                                    <div class="hour-slot" data-hour="6"></div>
-                                    <div class="hour-slot" data-hour="7">
-                                        <div class="event event-violet-dark" data-start="07:08" data-end="07:11">07:08</div>
-                                        <div class="event" data-start="07:41" data-end="07:44">07:41</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="8">
-                                        <div class="event event-gray" data-start="08:19" data-end="08:23">08:19</div>
-                                        <div class="event event-violet-dark" data-start="08:52" data-end="08:56">08:52</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="9">
-                                        <div class="event" data-start="09:14" data-end="09:17">09:14</div>
-                                        <div class="event event-gray" data-start="09:38" data-end="09:42">09:38</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="10">
-                                        <div class="event event-violet-dark" data-start="10:06" data-end="10:09">10:06</div>
-                                        <div class="event" data-start="10:33" data-end="10:37">10:33</div>
-                                        <div class="event event-gray" data-start="10:58" data-end="11:02">10:58</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="11">
-                                        <div class="event" data-start="11:22" data-end="11:26">11:22</div>
-                                        <div class="event event-violet-dark" data-start="11:49" data-end="11:52">11:49</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="12">
-                                        <div class="event event-gray" data-start="12:11" data-end="12:15">12:11</div>
-                                        <div class="event" data-start="12:44" data-end="12:48">12:44</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="13">
-                                        <div class="event event-violet-dark" data-start="13:07" data-end="13:11">13:07</div>
-                                        <div class="event event-gray" data-start="13:36" data-end="13:40">13:36</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="14">
-                                        <div class="event" data-start="14:03" data-end="14:06">14:03</div>
-                                        <div class="event event-violet-dark" data-start="14:29" data-end="14:33">14:29</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="15">
-                                        <div class="event event-gray" data-start="15:16" data-end="15:20">15:16</div>
-                                        <div class="event" data-start="15:47" data-end="15:51">15:47</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="16">
-                                        <div class="event event-violet-dark" data-start="16:12" data-end="16:15">16:12</div>
-                                        <div class="event event-gray" data-start="16:39" data-end="16:43">16:39</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="17">
-                                        <div class="event" data-start="17:04" data-end="17:08">17:04</div>
-                                        <div class="event event-violet-dark" data-start="17:31" data-end="17:34">17:31</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="18">
-                                        <div class="event event-gray" data-start="18:18" data-end="18:22">18:18</div>
-                                        <div class="event" data-start="18:51" data-end="18:55">18:51</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="16"></div>
-                                    <div class="hour-slot" data-hour="17"></div>
-                                    <div class="hour-slot" data-hour="18"></div>
-                                    <div class="hour-slot" data-hour="19"></div>
-                                    <div class="hour-slot" data-hour="20"></div>
-                                    <div class="hour-slot" data-hour="21"></div>
-                                    <div class="hour-slot" data-hour="22"></div>
-                                    <div class="hour-slot" data-hour="23"></div>
+                                    {% set daily_grid = ts.getDayGrid('Tuesday') %}
+
+                                    {% for i in range(24) %}
+                                        <div class="hour-slot" data-hour="{{ i }}">
+                                            {% for j in range(60) %}     
+                                                {% set current_key = "%02d:%02d"|format(i, j) %}
+                                                {% if daily_grid[current_key] %}
+                                                    {% for track in daily_grid[current_key] %}
+                                                        <div class="event" 
+                                                             data-start="{{ track.start }}" 
+                                                             data-end="{{ track.end }}"
+                                                             title="{{ track.name }}">
+                                                            {{ track.name }}
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
                                 </div>
 
-                                <!-- Mercredi -->
+                                <!-- Wednesday -->
                                 <div class="day-column">
-                                    <div class="hour-slot" data-hour="0"></div>
-                                    <div class="hour-slot" data-hour="1"></div>
-                                    <div class="hour-slot" data-hour="2"></div>
-                                    <div class="hour-slot" data-hour="3"></div>
-                                    <div class="hour-slot" data-hour="4"></div>
-                                    <div class="hour-slot" data-hour="5"></div>
-                                    <div class="hour-slot" data-hour="6"></div>
-                                    <div class="hour-slot" data-hour="7">
-                                        <div class="event" data-start="07:23" data-end="07:27">07:23</div>
-                                        <div class="event event-violet-dark" data-start="07:54" data-end="07:58">07:54</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="8">
-                                        <div class="event event-gray" data-start="08:11" data-end="08:14">08:11</div>
-                                        <div class="event" data-start="08:42" data-end="08:46">08:42</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="9">
-                                        <div class="event event-violet-dark" data-start="09:07" data-end="09:11">09:07</div>
-                                        <div class="event event-gray" data-start="09:35" data-end="09:39">09:35</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="10">
-                                        <div class="event" data-start="10:19" data-end="10:23">10:19</div>
-                                        <div class="event event-violet-dark" data-start="10:48" data-end="10:52">10:48</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="11">
-                                        <div class="event event-gray" data-start="11:13" data-end="11:17">11:13</div>
-                                        <div class="event" data-start="11:41" data-end="11:45">11:41</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="12">
-                                        <div class="event event-violet-dark" data-start="12:06" data-end="12:10">12:06</div>
-                                        <div class="event event-gray" data-start="12:34" data-end="12:38">12:34</div>
-                                        <div class="event" data-start="12:57" data-end="13:01">12:57</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="13">
-                                        <div class="event event-violet-dark" data-start="13:24" data-end="13:28">13:24</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="14">
-                                        <div class="event event-gray" data-start="14:16" data-end="14:20">14:16</div>
-                                        <div class="event" data-start="14:43" data-end="14:47">14:43</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="15">
-                                        <div class="event event-violet-dark" data-start="15:09" data-end="15:12">15:09</div>
-                                        <div class="event event-gray" data-start="15:37" data-end="15:41">15:37</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="16">
-                                        <div class="event" data-start="16:04" data-end="16:08">16:04</div>
-                                        <div class="event event-violet-dark" data-start="16:32" data-end="16:36">16:32</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="17">
-                                        <div class="event event-gray" data-start="17:11" data-end="17:15">17:11</div>
-                                        <div class="event" data-start="17:46" data-end="17:50">17:46</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="18">
-                                        <div class="event event-violet-dark" data-start="18:14" data-end="18:18">18:14</div>
-                                        <div class="event event-gray" data-start="18:42" data-end="18:46">18:42</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="10"></div>
-                                    <div class="hour-slot" data-hour="11"></div>
-                                    <div class="hour-slot" data-hour="12"></div>
-                                    <div class="hour-slot" data-hour="13"></div>
-                                    <div class="hour-slot" data-hour="14"></div>
-                                    <div class="hour-slot" data-hour="15"></div>
-                                    <div class="hour-slot" data-hour="16"></div>
-                                    <div class="hour-slot" data-hour="17"></div>
-                                    <div class="hour-slot" data-hour="18"></div>
-                                    <div class="hour-slot" data-hour="19"></div>
-                                    <div class="hour-slot" data-hour="20"></div>
-                                    <div class="hour-slot" data-hour="21"></div>
-                                    <div class="hour-slot" data-hour="22"></div>
-                                    <div class="hour-slot" data-hour="23"></div>
+                                    {% set daily_grid = ts.getDayGrid('Wednesday') %}
+
+                                    {% for i in range(24) %}
+                                        <div class="hour-slot" data-hour="{{ i }}">
+                                            {% for j in range(60) %}     
+                                                {% set current_key = "%02d:%02d"|format(i, j) %}
+                                                {% if daily_grid[current_key] %}
+                                                    {% for track in daily_grid[current_key] %}
+                                                        <div class="event" 
+                                                             data-start="{{ track.start }}" 
+                                                             data-end="{{ track.end }}"
+                                                             title="{{ track.name }}">
+                                                            {{ track.name }}
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
                                 </div>
 
-                                <!-- Jeudi -->
+                                <!-- Thursday -->
                                 <div class="day-column">
-                                    <div class="hour-slot" data-hour="0"></div>
-                                    <div class="hour-slot" data-hour="1"></div>
-                                    <div class="hour-slot" data-hour="2"></div>
-                                    <div class="hour-slot" data-hour="3"></div>
-                                    <div class="hour-slot" data-hour="4"></div>
-                                    <div class="hour-slot" data-hour="5"></div>
-                                    <div class="hour-slot" data-hour="6"></div>
-                                    <div class="hour-slot" data-hour="7">
-                                        <div class="event" data-start="07:23" data-end="07:27">07:23</div>
-                                        <div class="event event-violet-dark" data-start="07:54" data-end="07:58">07:54</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="8">
-                                        <div class="event event-gray" data-start="08:11" data-end="08:14">08:11</div>
-                                        <div class="event" data-start="08:42" data-end="08:46">08:42</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="9">
-                                        <div class="event event-violet-dark" data-start="09:07" data-end="09:11">09:07</div>
-                                        <div class="event event-gray" data-start="09:35" data-end="09:39">09:35</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="10">
-                                        <div class="event" data-start="10:19" data-end="10:23">10:19</div>
-                                        <div class="event event-violet-dark" data-start="10:48" data-end="10:52">10:48</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="11">
-                                        <div class="event event-gray" data-start="11:13" data-end="11:17">11:13</div>
-                                        <div class="event" data-start="11:41" data-end="11:45">11:41</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="12">
-                                        <div class="event event-violet-dark" data-start="12:06" data-end="12:10">12:06</div>
-                                        <div class="event event-gray" data-start="12:34" data-end="12:38">12:34</div>
-                                        <div class="event" data-start="12:57" data-end="13:01">12:57</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="13">
-                                        <div class="event event-violet-dark" data-start="13:24" data-end="13:28">13:24</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="14">
-                                        <div class="event event-gray" data-start="14:16" data-end="14:20">14:16</div>
-                                        <div class="event" data-start="14:43" data-end="14:47">14:43</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="15">
-                                        <div class="event event-violet-dark" data-start="15:09" data-end="15:12">15:09</div>
-                                        <div class="event event-gray" data-start="15:37" data-end="15:41">15:37</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="16">
-                                        <div class="event" data-start="16:04" data-end="16:08">16:04</div>
-                                        <div class="event event-violet-dark" data-start="16:32" data-end="16:36">16:32</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="17">
-                                        <div class="event event-gray" data-start="17:11" data-end="17:15">17:11</div>
-                                        <div class="event" data-start="17:46" data-end="17:50">17:46</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="18">
-                                        <div class="event event-violet-dark" data-start="18:14" data-end="18:18">18:14</div>
-                                        <div class="event event-gray" data-start="18:42" data-end="18:46">18:42</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="10"></div>
-                                    <div class="hour-slot" data-hour="11"></div>
-                                    <div class="hour-slot" data-hour="12"></div>
-                                    <div class="hour-slot" data-hour="13"></div>
-                                    <div class="hour-slot" data-hour="14"></div>
-                                    <div class="hour-slot" data-hour="15"></div>
-                                    <div class="hour-slot" data-hour="16"></div>
-                                    <div class="hour-slot" data-hour="17"></div>
-                                    <div class="hour-slot" data-hour="18"></div>
-                                    <div class="hour-slot" data-hour="19"></div>
-                                    <div class="hour-slot" data-hour="20"></div>
-                                    <div class="hour-slot" data-hour="21"></div>
-                                    <div class="hour-slot" data-hour="22"></div>
-                                    <div class="hour-slot" data-hour="23"></div>
+                                    {% set daily_grid = ts.getDayGrid('Thursday') %}
+
+                                    {% for i in range(24) %}
+                                        <div class="hour-slot" data-hour="{{ i }}">
+                                            {% for j in range(60) %}     
+                                                {% set current_key = "%02d:%02d"|format(i, j) %}
+                                                {% if daily_grid[current_key] %}
+                                                    {% for track in daily_grid[current_key] %}
+                                                        <div class="event" 
+                                                             data-start="{{ track.start }}" 
+                                                             data-end="{{ track.end }}"
+                                                             title="{{ track.name }}">
+                                                            {{ track.name }}
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
                                 </div>
 
-                                <!-- Vendredi -->
+                                <!-- Friday -->
                                 <div class="day-column">
-                                    <div class="hour-slot" data-hour="0"></div>
-                                    <div class="hour-slot" data-hour="1"></div>
-                                    <div class="hour-slot" data-hour="2"></div>
-                                    <div class="hour-slot" data-hour="3"></div>
-                                    <div class="hour-slot" data-hour="4"></div>
-                                    <div class="hour-slot" data-hour="5"></div>
-                                    <div class="hour-slot" data-hour="6"></div>
-                                    <div class="hour-slot" data-hour="7">
-                                        <div class="event" data-start="07:23" data-end="07:27">07:23</div>
-                                        <div class="event event-violet-dark" data-start="07:54" data-end="07:58">07:54</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="8">
-                                        <div class="event event-gray" data-start="08:11" data-end="08:14">08:11</div>
-                                        <div class="event" data-start="08:42" data-end="08:46">08:42</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="9">
-                                        <div class="event event-violet-dark" data-start="09:07" data-end="09:11">09:07</div>
-                                        <div class="event event-gray" data-start="09:35" data-end="09:39">09:35</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="10">
-                                        <div class="event" data-start="10:19" data-end="10:23">10:19</div>
-                                        <div class="event event-violet-dark" data-start="10:48" data-end="10:52">10:48</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="11">
-                                        <div class="event event-gray" data-start="11:13" data-end="11:17">11:13</div>
-                                        <div class="event" data-start="11:41" data-end="11:45">11:41</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="12">
-                                        <div class="event event-violet-dark" data-start="12:06" data-end="12:10">12:06</div>
-                                        <div class="event event-gray" data-start="12:34" data-end="12:38">12:34</div>
-                                        <div class="event" data-start="12:57" data-end="13:01">12:57</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="13">
-                                        <div class="event event-violet-dark" data-start="13:24" data-end="13:28">13:24</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="14">
-                                        <div class="event event-gray" data-start="14:16" data-end="14:20">14:16</div>
-                                        <div class="event" data-start="14:43" data-end="14:47">14:43</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="15">
-                                        <div class="event event-violet-dark" data-start="15:09" data-end="15:12">15:09</div>
-                                        <div class="event event-gray" data-start="15:37" data-end="15:41">15:37</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="16">
-                                        <div class="event" data-start="16:04" data-end="16:08">16:04</div>
-                                        <div class="event event-violet-dark" data-start="16:32" data-end="16:36">16:32</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="17">
-                                        <div class="event event-gray" data-start="17:11" data-end="17:15">17:11</div>
-                                        <div class="event" data-start="17:46" data-end="17:50">17:46</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="18">
-                                        <div class="event event-violet-dark" data-start="18:14" data-end="18:18">18:14</div>
-                                        <div class="event event-gray" data-start="18:42" data-end="18:46">18:42</div>
-                                    </div>
-                                    <div class="hour-slot" data-hour="10"></div>
-                                    <div class="hour-slot" data-hour="11"></div>
-                                    <div class="hour-slot" data-hour="12"></div>
-                                    <div class="hour-slot" data-hour="13"></div>
-                                    <div class="hour-slot" data-hour="14"></div>
-                                    <div class="hour-slot" data-hour="15"></div>
-                                    <div class="hour-slot" data-hour="16"></div>
-                                    <div class="hour-slot" data-hour="17"></div>
-                                    <div class="hour-slot" data-hour="18"></div>
-                                    <div class="hour-slot" data-hour="19"></div>
-                                    <div class="hour-slot" data-hour="20"></div>
-                                    <div class="hour-slot" data-hour="21"></div>
-                                    <div class="hour-slot" data-hour="22"></div>
-                                    <div class="hour-slot" data-hour="23"></div>
+                                    {% set daily_grid = ts.getDayGrid('Friday') %}
+
+                                    {% for i in range(24) %}
+                                        <div class="hour-slot" data-hour="{{ i }}">
+                                            {% for j in range(60) %}     
+                                                {% set current_key = "%02d:%02d"|format(i, j) %}
+                                                {% if daily_grid[current_key] %}
+                                                    {% for track in daily_grid[current_key] %}
+                                                        <div class="event" 
+                                                             data-start="{{ track.start }}" 
+                                                             data-end="{{ track.end }}"
+                                                             title="{{ track.name }}">
+                                                            {{ track.name }}
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
                                 </div>
 
-                                <!-- Samedi -->
-                                <div class="day-column">
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
+                                <!-- Saturday -->
+                                 <div class="day-column">
+                                    {% set daily_grid = ts.getDayGrid('Saturday') %}
+
+                                    {% for i in range(24) %}
+                                        <div class="hour-slot" data-hour="{{ i }}">
+                                            {% for j in range(60) %}     
+                                                {% set current_key = "%02d:%02d"|format(i, j) %}
+                                                {% if daily_grid[current_key] %}
+                                                    {% for track in daily_grid[current_key] %}
+                                                        <div class="event" 
+                                                             data-start="{{ track.start }}" 
+                                                             data-end="{{ track.end }}"
+                                                             title="{{ track.name }}">
+                                                            {{ track.name }}
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
                                 </div>
 
-                                <!-- Dimanche -->
+                                <!-- Sunday -->
                                 <div class="day-column">
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
-                                    <div class="hour-slot"></div>
+                                    {% set daily_grid = ts.getDayGrid('Sunday') %}
+
+                                    {% for i in range(24) %}
+                                        <div class="hour-slot" data-hour="{{ i }}">
+                                            {% for j in range(60) %}     
+                                                {% set current_key = "%02d:%02d"|format(i, j) %}
+                                                {% if daily_grid[current_key] %}
+                                                    {% for track in daily_grid[current_key] %}
+                                                        <div class="event" 
+                                                             data-start="{{ track.start }}" 
+                                                             data-end="{{ track.end }}"
+                                                             title="{{ track.name }}">
+                                                            {{ track.name }}
+                                                        </div>
+                                                    {% endfor %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    {% endfor %}
                                 </div>
+
+                                
                             </div>
                         </div>
                     </div>
 
                     <script>
-                        // Positionne automatiquement les événements selon leurs horaires
                         document.querySelectorAll('.event[data-start][data-end]').forEach(event => {
                             const start = event.dataset.start;
                             const end = event.dataset.end;
@@ -485,3 +238,74 @@
         </div>
     </div>
 {% endblock %}
+
+
+
+
+
+<!-- Exemple code lundi 
+    <div class="day-column">
+         <div class="hour-slot" data-hour="0"></div>
+         <div class="hour-slot" data-hour="1"></div>
+         <div class="hour-slot" data-hour="2"></div>
+         <div class="hour-slot" data-hour="3"></div>
+         <div class="hour-slot" data-hour="4"></div>
+         <div class="hour-slot" data-hour="5"></div>
+         <div class="hour-slot" data-hour="6"></div>
+         <div class="hour-slot" data-hour="7">
+             <div class="event" data-start="07:12" data-end="07:15">07:12</div>
+             <div class="event event-gray" data-start="07:34" data-end="07:38">07:34</div>
+         </div>
+         <div class="hour-slot" data-hour="8">
+             <div class="event event-violet-dark" data-start="08:05" data-end="08:08">08:05</div>
+             <div class="event" data-start="08:23" data-end="08:27">08:23</div>
+             <div class="event event-gray" data-start="08:51" data-end="08:54">08:51</div>
+         </div>
+         <div class="hour-slot" data-hour="9">
+             <div class="event" data-start="09:18" data-end="09:22">09:18</div>
+             <div class="event event-violet-dark" data-start="09:43" data-end="09:46">09:43</div>
+         </div>
+         <div class="hour-slot" data-hour="10">
+             <div class="event event-gray" data-start="10:07" data-end="10:11">10:07</div>
+             <div class="event" data-start="10:39" data-end="10:43">10:39</div>
+         </div>
+         <div class="hour-slot" data-hour="11">
+             <div class="event event-violet-dark" data-start="11:15" data-end="11:18">11:15</div>
+             <div class="event event-gray" data-start="11:47" data-end="11:52">11:47</div>
+         </div>
+         <div class="hour-slot" data-hour="12">
+             <div class="event" data-start="12:03" data-end="12:07">12:03</div>
+             <div class="event event-violet-dark" data-start="12:29" data-end="12:33">12:29</div>
+             <div class="event event-gray" data-start="12:56" data-end="12:59">12:56</div>
+         </div>
+         <div class="hour-slot" data-hour="13">
+             <div class="event" data-start="13:21" data-end="13:25">13:21</div>
+         </div>
+         <div class="hour-slot" data-hour="14">
+             <div class="event event-gray" data-start="14:08" data-end="14:11">14:08</div>
+             <div class="event event-violet-dark" data-start="14:37" data-end="14:41">14:37</div>
+         </div>
+         <div class="hour-slot" data-hour="15">
+             <div class="event" data-start="15:14" data-end="15:18">15:14</div>
+             <div class="event event-gray" data-start="15:49" data-end="15:53">15:49</div>
+         </div>
+         <div class="hour-slot" data-hour="16">
+             <div class="event event-violet-dark" data-start="16:02" data-end="16:05">16:02</div>
+             <div class="event" data-start="16:31" data-end="16:35">16:31</div>
+         </div>
+         <div class="hour-slot" data-hour="17">
+             <div class="event event-gray" data-start="17:17" data-end="17:21">17:17</div>
+             <div class="event" data-start="17:44" data-end="17:47">17:44</div>
+         </div>
+         <div class="hour-slot" data-hour="18">
+             <div class="event event-violet-dark" data-start="18:09" data-end="18:13">18:09</div>
+             <div class="event event-gray" data-start="18:38" data-end="18:42">18:38</div>
+         </div>
+         <div class="hour-slot" data-hour="19"></div>
+         <div class="hour-slot" data-hour="20"></div>
+         <div class="hour-slot" data-hour="21"></div>
+         <div class="hour-slot" data-hour="22"></div>
+         <div class="hour-slot" data-hour="23"></div>
+    </div> 
+
+-->

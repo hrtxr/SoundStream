@@ -14,19 +14,6 @@ class PlaylistDAO(PlaylistDAOInterface):
         conn = sqlite3.connect(self.databasename)
         conn.row_factory = sqlite3.Row
         return conn
-
-    def getTracksForDay(self, day_name) -> list:
-        """ JE PENSE QUE CA SERT A RIEN CA NON PLUS A REVOIR PLUS TARD """
-        conn = self._getDbConnection()
-        query = """
-            SELECT f.name, f.time_length, f.path
-            FROM file f
-            JOIN composition c ON f.id_file = c.id_file
-            JOIN playlist p ON c.id_playlist = p.id_playlist
-            JOIN planned pl ON p.id_playlist = pl.id_playlist
-            WHERE pl.day_ = ?
-        """
-        return conn.execute(query, (day_name,)).fetchall()
     
     def findAll(self) -> list[Playlist]|None:
         """ Get all playlists  """
@@ -235,3 +222,26 @@ class PlaylistDAO(PlaylistDAOInterface):
             return 0
         finally:
             conn.close()
+
+    ####################################
+    ## Calendar view & Timetable view ##
+    ####################################
+    
+    def getRawScheduleForDay(self, day_name: str) -> list:
+        """ Retrieve raw schedule data for a specific day """
+        conn = self._getDbConnection()
+        conn.row_factory = sqlite3.Row
+
+        sql = '''
+            SELECT pl.start_time as playlist_start, f.name, f.time_length
+            FROM planned pl
+            JOIN composition c ON pl.id_playlist = c.id_playlist
+            JOIN file f ON c.id_file = f.id_file
+            WHERE pl.day_ = ?
+            ORDER BY pl.start_time, c.rowid
+        '''
+        
+        cur = conn.execute(sql, (day_name,))
+        rows = cur.fetchall()
+        conn.close()
+        return rows

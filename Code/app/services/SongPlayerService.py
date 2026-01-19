@@ -186,3 +186,11 @@ class SongPlayerService:
         """ Envoie les fichiers vers la vm Debian distante dans des dossiers séparés """
 
         threading.Thread(target=self.run_sync(ip, username)).start()
+
+
+####################################
+## Calendar view & Timetable view ##
+####################################
+
+def trackStartingAt(self, day_name: str, hour: int, minute: int) -> list:
+    """"""
