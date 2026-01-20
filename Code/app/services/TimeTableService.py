@@ -177,10 +177,17 @@ class TimeTableService:
 
         for row in raw_rows:
             playlist_start = row['playlist_start'] # ex: "09:00"
+
+            if not playlist_start:
+                continue
             
             if playlist_start != last_plist_start:
                 last_plist_start = playlist_start
-                cursor = datetime.strptime(playlist_start, "%H:%M")
+                try:
+                    cursor = datetime.strptime(playlist_start, "%H:%M")
+                except ValueError:
+                    # Si ça échoue, on tente avec les secondes
+                    cursor = datetime.strptime(playlist_start, "%H:%M:%S")
 
             duration = row['time_length']
             if duration:
