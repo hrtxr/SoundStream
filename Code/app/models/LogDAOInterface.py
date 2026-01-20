@@ -14,3 +14,6 @@ class LogDAOInterface:
 
     def findAllTickets(self) -> list[Log]:
         pass
+
+    def findAllMessageDiffused(self) -> list[Log]:
+        pass
