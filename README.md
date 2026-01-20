@@ -3,11 +3,22 @@
 ### Livrable pour les évaluations des Compétences :
 ## Compétence 4 :
 [livrable compétences 4](00-Documents/Compte_rendu_compétence_4%20(1).pdf)
+## Compétence 5 :
+[Cahier des charges](00-Documents/Cahier_des_ChargesV1.0.pdf)
+[Maquette](00-Documents/Screenshots-Maquette/V1/)
+[Fiche de route]
+[Feuille de temps]
+## Compétence 6 :
+
+### Analyse du déroulement du projet :
+On fera ici l'analyse du projet y veut un petit paragraphe
+
+### Comment lancer l'application :
+on devras mettre les commande bash pour creer un environement python et aussi pour lancer le serveur flask
 
 ### Qu'est ce que SoundStream
 SoundStream est un projet que nous sommes en train de réaliser dans le cadre de la SAÉ S301 (SAÉ = projet évalué qui regroupe un ensemble de compétances afin de pouvoir appliquer les principes théoriques vus en cours). Elle est réalisée en groupe et consiste en le développement d'une application web complète.
-<br>
-> Rendu du projet le **19 Janvier** & Soutenance la **semaine du 20 Janvier**
+
 
 ### 🧑‍💻 Développeurs
 | Participants      | Mail de contact                       | Discord               |
@@ -35,26 +46,7 @@ Les étudiants développeraient la solution pour un pilote :
 3. Stocker l’historique.
 4. Scénarios de test : coupure réseau, coupure électrique, diffusion d’un message urgent, respect du planning des publicités.
 
-### 📷 Photos du projet 
 
-#### Maquette:
-![Login](00-documents/Screenshots-Maquette/V1/Login.png "Login")
-
-![Dashboard Admin](00-documents/Screenshots-Maquette/V1/Dashboard%20Admin.png "Dashboard Admin")
-
-![Dashboard CM](00-documents/Screenshots-Maquette/V1/Dashboard%20CM.png "Dashboard Admin")
-
-![Device view 1](00-documents/Screenshots-Maquette/V1/Device%20view%201.png "Device view 1")
-
-![timetable view 1](00-documents/Screenshots-Maquette/V1/Timetable%20view%201.png "timetable view 1")
-
-![Timetable view 2 - Calendar](00-documents/Screenshots-Maquette/V1/Timetable%20view%202%20-%20Calendar.png "Timetable view 2 - Calendar")
-
-![Player Web](00-documents/Screenshots-Maquette/V1/Player%20web.png "Player Web")
-
-### Produit final
-*-> En cours git push origin main
-Username for 'https://github.com': de création ;)*
 
 ### 🌲 Arborescence 
 ```
