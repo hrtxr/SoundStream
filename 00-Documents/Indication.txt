@@ -1,1 +1,0 @@
-Dans ce fichier se trouve tout les documents annexe au projet (Par exemple les diagrammes, notes, etc...)

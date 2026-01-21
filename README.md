@@ -1,20 +1,42 @@
 # 🔉 SoundStream
 
 ### Livrable pour les évaluations des Compétences :
+## Compétence 2 :
+[livrable compétence 2](00-Documents/rapport_compétence_2-1.pdf)
 ## Compétence 4 :
 [livrable compétences 4](00-Documents/Compte_rendu_compétence_4%20(1).pdf)
 ## Compétence 5 :
+[Synthèse des questions pour le receuil de besoin](00-Documents/Synthèse%20des%20questions%20à%20poser%20à%20Mr.pdf)
+[User story](00-Documents/Besoin_Utilisateurs.pdf)
 [Cahier des charges](00-Documents/Cahier_des_ChargesV1.0.pdf)
-[Maquette](00-Documents/Screenshots-Maquette/V1/)
-[Fiche de route]
-[Feuille de temps]
+[Maquette](00-Documents/Screenshots-Maquette/V1/)  
+[Fiche de route] (seras disponible avant la soutenance du vendredi 23/01/2026)  
+[Feuille de temps] (seras disponible avant la soutenance du vendredi 23/01/2026)  
+# Paragraphe d'analyse du déroulement du projet :  
+(seras disponible avant la soutenance du vendredi 23/01/2026)
 ## Compétence 6 :
+[Compte-rendu](00-Documents/Compte_rendu_compétence_6.pdf)
 
-### Analyse du déroulement du projet :
-On fera ici l'analyse du projet y veut un petit paragraphe
 
 ### Comment lancer l'application :
-on devras mettre les commande bash pour creer un environement python et aussi pour lancer le serveur flask
+Il est nécessaire d'utiliser un environnement virtuel Python pour isoler les dépendances.
+
+```bash
+python3 -m venv env
+
+# Windows
+.\env\Scripts\activate
+
+# macOS / Linux
+source env/bin/activate
+
+pip install -r requirements.txt
+
+# Dans le répertoire SoundStream/Code
+python3 main.py
+
+```
+Puis mettre l'URL http://127.0.0.1:8000/ .
 
 ### Qu'est ce que SoundStream
 SoundStream est un projet que nous sommes en train de réaliser dans le cadre de la SAÉ S301 (SAÉ = projet évalué qui regroupe un ensemble de compétances afin de pouvoir appliquer les principes théoriques vus en cours). Elle est réalisée en groupe et consiste en le développement d'une application web complète.
