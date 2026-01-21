@@ -159,6 +159,55 @@ class TimeTableService:
             f.write(content)
 
         return True
+
+
+    def getPlaylistForTime(self, current_day, current_time) :
+        ''' Identifie la playlist active et renvoie uniquement son nom '''
+        raw_rows = self.pdao.getRawScheduleForDay(current_day)
+        
+        try:
+            now_dt = datetime.strptime(current_time, "%H:%M")
+        except ValueError:
+            now_dt = datetime.strptime(current_time, "%H:%M:%S")
+
+        cursor = 0 
+        last_plist_start = 0
+
+        for row in raw_rows:
+            playlist_start = row['playlist_start']
+            if not playlist_start:
+                continue
+            
+            if playlist_start != last_plist_start:
+                last_plist_start = playlist_start
+                try:
+                    cursor = datetime.strptime(playlist_start, "%H:%M")
+                except ValueError:
+                    cursor = datetime.strptime(playlist_start, "%H:%M:%S")
+
+            duration = row['time_length']
+            if duration:
+                parts = list(map(int, duration.split(':')))
+                if len(parts) == 3: h, m, s = parts
+                elif len(parts) == 2: h, m, s = 0, parts[0], parts[1]
+                else: h, m, s = 0, 0, 0
+                duration_delta = timedelta(hours=h, minutes=m, seconds=s)
+            else:
+                duration_delta = timedelta(0)
+
+            start_dt = cursor
+            end_dt = cursor + duration_delta
+
+            if start_dt <= now_dt < end_dt:
+                # Au lieu de row['name'] (le titre du son), 
+                # assurez-vous de renvoyer le nom utilisé pour le fichier .m3u
+                # Si votre fichier s'appelle "playlist_Pop_Chill.m3u", renvoyez "playlist_Pop_Chill"
+                return f"playlist_{row['playlist_name']}" # Remplacez par la clé correcte de votre query SQL
+
+            cursor = end_dt
+
+        return None
+
     
     def autoCleanPlaylists(self):
         return self.pdao.deleteObsoletePlaylists()
@@ -176,8 +225,7 @@ class TimeTableService:
         last_plist_start = 0
 
         for row in raw_rows:
-            playlist_start = row['playlist_start'] # ex: "09:00"
-
+            playlist_start = row['playlist_start'] 
             if not playlist_start:
                 continue
             
@@ -186,7 +234,6 @@ class TimeTableService:
                 try:
                     cursor = datetime.strptime(playlist_start, "%H:%M")
                 except ValueError:
-                    # Si ça échoue, on tente avec les secondes
                     cursor = datetime.strptime(playlist_start, "%H:%M:%S")
 
             duration = row['time_length']
@@ -217,3 +264,51 @@ class TimeTableService:
             cursor = end_dt
 
         return grid
+
+    def getNextTracks(self) -> list[dict]:
+        """ Get a list of the next tracks after the current time on a specific day """
+
+        now = datetime.now()
+        day_name = now.strftime("%A")
+
+        current_time_str = now.strftime("%H:%M:%S")
+        now_dt = datetime.strptime(current_time_str, "%H:%M:%S")
+
+        raw_rows = self.pdao.getRawScheduleForDay(day_name)
+
+        upcoming_tracks = []
+        cursor = None 
+        last_plist_start = None
+
+        for row in raw_rows:
+            playlist_start = row['playlist_start']
+
+            if not playlist_start:
+                continue
+            
+            if playlist_start != last_plist_start:
+                last_plist_start = playlist_start
+                cursor = datetime.strptime(playlist_start, "%H:%M")
+
+            duration = row['time_length']
+            if duration:
+                parts = list(map(int, duration.split(':')))
+                if len(parts) == 3: h, m, s = parts
+                elif len(parts) == 2: h, m, s = 0, parts[0], parts[1]
+                else: h, m, s = 0, 0, 0
+                duration_delta = timedelta(hours=h, minutes=m, seconds=s)
+            else:
+                duration_delta = timedelta(0)
+
+            start_dt = cursor
+            end_dt = cursor + duration_delta
+            if start_dt > now_dt:
+                upcoming_tracks.append({
+                    "name": row['name'],
+                    "id_playlist": row['id_playlist'],
+                    "start": start_dt.strftime("%H:%M"),
+                    "end": end_dt.strftime("%H:%M")
+                })
+            cursor = end_dt
+
+        return upcoming_tracks

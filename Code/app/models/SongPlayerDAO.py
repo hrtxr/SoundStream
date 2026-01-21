@@ -181,3 +181,14 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         conn.execute('UPDATE song_player SET state = ? WHERE id_player =  ?;', (state,id_player))
         conn.commit() 
         conn.close()
+
+    def findAllOnlineDevices(self) -> list[SongPlayer]:
+        conn = self._getDbConnection()
+        songplayers = conn.execute("SELECT * FROM song_player WHERE state = 'ONLINE';").fetchall()
+        players_online_list = list()
+
+        for songplayer in songplayers :
+            players_online_list.append(SongPlayer(dict(songplayer)))
+        
+        conn.close()
+        return players_online_list

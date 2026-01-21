@@ -233,10 +233,11 @@ class PlaylistDAO(PlaylistDAOInterface):
         conn.row_factory = sqlite3.Row
 
         sql = '''
-            SELECT pl.start_time as playlist_start, f.name, f.time_length
+            SELECT pl.start_time as playlist_start, p.name as playlist_name, f.name, f.time_length, pl.id_playlist as id_playlist
             FROM planned pl
             JOIN composition c ON pl.id_playlist = c.id_playlist
             JOIN file f ON c.id_file = f.id_file
+            JOIN playlist p ON pl.id_playlist = p.id_playlist
             WHERE pl.day_ = ?
             ORDER BY pl.start_time, c.rowid
         '''

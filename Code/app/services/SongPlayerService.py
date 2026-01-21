@@ -1,11 +1,18 @@
 from app.models.SongPlayerDAO import SongPlayerDAO
+from app.services.TimeTableService import TimeTableService 
 import subprocess
+import time
 import threading
+import datetime
 import platform
 import os
 from app import app
 
+ts = TimeTableService()
+
 class SongPlayerService:
+
+    _current_playlist = None
     
     def __init__(self) :
         self.spdao = SongPlayerDAO()
@@ -186,6 +193,61 @@ class SongPlayerService:
         """ Envoie les fichiers vers la vm Debian distante dans des dossiers séparés """
 
         threading.Thread(target=self.run_sync(ip, username)).start()
+
+
+    def remote_play_playlist(self, ip, username, playlist_name):
+        """ 
+        Commande le MPD distant pour charger et lire une playlist précise 
+        """
+        # 1. On nettoie MPD
+        # 2. On charge la nouvelle playlist (le fichier .m3u doit être dans le dossier playlist de MPD)
+        # 3. On lance la lecture
+        remote_cmd = f"mpc clear && mpc load {playlist_name} && mpc play"
+        
+        ssh_cmd = ["ssh", f"{username}@{ip}", remote_cmd]
+        
+        try:
+            subprocess.run(ssh_cmd, check=True)
+            print(f"▶️ Lecture de {playlist_name} lancée sur {ip}")
+        except Exception as e:
+            print(f"❌ Erreur lors de l'envoi de l'ordre de lecture : {e}")
+
+    def run_check(self):
+        print("🚀 Scheduler démarré...")
+        while True:
+            now = datetime.datetime.now()
+            current_time = now.strftime("%H:%M")
+            current_day = now.strftime("%A")
+            
+            # Récupération de la playlist prévue (ex: "playlist_MaListe")
+            scheduled_playlist = ts.getPlaylistForTime(current_day, current_time)
+            
+            # CONDITION CRUCIALE : 
+            # On ne lance la musique QUE SI :
+            # 1. Une playlist est prévue (scheduled_playlist n'est pas None)
+            # 2. ET ce n'est pas celle qui tourne déjà
+            if scheduled_playlist and scheduled_playlist != SongPlayerService._current_playlist:
+                
+                devices = self.spdao.findAllOnlineDevices()
+                if devices:
+                    print(f"🎵 Changement de playlist : {scheduled_playlist}")
+                    for dev in devices:
+                        self.remote_play_playlist(dev.IP_adress, 'tristan', scheduled_playlist)
+                    
+                    # On met à jour la mémoire pour ne pas relancer au prochain tour
+                    SongPlayerService._current_playlist = scheduled_playlist
+            
+            # Si aucune playlist n'est prévue dans le planning (trou dans l'emploi du temps)
+            elif not scheduled_playlist and SongPlayerService._current_playlist is not None:
+                print("🛑 Fin de plage horaire : arrêt de la musique.")
+                # Optionnel : envoyer un 'mpc stop' via SSH ici
+                SongPlayerService._current_playlist = None
+
+            time.sleep(30)
+
+    def start_background_scheduler(self):
+
+        threading.Thread(target=self.run_check, daemon=True).start()
 
 
 ####################################
