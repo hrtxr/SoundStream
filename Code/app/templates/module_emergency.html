@@ -1,0 +1,21 @@
+<div class="divider colored">  
+
+    <h1>Upload Emergency Message</h1>
+
+    <form method="POST" enctype="multipart/form-data" class="form">
+        <div class="uploadfile">
+            <input type="file" id="file" name="uploadfile" accept=".mp3" class="input-hidden">
+
+            <label for="file" class="btn-design"> Choose file </label>
+
+            <div id="file-name" style="margin-top: 10px; color: #aaa; font-size: 0.9em;"></div>
+
+            <input type="hidden" id="filename-hidden" name="filename">
+                This file will be played instantly as the emergency message
+            </input>
+        </div>
+
+        <button type="submit" class="btn-upload"> Upload </button>
+    </form>
+
+</div>

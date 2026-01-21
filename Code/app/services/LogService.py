@@ -32,3 +32,11 @@ class LogService:
             list_tickets.append(ticket.toDict())
 
         return list_tickets
+    
+    def getMessageDiffusedLogs(self) -> list[dict]:
+        messages = self.ldao.findAllMessageDiffused()  # New method to get message diffused logs
+        list_messages = list()
+        for message in messages :
+            list_messages.append(message.toDict())
+
+        return list_messages

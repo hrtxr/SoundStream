@@ -28,4 +28,11 @@ class LogController :
         nom_orga = session.get('organisation_name')
         ticket_list = log.getTicketLogs()
         return render_template('tickets.html', ticket_list = ticket_list, metadata = metadata, orga=nom_orga)
-    
+
+    @app.route('/messages_diffused/<nom_orga>', methods =['GET'])
+    @LoggedIn
+    @reqrole(['marketing'])
+    def messages_diffused(nom_orga):
+        metadata = {'title' : 'Messages Diffused'}
+        message_list = log.getMessageDiffusedLogs()
+        return render_template('messages_diffused.html', message_list = message_list, metadata = metadata, orga=nom_orga)
