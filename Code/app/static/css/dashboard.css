@@ -168,3 +168,17 @@ tbody tr:nth-child(odd) {
 .input-pill:focus {
     background-color: #FFFFFF22; 
 }
+
+.table-scroll-container {
+    max-height: 30.5vh; /* Hauteur maximale avant d'activer le défilement */
+    overflow-y: auto;        
+    width: 100%;
+    margin-top:2vh;
+}
+
+.table-scroll-container th {
+    margin-top:-2vh;
+    position: sticky;
+    z-index: 10;
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.1); /* Petit ombrage pour l'effet de profondeur */
+}

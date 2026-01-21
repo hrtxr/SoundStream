@@ -93,7 +93,7 @@ class TimetableController:
             username = session.get('username')
             orga_id = orga.getIdByName(session.get('organisation_name'))
             playlist_name = ts.getPlaylistNameById(playlist_id)
-
+            
             devices = sps.findAllSongPlayerByOrganisation(orga_id)
             for device in devices:
                 # On synchronise chaque machine Debian enregistrée dans la BDD
