@@ -11,12 +11,11 @@ from app import app
 ts = TimeTableService()
 
 class SongPlayerService:
-    _current_running_playlist = None
+
+    _current_playlist = None
     
     def __init__(self) :
         self.spdao = SongPlayerDAO()
-
-        self.last_played_playlist = None  # Mémoire de la dernière playlist jouée
     
    
     def ping(self,ip):
@@ -220,32 +219,31 @@ class SongPlayerService:
             current_time = now.strftime("%H:%M")
             current_day = now.strftime("%A")
             
-            # Récupération de la playlist prévue
+            # Récupération de la playlist prévue (ex: "playlist_MaListe")
             scheduled_playlist = ts.getPlaylistForTime(current_day, current_time)
             
-            # LOGIQUE DE COMPARAISON :
-            # On ne déclenche l'ordre SSH QUE SI :
-            # 1. Il y a une playlist prévue
-            # 2. ET ce n'est pas celle qui est déjà en train de jouer
-            if scheduled_playlist and scheduled_playlist != SongPlayerService._current_running_playlist:
+            # CONDITION CRUCIALE : 
+            # On ne lance la musique QUE SI :
+            # 1. Une playlist est prévue (scheduled_playlist n'est pas None)
+            # 2. ET ce n'est pas celle qui tourne déjà
+            if scheduled_playlist and scheduled_playlist != SongPlayerService._current_playlist:
                 
                 devices = self.spdao.findAllOnlineDevices()
                 if devices:
-                    print(f"🎵 Changement détecté : {scheduled_playlist} (Ancien: {SongPlayerService._current_running_playlist})")
-                    
+                    print(f"🎵 Changement de playlist : {scheduled_playlist}")
                     for dev in devices:
                         self.remote_play_playlist(dev.IP_adress, 'tristan', scheduled_playlist)
                     
-                    # MISE À JOUR DE L'ÉTAT
-                    SongPlayerService._current_running_playlist = scheduled_playlist
+                    # On met à jour la mémoire pour ne pas relancer au prochain tour
+                    SongPlayerService._current_playlist = scheduled_playlist
             
-            # Si aucune playlist n'est prévue dans le planning actuel
-            elif not scheduled_playlist and SongPlayerService._current_running_playlist is not None:
-                print("🛑 Fin de la plage horaire : arrêt de la musique.")
-                # Optionnel : envoyer un 'mpc stop' ici
-                SongPlayerService._current_running_playlist = None
+            # Si aucune playlist n'est prévue dans le planning (trou dans l'emploi du temps)
+            elif not scheduled_playlist and SongPlayerService._current_playlist is not None:
+                print("🛑 Fin de plage horaire : arrêt de la musique.")
+                # Optionnel : envoyer un 'mpc stop' via SSH ici
+                SongPlayerService._current_playlist = None
 
-            time.sleep(30) # On peut descendre à 30s pour plus de réactivité
+            time.sleep(30)
 
     def start_background_scheduler(self):
 
