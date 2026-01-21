@@ -84,7 +84,7 @@ class LogSqliteDAO(LogDAOInterface):
         ''' Return the list of the all the message diffused logs'''
 
         conn = self._getDbConnection()
-        query = "SELECT * FROM log WHERE type_log = 'MESSAGE_DIFFUSED' ORDER BY date_log DESC;"
+        query = "SELECT * FROM log WHERE type_log = 'UPLOAD_EMERGENCY' OR type_log = 'UPLOAD_ADVERTISEMENT' ORDER BY date_log DESC;"
 
         tickets = conn.execute(query).fetchall()
         tickets_instances = list()

@@ -10,8 +10,9 @@
             {% if session['role'] == 'admin' %}
                 <a href="/timetable/{{ orga }}" class="navbtn">CALENDAR</a>
                 <a href="/devices/{{ orga }}" class="navbtn">DEVICES</a>
-                <a href="/logs/{{ orga }}" class="navbtn">LOGS</a>
                 <a href="/tickets" class="navbtn">TICKETS</a>
+                <a href="/users/{{ orga }}" class="navbtn">USERS</a>
+                <a href="/logs/{{ orga }}" class="navbtn">LOGS</a>
                 <!-- <a href="/tools/{{ orga }}" class="navbtn">TOOLS</a> -->
 
             {% elif session['role'] == 'marketing' %}

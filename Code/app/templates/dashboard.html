@@ -9,11 +9,11 @@
             <!-- ############## ADMIN ############### -->
             {% if session.get('role') == 'admin' %}
                 <div class="divider">
-                    {% include 'module_timetable5.html' %}
+                    {% include 'module_devices.html' %}
                     {% include 'module_users.html' %}
                 </div>
                 <div class="divider">
-                    {% include 'module_devices.html' %}
+                    {% include 'module_ticket.html' %}
                     {% include 'module_log.html' %}
                 </div>
 
