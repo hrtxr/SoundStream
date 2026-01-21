@@ -1,21 +1,30 @@
 # 🔉 SoundStream
 
-### Livrable pour les évaluations des Compétences :
-## Compétence 2 :
-[livrable compétence 2](00-Documents/rapport_compétence_2-1.pdf)
+# Livrable pour les évaluations des Compétences :
+## Compétence 2 :  
+### livrable compétence 2 :  
+[livrable compétence 2](00-Documents/rapport_compétence_2-1.pdf)  
 ## Compétence 4 :
-[livrable compétences 4](00-Documents/Compte_rendu_compétence_4%20(1).pdf)
-## Compétence 5 :
-[Synthèse des questions pour le receuil de besoin](00-Documents/Synthèse%20des%20questions%20à%20poser%20à%20Mr.pdf)
-[User story](00-Documents/Besoin_Utilisateurs.pdf)
-[Cahier des charges](00-Documents/Cahier_des_ChargesV1.0.pdf)
-[Maquette](00-Documents/Screenshots-Maquette/V1/)  
+### livrable compétences 4 :  
+[livrable compétences 4](00-Documents/Compte_rendu_compétence_4%20(1).pdf)  
+## Compétence 5 :  
+### Synthèse des questions pour le receuil de besoin :  
+[Synthèse des questions pour le receuil de besoin](00-Documents/Synthèse%20des%20questions%20à%20poser%20à%20Mr.pdf)  
+### User story :  
+[User story](00-Documents/Besoin_Utilisateurs.pdf)  
+### Cahier des charges :  
+[Cahier des charges](00-Documents/Cahier_des_ChargesV1.0.pdf)  
+### Maquette :  
+[Maquette](00-Documents/Screenshots-Maquette/V1/)   
+### Fiche de route :  
 [Fiche de route] (seras disponible avant la soutenance du vendredi 23/01/2026)  
+### Feuille de temps :  
 [Feuille de temps] (seras disponible avant la soutenance du vendredi 23/01/2026)  
-# Paragraphe d'analyse du déroulement du projet :  
-(seras disponible avant la soutenance du vendredi 23/01/2026)
+### Paragraphe d'analyse du déroulement du projet :  
+(seras disponible avant la soutenance du vendredi 23/01/2026)  
 ## Compétence 6 :
-[Compte-rendu](00-Documents/Compte_rendu_compétence_6.pdf)
+### Compte-rendu :  
+[Compte-rendu](00-Documents/Compte_rendu_compétence_6.pdf)  
 
 
 ### Comment lancer l'application :
@@ -36,7 +45,7 @@ pip install -r requirements.txt
 python3 main.py
 
 ```
-Puis mettre l'URL http://127.0.0.1:8000/ .
+Puis mettre l'URL http://127.0.0.1:8000/ dan votre navigateur.
 
 ### Qu'est ce que SoundStream
 SoundStream est un projet que nous sommes en train de réaliser dans le cadre de la SAÉ S301 (SAÉ = projet évalué qui regroupe un ensemble de compétances afin de pouvoir appliquer les principes théoriques vus en cours). Elle est réalisée en groupe et consiste en le développement d'une application web complète.
