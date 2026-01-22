@@ -8,14 +8,14 @@
     
     <div class="bento">
         <div class="divider colored" style="padding: 4vh;">
-            <h1>Ajouter un nouveau Lecteur</h1>
+            <h1>Add a new player</h1>
             
             <form method="POST" style="max-width: 600px; margin: 2vh auto;">
                 
                 <!-- Champ Nom du lieu -->
                 <div style="margin-bottom: 2vh;">
                     <label for="name_place" style="display: block; margin-bottom: 0.5vh; color: white;">
-                        Nom du lieu :
+                        Place Name :
                     </label>
                     <input 
                         type="text" 
@@ -29,7 +29,7 @@
                 <!-- Champ Adresse IP -->
                 <div style="margin-bottom: 2vh;">
                     <label for="ip_address" style="display: block; margin-bottom: 0.5vh; color: white;">
-                        Adresse IP :
+                        IP Adress :
                     </label>
                     <input 
                         type="text" 
@@ -45,7 +45,7 @@
                 <!-- Champ Adresse physique -->
                 <div style="margin-bottom: 2vh;">
                     <label for="place_address" style="display: block; margin-bottom: 0.5vh; color: white;">
-                        Adresse physique :
+                        Physical Address :
                     </label>
                     <input 
                         type="text" 
@@ -59,7 +59,7 @@
                 <!-- Champ Ville -->
                 <div style="margin-bottom: 2vh;">
                     <label for="place_city" style="display: block; margin-bottom: 0.5vh; color: white;">
-                        Ville :
+                        City :
                     </label>
                     <input 
                         type="text" 
@@ -73,7 +73,7 @@
                 <!-- Champ Code postal -->
                 <div style="margin-bottom: 2vh;">
                     <label for="place_postcode" style="display: block; margin-bottom: 0.5vh; color: white;">
-                        Code postal :
+                        Postcode :
                     </label>
                     <input 
                         type="text" 
@@ -87,7 +87,7 @@
                 <!-- Champ Bâtiment -->
                 <div style="margin-bottom: 2vh;">
                     <label for="place_building_name" style="display: block; margin-bottom: 0.5vh; color: white;">
-                        Bâtiment :
+                        Building :
                     </label>
                     <select id="place_building_name" name="place_building_name" required style="width:100%; padding:1vh; border-radius:5px; border:1px solid #ccc; background: rgba(255,255,255,0.1); color: white;">
                         {% for building in buildings %}
@@ -103,12 +103,12 @@
                     <a href="{{ request.referrer or url_for('devices', nom_orga='Harman_Kardon') }}" 
                        class="custom-btn btn-yellow"
                        style="text-decoration: none; padding: 1.2vh 3.5vh;">
-                        Annuler
+                        Cancel
                     </a>
                     
                     <button type="submit" class="custom-btn" 
                             style="background-color: #00FF44; color: black; padding: 1.2vh 3.5vh; border: none; cursor: pointer;">
-                        Enregistrer
+                        Save
                     </button>
                 </div>
                 

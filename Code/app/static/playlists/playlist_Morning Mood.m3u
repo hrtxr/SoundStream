@@ -1,11 +1,7 @@
 #EXTM3U
-#EXTINF:212,Alan_Walker_-_Faded.mp3
-Alan_Walker_-_Faded.mp3
-#EXTINF:174,FREE_Alpha_Wann__NeS_Type_Beat_-_Une_Main_Lave_LAutre.mp3
-FREE_Alpha_Wann__NeS_Type_Beat_-_Une_Main_Lave_LAutre.mp3
-#EXTINF:178,FREE_Luv_Resval_Type_Beat_Arch_Prod._IVERRN.mp3
-FREE_Luv_Resval_Type_Beat_Arch_Prod._IVERRN.mp3
-#EXTINF:149,FREE_RB_Type_Beat_-_No_More.mp3
-FREE_RB_Type_Beat_-_No_More.mp3
+#EXTINF:5,Ambient_Lounge.mp3
+ambient.mp3
+#EXTINF:3,Summer_Vibes_Intro.mp3
+summer_intro.mp3
 #EXTINF:190,xtc_3.mp3
 xtc_3.mp3
