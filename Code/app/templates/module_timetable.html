@@ -9,7 +9,7 @@
 
             {% set ns = namespace(LineNb=0) %}
             {% for el in tts.getNextTracks()  %}
-                {% if ns.LineNb < 3 %}
+                {% if ns.LineNb < nb_linestot %}
                     {% set ns.LineNb = ns.LineNb + 1 %}
                     <tr>
                         <td> {{el['name']}} </td>
@@ -18,7 +18,7 @@
             {% endfor %}
                                     
             <!-- Completion of empty lines -->
-            {% for i in range(ns.LineNb, 3) %}
+            {% for i in range(ns.LineNb, nb_linestot) %}
                 <tr><td>&nbsp;</td></tr>
             {% endfor %}
                                 
