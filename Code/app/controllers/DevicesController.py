@@ -1,5 +1,6 @@
 from flask import render_template, session, redirect, url_for, request , jsonify
 from functools import wraps
+import datetime
 from app import app
 from app.controllers.LoginController import LoggedIn, reqrole
 from app.services.UserService import UserService
@@ -50,6 +51,13 @@ class DevicesController :
     @LoggedIn
     @reqrole(['admin'])
     def delete(id_player):
+
+        player= sps.spdao.findByID(id_player)
+        log.ldao.createLog(
+            "DELETE", 
+            f"le lecteur {player.name_place} a été supprimé", 
+            datetime.datetime.now(), 
+            player.id_orga)
         # Permanently remove the player from the database using the service layer
         sps.deleteSongPlayer(id_player)
 
@@ -123,6 +131,7 @@ class DevicesController :
             place_city = request.form.get('place_city')
             place_postcode = request.form.get('place_postcode')
             place_building_name = request.form.get('place_building_name')
+            device_name = request.form.get('device_name')
             
             # Vérification que tous les champs sont remplis
             # Si un champ est vide (None ou ""), on retourne une erreur
@@ -138,7 +147,8 @@ class DevicesController :
                 'place_adress': place_address,  # ← Attention à l'orthographe
                 'place_city': place_city,
                 'place_postcode': place_postcode,
-                'place_building_name': place_building_name
+                'place_building_name': place_building_name,
+                'device_name': device_name
             }
             
             # Appel du service pour mettre à jour dans la base de données
@@ -191,6 +201,7 @@ class DevicesController :
             place_city = request.form.get('place_city')
             place_postcode = request.form.get('place_postcode')
             place_building_name = request.form.get('place_building_name')
+            device_name = request.form.get('device_name')
 
             # Récupérer l'organisation pour redirection et association au nouveau device
             orga_name = session.get('organisation_name')
@@ -198,7 +209,16 @@ class DevicesController :
             orga_id = ogs.getIdByName(orga_name)
             
             # Création du device
-            sps.spdao.createDevice(name_place, ip_address, state, place_address, place_postcode, place_city, place_building_name, orga_id)
+            sps.spdao.createDevice(
+                name_place,
+                ip_address, 
+                state, 
+                place_address, 
+                place_postcode, 
+                place_city, 
+                place_building_name, 
+                device_name, 
+                orga_id)
             
             return redirect(url_for('devices', nom_orga=orga_name))
         

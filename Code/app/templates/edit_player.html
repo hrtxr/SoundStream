@@ -103,6 +103,21 @@
                     </select>
                 </div>
 
+                <!-- Champ Nom de la machine linux -->
+                <div style="margin-bottom: 2vh;">
+                    <label for="device_name" style="display: block; margin-bottom: 0.5vh; color: white;">
+                        Username Linux :
+                    </label>
+                    <input 
+                        type="text" 
+                        id="device_name" 
+                        name="device_name"
+                        value="{{ player.device_name }}"
+                        required
+                        style="width: 100%; padding: 1vh; border-radius: 5px; border: 1px solid #ccc; background: rgba(255,255,255,0.1); color: white;"
+                    >
+                </div>
+
                 <!-- Boutons -->
                 <div style="display: flex; gap: 2vh; justify-content: center; margin-top: 3vh;">
                     <a href="{{ request.referrer or url_for('devices', nom_orga='Harman_Kardon') }}" 

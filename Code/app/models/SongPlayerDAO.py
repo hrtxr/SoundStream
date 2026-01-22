@@ -14,16 +14,16 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         conn.row_factory = sqlite3.Row
         return conn
 
-    def createDevice(self, name_place, ip_address, state, place_address, place_postcode, place_city, place_building_name, orga_id) -> None:
+    def createDevice(self, name_place, ip_address, state, place_address, place_postcode, place_city, place_building_name, device_name, orga_id) -> None:
         """ Create a new song player in the database. """
         conn = self._getDbConnection()
         try:
             query = '''
             INSERT INTO song_player
-            (name_place, IP_adress, state, last_synchronization, place_adress, place_postcode, place_city, place_building_name, id_orga)
-            VALUES (?, ?, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?, ?);
+            (name_place, IP_adress, state, last_synchronization, place_adress, place_postcode, place_city, place_building_name, device_name, id_orga)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
             '''
-            conn.execute(query, (name_place, ip_address, state, place_address, place_postcode, place_city, place_building_name, orga_id))
+            conn.execute(query, (name_place, ip_address, state, place_address, place_postcode, place_city, place_building_name, device_name, orga_id))
             conn.commit()
         except Exception as e:
             conn.rollback()
@@ -37,8 +37,8 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         try:
             query = '''
             INSERT INTO song_player
-            (name_place, ip_address, state, last_synchronization, place_address, place_city, place_postcode, place_building_name, id_orga)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+            (name_place, ip_address, state, last_synchronization, place_address, place_city, place_postcode, place_building_name, device_name, id_orga)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
             '''
             conn.execute(query, data_form_to_form)
             conn.commit()

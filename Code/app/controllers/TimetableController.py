@@ -7,8 +7,10 @@ from app.services.LogService import LogService
 from app.services.OrganisationService import OrganisationService
 from app.services.FileService import FileService
 from app.services.SongPlayerService import SongPlayerService
+from app.services.UserService import UserService
 import datetime
 
+us = UserService()
 sps = SongPlayerService()
 orga = OrganisationService()
 log = LogService()
@@ -96,9 +98,10 @@ class TimetableController:
             
             devices = sps.findAllSongPlayerByOrganisation(orga_id)
             for device in devices:
-                # On synchronise chaque machine Debian enregistrée dans la BDD
-                sps.sync_to_device(device['IP_adress'], 'tristan')
-        
+                if device['state'] == 'ONLINE':
+                    # On synchronise chaque machine Debian enregistrée dans la BDD
+                    sps.sync_to_device(device['IP_adress'], device['device_name'])
+
             log.ldao.createLog(
                 "ADD_FILE",
                 f"User {username} added file {file_storage.filename} to playlist {playlist_name}.",
@@ -110,7 +113,18 @@ class TimetableController:
     
     @app.route('/deletePlaylist/<nom_orga>', methods=['POST'])
     def deletePlaylist(nom_orga):
+        username = session.get('username')
         playlist_id = request.form.get('playlist_id')
+        playlist = ts.getPlaylistById(playlist_id)
+        user_orga = us.udao.getOrganisationByUsername(username)
+        orga_id = orga.getIdByName(user_orga)
+
+        log.ldao.createLog(
+            "DELETE",
+            f"{username} a supprimé la playlist {playlist.name}.",
+            datetime.datetime.now(),
+            orga_id
+        )
 
         ts.deletePlaylist(playlist_id)
 
@@ -167,10 +181,13 @@ class TimetableController:
             playlist_id = None 
         ts.updateDaySchedule(day_name, playlist_id, start_time)
 
+
+        ''' Log update'''
+        playlist = ts.getPlaylistById(playlist_id)
         username = session.get('username')
         orga_id = orga.getIdByName(session.get('organisation_name'))
         log.ldao.createLog("SCHEDULE_UPDATE",
-                            f"l'utilisateur {username} a mis à jour la plannificationde de la playlist {playlist_id}.",
+                            f"l'utilisateur {username} a mis à jour la plannificationde de la playlist {playlist.name}.",
                            datetime.datetime.now(),
                              orga_id)
         

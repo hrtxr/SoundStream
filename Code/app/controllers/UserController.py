@@ -59,14 +59,14 @@ class UserController :
             
             user_name_session = session.get('username')
             orga_id = session.get('organisation_name')
-            log.ldao.createLog("EDIT_USER",
+            log.ldao.createLog("EDIT",
                                f"Le mot de passe de l'utilisateur {username} a été changé par {user_name_session}",
                                datetime.datetime.now(),
                                orga_id
                             )
             # Mise à jour du rôle
             us.udao.updateUserRole(username, new_role)
-            log.ldao.createLog("EDIT_USER",
+            log.ldao.createLog("EDIT",
                                f"Le rôle de l'utilisateur {username} a été changé en {new_role} par {user_name_session}",
                                datetime.datetime.now(),
                                orga_id

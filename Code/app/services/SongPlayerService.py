@@ -160,7 +160,7 @@ class SongPlayerService:
         return (nb_on, nb_off)
         
 
-    def run_sync(self, ip, username):
+    def run_sync(self, ip, device_name):
             # Configuration des dossiers
             # On définit des couples (Source_Locale, Dossier_Destination_Distant)
             sync_tasks = [
@@ -168,16 +168,15 @@ class SongPlayerService:
                 (os.path.join(app.static_folder, 'playlists/'), "playlists/")
             ]
             
-            base_dest_path = f"/home/{username}/SoundStreamDevice/"
-
+            base_dest_path = f"/home/{device_name}/SoundStreamDevice/"
             for src, subfolder in sync_tasks:
                 full_remote_path = os.path.join(base_dest_path, subfolder)
                 
                 # 1. Créer le sous-dossier spécifique sur la Debian
-                subprocess.run(["ssh", f"{username}@{ip}", f"mkdir -p {full_remote_path}"])
+                subprocess.run(["ssh", f"{device_name}@{ip}", f"mkdir -p {full_remote_path}"])
 
                 # 2. Synchroniser vers ce sous-dossier précis
-                dest = f"{username}@{ip}:{full_remote_path}"
+                dest = f"{device_name}@{ip}:{full_remote_path}"
                 cmd = [
                     "rsync", "-avz", "--delete",
                     "-e", "ssh",
@@ -189,13 +188,12 @@ class SongPlayerService:
                 except Exception as e:
                     print(f"Erreur synchro {subfolder} vers {ip} : {e}")
                     
-    def sync_to_device(self, ip, username):
+    def sync_to_device(self, ip, device_name):
         """ Envoie les fichiers vers la vm Debian distante dans des dossiers séparés """
 
-        threading.Thread(target=self.run_sync(ip, username)).start()
+        threading.Thread(target=self.run_sync, args=(ip, device_name)).start()
 
-
-    def remote_play_playlist(self, ip, username, playlist_name):
+    def remote_play_playlist(self, ip, device_name, playlist_name):
         """ 
         Commande le MPD distant pour charger et lire une playlist précise 
         """
@@ -204,7 +202,7 @@ class SongPlayerService:
         # 3. On lance la lecture
         remote_cmd = f"mpc clear && mpc load {playlist_name} && mpc play"
         
-        ssh_cmd = ["ssh", f"{username}@{ip}", remote_cmd]
+        ssh_cmd = ["ssh", f"{device_name}@{ip}", remote_cmd]
         
         try:
             subprocess.run(ssh_cmd, check=True)
@@ -218,7 +216,6 @@ class SongPlayerService:
             now = datetime.datetime.now()
             current_time = now.strftime("%H:%M")
             current_day = now.strftime("%A")
-            
             # Récupération de la playlist prévue (ex: "playlist_MaListe")
             scheduled_playlist = ts.getPlaylistForTime(current_day, current_time)
             
@@ -230,9 +227,10 @@ class SongPlayerService:
                 
                 devices = self.spdao.findAllOnlineDevices()
                 if devices:
+
                     print(f"🎵 Changement de playlist : {scheduled_playlist}")
                     for dev in devices:
-                        self.remote_play_playlist(dev.IP_adress, 'tristan', scheduled_playlist)
+                        self.remote_play_playlist(dev.IP_adress, dev.device_name, scheduled_playlist)
                     
                     # On met à jour la mémoire pour ne pas relancer au prochain tour
                     SongPlayerService._current_playlist = scheduled_playlist

@@ -11,6 +11,7 @@ class SQLValue(TypedDict):
     place_postcode: str
     place_city: str
     place_building_name: str
+    device_name: str
     id_orga: int
     
 class SongPlayer : 
@@ -24,4 +25,5 @@ class SongPlayer :
         self.place_postcode = dico['place_postcode']
         self.place_city = dico['place_city']
         self.place_building_name = dico['place_building_name']
+        self.device_name = dico['device_name']
         self.id_orga = dico['id_orga']

@@ -55,10 +55,9 @@ def populate_database():
     conn.executemany("INSERT INTO user_ (username, role, password) VALUES (?, ?, ?)", users)
 
     orgas = [
-        ('JBL',),
-        ('Harman_Kardon',),
-        ('Samsung',),
-        ('AKG',)
+        ('Orga1',),
+        ('Orga2',),
+        ('Orga3',),
     ]
     conn.executemany("INSERT INTO organisation (name_orga) VALUES (?)", orgas)
 
@@ -80,12 +79,9 @@ def populate_database():
     # 6. SONG_PLAYER (Les boitiers physiques)
     # Note: id_orga doit correspondre aux organisations existantes (111, 113, etc.)
     players = [
-        ('Showroom Paris', '192.168.1.10', 'ONLINE', now, '12 Rue de Rivoli','75000', 'Paris', 'centre commercial', 1), # JBL
-        ('Boutique Lyon', '192.168.1.15', 'OFFLINE', now - timedelta(days=1),'5 Place Bellecour','69000', 'Lyon', 'boutique', 3), # Samsung
-        ('Corner Fnac', '10.0.0.55', 'ONLINE', now, '1 rue Jules Joffrin','59000', 'Lille', 'centre commercial', 2), # Harman
-        ('Givenchy', '8.8.8.8', 'OFFLINE',now,'LA commercial','06000','Nice','centre commercial', 2)
+        ('Abou', '10.100.27.134', 'OFFLINE', now, '12 Rue de Rivoli','75000', 'Paris', 'centre commercial', 'aboubakry', 2), # JBL
     ]
-    conn.executemany("INSERT INTO song_player (name_place, IP_adress, state, last_synchronization, place_adress, place_postcode, place_city, place_building_name, id_orga) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", players)
+    conn.executemany("INSERT INTO song_player (name_place, IP_adress, state, last_synchronization, place_adress, place_postcode, place_city, place_building_name, device_name, id_orga) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", players)
     print("✅ Players insérés.")
 
     conn.commit()

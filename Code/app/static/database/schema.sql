@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS song_player(
    place_postcode  VARCHAR(5) NOT NULL,
    place_city VARCHAR(50) NOT NULL,
    place_building_name TEXT,
+   device_name TEXT NOT NULL,
    id_orga INT NOT NULL,
    UNIQUE(IP_adress),
    FOREIGN KEY(id_orga) REFERENCES organisation(id_orga)
