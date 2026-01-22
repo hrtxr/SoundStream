@@ -21,7 +21,7 @@
                     <tbody>
                         {% set ns = namespace(LineNb=0) %}
                         {% for el in liste_song_player  %}
-                            {% if ns.LineNb < 13 %}
+                            {% if ns.LineNb < 11 %}
                                 {% set ns.LineNb = ns.LineNb + 1 %}
                                 <tr>
                                     <td> {{ el['IP_adress'] }} </td>
@@ -51,7 +51,7 @@
                         </tr>
                             
                         <!-- Completion of empty lines -->
-                        {% for i in range(ns.LineNb, 13) %}
+                        {% for i in range(ns.LineNb, 11) %}
                             <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
                         {% endfor %}
                         <tr>
