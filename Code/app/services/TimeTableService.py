@@ -199,10 +199,7 @@ class TimeTableService:
             end_dt = cursor + duration_delta
 
             if start_dt <= now_dt < end_dt:
-                # Au lieu de row['name'] (le titre du son), 
-                # assurez-vous de renvoyer le nom utilisé pour le fichier .m3u
-                # Si votre fichier s'appelle "playlist_Pop_Chill.m3u", renvoyez "playlist_Pop_Chill"
-                return f"playlist_{row['playlist_name']}" # Remplacez par la clé correcte de votre query SQL
+                return f"playlist_{row['playlist_name']}"
 
             cursor = end_dt
 

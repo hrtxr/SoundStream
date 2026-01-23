@@ -99,7 +99,7 @@ class TimetableController:
             devices = sps.findAllSongPlayerByOrganisation(orga_id)
             for device in devices:
                 if device['state'] == 'ONLINE':
-                    # On synchronise chaque machine Debian enregistrée dans la BDD
+                    # machine synchronisation
                     sps.sync_to_device(device['IP_adress'], device['device_name'])
 
             log.ldao.createLog(
