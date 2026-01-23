@@ -17,11 +17,12 @@
 ### Maquette :  
 [Maquette](00-Documents/Screenshots-Maquette/V1/)   
 ### Fiche de route :  
-[Fiche de route] (seras disponible avant la soutenance du vendredi 23/01/2026)  
+[Fiche de route](00-Documents/Fiche_de_route.xlsx)  
+[RACI](00-Documents/RACI.pdf)   
 ### Feuille de temps :  
-[Feuille de temps] (seras disponible avant la soutenance du vendredi 23/01/2026)  
+[Feuille de temps](00-Documents/Feuille_de_temps_Neptune_A%20.pdf)  
 ### Paragraphe d'analyse du déroulement du projet :  
-(seras disponible avant la soutenance du vendredi 23/01/2026)  
+Pour ce qui est de la méthodologie de la gestion de ce projet, nous avons procédé comme cela : on a tout d’abord recueilli les besoins du client et on les a bien définis en les traduisant en  users stories. Puis nous avons créé le cahier des charges afin de cadrer  et  transformer les users stories en réelles exigences.Puis nous sommes passés à la planification des tâches, via une feuille de route qui nous a permis de connaître qui a fait quoi au sein du projet. Les obstacles étaient nombreux, nous avons eu du mal à bien planifier nos tâches car avant de commencer à coder le manière de procéder était très abstraite, mais à force de coder nous avons réussi à gagner en clarté sur l'avancée du projet. De plus, nous estimons avoir commencé la partie programmation du projet avec un peu de retard, ce qui nous  a donné un peu de stress et quelques nuits blanches à la fin du projet. Ainsi, pour conclure, nous estimons avoir bien conduit le projet malgré quelques obstacles sur la planification et la gestion du temps. 
 ## Compétence 6 :
 ### Compte-rendu :  
 [Compte-rendu](00-Documents/Compte_rendu_compétence_6.pdf)  
@@ -77,31 +78,6 @@ Les étudiants développeraient la solution pour un pilote :
 3. Stocker l’historique.
 4. Scénarios de test : coupure réseau, coupure électrique, diffusion d’un message urgent, respect du planning des publicités.
 
-
-
-### 🌲 Arborescence 
-```
-/
-├── 00-Documents
-│   ├── Screenshots-Maquette
-│   │   └── V1
-│   │       ├── Dashboard Admin.png
-│   │       ├── Dashboard CM.png
-│   │       ├── Device view 1.png
-│   │       ├── Login.png
-│   │       ├── Player web.png
-│   │       ├── Timetable view 1.png
-│   │       └── Timetable view 2 - Calendar.png
-│   ├── Besoin_Utilisateurs.pdf
-│   ├── Cahier_des_chargesV1.0.pdf
-│   ├── indications.txt
-│   ├── Ignore-latex-userstories.txt
-│   └── Synthèse des questions à poser à Mr.pdf
-├── Code
-│   └── indications.txt
-├── .gitignore
-└── README.md
-```
 
 ### 🧋 Autres Sources
 - [🐈‍⬛ Le Github](https://github.com/hrtxr/SoundStream)
