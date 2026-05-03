@@ -27,6 +27,8 @@ Pour ce qui est de la méthodologie de la gestion de ce projet, nous avons proc�
 ### Compte-rendu :  
 [Compte-rendu](00-Documents/Compte_rendu_compétence_6.pdf)  
 
+# Livrable pour les évaluations des Compétences (S4) :
+
 
 ### Comment lancer l'application :
 Il est nécessaire d'utiliser un environnement virtuel Python pour isoler les dépendances.
