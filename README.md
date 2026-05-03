@@ -54,7 +54,7 @@ Puis mettre l'URL http://127.0.0.1:8000/ dan votre navigateur.
 SoundStream est un projet que nous sommes en train de réaliser dans le cadre de la SAÉ S301 (SAÉ = projet évalué qui regroupe un ensemble de compétances afin de pouvoir appliquer les principes théoriques vus en cours). Elle est réalisée en groupe et consiste en le développement d'une application web complète.
 
 
-### 🧑‍💻 Développeurs
+### 🧑‍💻 Développeurs (V1)
 | Participants      | Mail de contact                       | Discord               |
 | ----------------- | ------------------------------------- | -----------           |
 | HEURTAUX Romain   | heurtaux.romain@gmail.com             | romain_hrtx           |
@@ -62,6 +62,16 @@ SoundStream est un projet que nous sommes en train de réaliser dans le cadre de
 | CASSEL Kadir      | kadir.cassel06@gmail.com              | -                     |
 | COLLEN Tristan    | tristan.collen@edu.univ-paris13.fr    | -                     |
 | ALJANE Saif-Eddine| saifeddinealjane@gmail.com            | -                     |
+- Groupe Neptune A
+
+### 🧑‍💻 Développeurs (V2)
+| Participants      | Mail de contact                       | Discord               |
+| ----------------- | ------------------------------------- | -----------           |
+| HEURTAUX Romain   | heurtaux.romain@gmail.com             | romain_hrtx           |
+| FILLONNEAU Kenzo  | kenzo.fillonneau@edu.univ-paris13.fr  | -                     |
+| SEBBAH Sofiane    | sofianesbh6@gmail.com                 | -                     |
+| LEMEST Enzo       |                                       | -                     |
+| Lucas             |                                       | -                     |
 - Groupe Neptune A
 ### 🖊️ Descriptif du projet
 
@@ -73,6 +83,8 @@ L’idée serait de mettre en place un système de supervision qui permette :
 - de vérifier que la playlist locale de secours est bien à jour
 - de consigner les messages diffusés (musique, publicité, urgent)
 - et de déclencher des alertes en cas de problème (lecteur KO, playlist obsolète,absence de diffusion).
+
+Une version V2 à été proposer en rigueur des problémes observer dans la version Vanilla avec une architecture réseaux totalement revue
 
 Les étudiants développeraient la solution pour un pilote :
 1. Deux lecteurs test (site principal + 2 sites distants)
