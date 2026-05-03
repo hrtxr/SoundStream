@@ -1,6 +1,6 @@
 # 🔉 SoundStream
 
-# Livrable pour les évaluations des Compétences :
+# Livrable pour les évaluations des Compétences (S3) :
 ## Compétence 2 :  
 ### livrable compétence 2 :  
 [livrable compétence 2](00-Documents/rapport_compétence_2-1.pdf)  
@@ -26,6 +26,8 @@ Pour ce qui est de la méthodologie de la gestion de ce projet, nous avons proc�
 ## Compétence 6 :
 ### Compte-rendu :  
 [Compte-rendu](00-Documents/Compte_rendu_compétence_6.pdf)  
+
+# Livrable pour les évaluations des Compétences (S4) :
 
 
 ### Comment lancer l'application :
