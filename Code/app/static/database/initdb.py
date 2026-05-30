@@ -29,9 +29,19 @@ def populate_database():
     conn.executemany("INSERT INTO role (role, description) VALUES (?, ?)", roles)
     print("✅ Roles insérés.")
 
-    # Types de fichiers
-    conn.executemany("INSERT INTO type_file (type_file) VALUES (?)", [('mp3',)])
-    print("✅ Types insérés.")
+    buildings = [
+        'centre commercial',
+        'boutique',
+        'restaurant',
+        'salle de sport',
+        'hôtel',
+        'supermarché',
+        'cinéma',
+        'gare'
+    ]
+    for b in buildings:
+        conn.executemany("INSERT INTO building (building_name) VALUES (?);", [(b,)])
+    print("✅ Buildings insérés.")
 
     # ✅ CORRECTION : mot de passe + email pour chaque utilisateur
     # L'admin par défaut est créé ici avec des identifiants connus
@@ -39,14 +49,14 @@ def populate_database():
     hashed_pw = bcrypt.hashpw(password_clair.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
 
     users = [
-        # (username,  role,        password,   email)
-        ("admin",     'admin',     hashed_pw,  'admin@soundstream.local'),     # ← ADMIN PAR DÉFAUT
-        ("Romain",   'admin',     hashed_pw,  'romain@soundstream.local'),
-        ("Tristan",  'marketing', hashed_pw,  'tristan@soundstream.local'),
-        ("Abou",     'sales',     hashed_pw,  'abou@soundstream.local'),
+        # (username,  role,         email,                        phone_number, password)
+        ("admin",     'admin',      'admin@soundstream.local',    "0606060606", hashed_pw),     # ← ADMIN PAR DÉFAUT
+        ("Romain",    'admin',      'romain@soundstream.local',   "0606060606", hashed_pw),
+        ("Tristan",   'marketing',  'tristan@soundstream.local',  "0606060606", hashed_pw),
+        ("Abou",      'sales',      'abou@soundstream.local',     "0606060606", hashed_pw),
     ]
     conn.executemany(
-        "INSERT INTO user_ (username, role, password, email) VALUES (?, ?, ?, ?)",
+        "INSERT INTO user (username, role, email, phone_number, password) VALUES (?, ?, ?, ?, ?)",
         users
     )
     print("✅ Utilisateurs insérés.")
@@ -71,7 +81,7 @@ def populate_database():
     # Planning
     days = [('Monday',), ('Tuesday',), ('Wednesday',), ('Thursday',),
             ('Friday',), ('Saturday',), ('Sunday',)]
-    conn.executemany("INSERT INTO Planning (day_) VALUES (?)", days)
+    conn.executemany("INSERT INTO planning (diffusing_day) VALUES (?)", days)
     print("✅ Planning inséré.")
 
     # Song player
@@ -83,9 +93,9 @@ def populate_database():
     ]
     conn.executemany(
         "INSERT INTO song_player "
-        "(name_place, IP_adress, state, last_synchronization, "
-        " place_adress, place_postcode, place_city, "
-        " place_building_name, device_name, id_orga) "
+        "(name_place, IP_adress, player_state, last_synchronization, "
+        " address_place, postcode_place, city_place, "
+        " building_name_place, device_name, id_orga) "
         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
         players
     )

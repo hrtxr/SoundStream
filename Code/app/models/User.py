@@ -14,3 +14,4 @@ class User:
         self.password = dico['password']
         self.role = dico['role']
         self.email = dico['email']
+        self.phone_number = dico['phone_number']
