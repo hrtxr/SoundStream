@@ -3,6 +3,7 @@ from app import app
 import requests
 import subprocess
 from ping3 import ping, verbose_ping
+import sys
 import paramiko
 import json
 from app.models.SongPlayer import SongPlayer
@@ -198,4 +199,33 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
 
         conn.close()
         return players_online_list
+
+    def rtp(self):
+
+        """Si tout va dans le meilleur des mondes on ferra du rtp (la machine étant une grande fille elle sera distinguer
+        quand activer le plan de secours en local) """
+
+        rtp_url = "rtp://239.1.1.1:5004?localport=5004"
+        fifo_path = "../static/playlists/mpd.fifo" # PIPE
+
+        command = [
+            'ffmpeg',
+            '-f', 's16le',         # Format d'entrée : PCM 16-bit Little-Endian
+            '-ar', '44100',        # Facultatif : 44.1 kHz
+            '-ac', '2',            # Facultatif : 2 canaux stéréo
+            '-i', fifo_path,       # Obligatoire : PIPE
+            '-acodec', 'libmp3lame', # MP3
+            '-ab', '192k',         #  192 kbps
+            '-f', 'rtp',           # Obligatoire (pour les besoins de soundstream) : RTP
+            rtp_url                # url rtp
+        ]
+
+        try:
+
+            process_async = subprocess.Popen(command, stderr=subprocess.PIPE, text=True) # Popen != Run dans la synchronisité
+
+        except e:
+            print(f"Probléme {e} dans rtps")
+
+
  
