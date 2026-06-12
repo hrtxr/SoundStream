@@ -92,7 +92,7 @@ class TimeTableService:
         days_data = []
 
         for day in days:
-            day_name = day['diffusing_day'] 
+            day_name = day['day_'] 
             playlists = self.pdao.getPlannedPlaylistsForDay(day_name)
             
             days_data.append({
@@ -249,7 +249,7 @@ class TimeTableService:
             end_display = end_dt.strftime("%H:%M")
 
             track_info = {
-                "name": row['file_name'],
+                "name": row['name'],
                 "start": start_key,
                 "end": end_display
             }

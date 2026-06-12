@@ -5,7 +5,7 @@ from typing import *
 # Werkzeug: Flask's utility library
 from werkzeug.utils import secure_filename      # Essential security tool to clean filenames (prevents hacking)
 from werkzeug.datastructures import FileStorage # Used only for type hinting (helps IDE auto-completion)
-from tinytag import TinyTag
+from mutagen import File as MutagenFile         # External library used to read audio metadata (duration)
 
 from app import app
 from app.models.FileDAO import FileDAO
@@ -50,36 +50,35 @@ class FileService:
     
     def _getTimeLengthOfFile(self, absolute_path: str) -> str:
         """
-        Calculates the audio file duration in MM:SS format.
-        Reads the file's metadata using the TinyTag library.
+        Calculates the duration of an audio file using Mutagen.
 
         Args:
             absolute_path (str): The full path to the file on the disk.
 
         Returns:
-            str: The duration in 'MM:SS' format.
-                 Returns '00:00' if the metadata cannot be read.
+            str: The duration in 'MM:SS' format (e.g., '03:45').
+                 Returns '00:00' if an error occurs.
         """
         try:
-            # 1. Check if the file exists on the disk
-            if not os.path.exists(absolute_path):
-                return "00:00"
-            
-            # 2. Read the audio metadata
-            tag = TinyTag.get(absolute_path)
-            
-            if tag.duration is None:
-                return "00:00"
-        
-            # 3. Format the duration into minutes and seconds
-            length_in_seconds = int(tag.duration)
-            minutes = length_in_seconds // 60
-            seconds = length_in_seconds % 60
-            
-            return f"{minutes:02d}:{seconds:02d}"
+            # Mutagen analyzes the file at the given path
+            audio = MutagenFile(absolute_path)
 
+            if not audio or not audio.info:
+                return "00:00"
+            
+            # audio.info.length gives a float (225.4s), we cast to int
+            length_in_seconds = int(audio.info.length)
+
+            # Mathematical conversion:
+            # // is integer division (225 // 60 = 3)
+            minutes = length_in_seconds // 60
+            # % is the modulo operator (remainder) (225 % 60 = 45)
+            seconds = length_in_seconds % 60
+
+            # :02d ensures 2 digits ('3' becomes '03')
+            return f"{minutes:02d}:{seconds:02d}"
         except Exception as e:
-            print(f"Error reading metadata: {e}")
+            print(f"Error reading duration: {e}")
             return "00:00"
 
     def createFileFromForm(self, form_data: dict, file_storage: FileStorage) -> int:
