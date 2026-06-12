@@ -33,7 +33,7 @@ class FileDAO(FileDAOInterface) :
     def findByName(self, name: str) -> Optional[File]:
         '''Return a file from the database using its name'''
         conn = self._getDbConnection()
-        query = "SELECT * FROM file WHERE name = ?;"
+        query = "SELECT * FROM file WHERE file_name = ?;"
         
         row = conn.execute(query, (name,)).fetchone()
         conn.close()
