@@ -33,7 +33,7 @@ class FileDAO(FileDAOInterface) :
     def findByName(self, name: str) -> Optional[File]:
         '''Return a file from the database using its name'''
         conn = self._getDbConnection()
-        query = "SELECT * FROM file WHERE file_name = ?;"
+        query = "SELECT * FROM file WHERE name = ?;"
         
         row = conn.execute(query, (name,)).fetchone()
         conn.close()
@@ -62,7 +62,7 @@ class FileDAO(FileDAOInterface) :
         conn = self._getDbConnection()
         
         # J'ajoute upload_date car il est dans ta requête, vérifie qu'il est dans ta table !
-        query = "INSERT INTO file (file_name, path, time_length, upload_date, type_file) VALUES (?, ?, ?, ?, ?);"
+        query = "INSERT INTO file (name, path, time_length, upload_date, type_file) VALUES (?, ?, ?, ?, ?);"
         data = (name, path, time_length, datetime.now(), type_file)
         try:
             cursor = conn.execute(query, data)
@@ -116,7 +116,7 @@ class FileDAO(FileDAOInterface) :
             FROM file f
             JOIN composition c ON f.id_file = c.id_file
             WHERE c.id_playlist = ?
-            ORDER BY f.file_name;
+            ORDER BY f.name
         ''', (playlist_id,)).fetchall()
         
         conn.close()

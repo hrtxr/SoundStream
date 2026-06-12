@@ -2,7 +2,7 @@ from app.models.User import User
 
 
 class UserDAOInterface :
-    def createUser(self, username, password, role, organisation, email='', phone_number='') -> None:
+    def createUser(self, username, password, role) :
         """ create a new user """
         pass
 
