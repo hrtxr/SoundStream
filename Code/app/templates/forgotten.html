@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/devices.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/users.css') }}">
 
 <div class="devices">
     <div class="bento">
@@ -22,13 +22,28 @@
                 {% if error %}
                     <p style="color: red;">{{ error }}</p>
                 {% endif %}
+                
                 {% if success %}
                     <p style="color: #00FF44;">{{ success }}</p>
+                    <a href="https://mail.google.com" target="_blank" class="custom-btn btn-gmail">
+                        <img src="https://www.google.com/favicon.ico" alt="Gmail" style="width: 35px; height: 35px; vertical-align: middle; margin-right: 8px;">
+                        Gmail
+                    </a>
+                    <a href="https://outlook.live.com" target="_blank" class="custom-btn btn-outlook">
+                        <img src="https://img.icons8.com/?size=100&id=gfladD7prcwv&format=png&color=000000" alt="Outlook" style="width: 40px; height: 40px; vertical-align: middle; margin-right: 8px;">
+                        Outlook
+                    </a>
+                    <a href="https://www.yahoo.com/intl/fr_fr/mail" target="_blank" class="custom-btn btn-yahoo">
+                        <img src="https://www.yahoo.com/favicon.ico" alt="Yahoo Mail" style="width: 30px; height: 30px; vertical-align: middle; margin-right: 8px;">
+                        Yahoo
+                    </a>
                 {% endif %}
 
                 <div style="display: flex; gap: 2vh; justify-content: center; margin-top: 3vh;">
                     <a href="{{ url_for('login') }}" class="custom-btn btn-yellow"
-                        style="background-color: #ffee00; color: black; padding: 1.2vh 3.5vh;">Annuler</a>
+                        style="background-color: #ffee00; color: black; padding: 1.2vh 3.5vh;">
+                        Retour à la page de connexion
+                    </a>
                     <button type="submit" class="custom-btn"
                         style="background-color:#00FF44; color: black; padding: 1.2vh 3.5vh;">
                         Envoyer
