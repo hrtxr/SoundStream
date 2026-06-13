@@ -28,15 +28,23 @@ class UserController :
     @reqrole(['admin'])
     def deleteUser(username):
 
-        # Create the log before and insert it in the database before delete the user
-        user_orga = us.udao.getOrganisationByUsername(username)
-        orga_id = ogs.getIdByName(user_orga)
-        log.ldao.createLog("DELETE", f"l'utilisateur {username} a été supprimé de la base de données.",
-                           datetime.datetime.now(), orga_id)
-        
+        # Claim the organizations of the user to delete and its id to create the log
+        user_orga = us.getOrganisationsByUsername(username)
+        orga_name = session.get('organisation_name')
 
-        us.deleteByUsername(username)
-        return redirect(request.referrer)
+        orga_id = ogs.getIdByName(orga_name)
+        print(user_orga)
+
+        if len(user_orga) == 1:
+            us.deleteByUsername(username)
+            log.ldao.createLog("DELETE", f"l'utilisateur {username} a été supprimé de la base de données.",
+                                datetime.datetime.now(), orga_id)
+        elif (len(user_orga) > 1):
+            us.deleteUserOfOrganisation(username, orga_name)
+            log.ldao.createLog("DELETE", f"l'utilisateur {username} a été supprimé de l'organisation {orga_name}",
+                                datetime.datetime.now(), orga_id)
+        
+        return redirect(url_for('users', nom_orga=orga_name))
     
     @app.route('/editUsn/<username>', methods=['GET', 'POST'])
     @LoggedIn
@@ -59,7 +67,7 @@ class UserController :
 
 
             # Récupérer l'organisation pour redirection
-            orga_name = us.udao.getOrganisationByUsername(username)
+            orga_name = session.get('organisation_name')
             
             if not orga_name:
                 orga_name = 'default'
@@ -133,7 +141,7 @@ class UserController :
                 return "Utilisateur non trouvé", 404
             
             # Récupérer l'organisation de l'utilisateur
-            orga_name = us.udao.getOrganisationByUsername(username)
+            orga_name = session.get('organisation_name')
             
             if not orga_name:
                 orga_name = 'Harman_Kardon'
@@ -174,25 +182,38 @@ class UserController :
                 return "Erreur : Rôle invalide", 400
 
             user_name_session = session.get('username')
+            
+            users = us.findAll()
+
+            user_organizations = us.getOrganisationsByUsername(username)
+
+            for user in users:
+                if user.username == username:
+
+                    if orga_name in user_organizations:
+                        message = "L'utilisateur existe déjà dans cette organisation"
+                        return render_template('add_user.html',
+                                                metadata={'title': 'Ajouter Utilisateur'},
+                                                orga=orga_name,
+                                                roles=available_roles,
+                                                message=message
+                                                )
+                    
+                    user_with_email = user.email
+
 
             existing_emails = [user.email for user in us.findAll()]
 
             # Create the log and insert it in the database
             orga_id = ogs.getIdByName(orga_name)
 
-            if match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email) and email not in existing_emails:
-                # Création de l'utilisateur
-                us.udao.createUser(username, password, role, orga_name)
+            if match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+                if email not in existing_emails or email == user_with_email:
+                    # Création de l'utilisateur
+                    us.createUser(username, password, role, orga_name, email)
 
-                log.ldao.createLog("ADD", f"l'utilisateur {username} a été implémenté dans la base de données.",
-                           datetime.datetime.now(), orga_id)
-                
-                us.udao.updateEmail(username, email)
-                log.ldao.createLog("ADD",
-                                   f"L'email de l'utilisateur {username} a été ajouté ({email}) par {user_name_session}",
-                                   datetime.datetime.now(),
-                                   orga_id
-                                )
+                    log.ldao.createLog("ADD", f"l'utilisateur {username} a été implémenté dans la base de données.",
+                                        datetime.datetime.now(), orga_id)
                 
                 return redirect(url_for('users', nom_orga=orga_name))
             else:

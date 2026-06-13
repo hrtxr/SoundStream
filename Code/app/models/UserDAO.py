@@ -26,13 +26,16 @@ class UserDAO(UserDAOInterface):
     def createUser(self, username, password, role, organisation, email='', phone_number='') -> None:
         """ create a new user """
         if username in self.findUsersInOrganisation(organisation):
-            raise ValueError("Username already exists")
+            raise ValueError("Username already exists in this organisation")
         
         conn = self._getDbConnection()
-        hashed_password = self._generatePWDHash(password)
-        # ✅ CORRECTION : email et phone_number ajoutés dans l'INSERT (colonnes NOT NULL dans le schéma)
-        query = 'INSERT INTO user (username, password, role, email, phone_number) VALUES (?,?,?,?,?);'
-        conn.execute(query, (username, hashed_password, role, email, phone_number))
+
+        if username not in self.findAllUsername():
+            hashed_password = self._generatePWDHash(password)
+            # ✅ CORRECTION : email et phone_number ajoutés dans l'INSERT (colonnes NOT NULL dans le schéma)
+            query = 'INSERT INTO user (username, password, role, email, phone_number) VALUES (?,?,?,?,?);'
+            conn.execute(query, (username, hashed_password, role, email, phone_number))
+
         conn.commit()
         conn.close()
 
@@ -41,28 +44,27 @@ class UserDAO(UserDAOInterface):
     def createLinkUserOrganisation(self, username, organisation) -> None:
         """ Create a link between a user and an organisation """
         conn = self._getDbConnection()
+
         query_idUser = """
             SELECT u.id_user
             FROM user u
             WHERE u.username = ?
         """
         user_id = conn.execute(query_idUser, (username,)).fetchone()[0]
-        conn.commit()
-        conn.close()
 
-        conn = self._getDbConnection()
+
         query_idOrga = """
             SELECT o.id_orga
             FROM organisation o
             WHERE o.name_orga = ?
         """
         orga_id = conn.execute(query_idOrga, (organisation,)).fetchone()[0]
-        conn.commit()
-        conn.close()
+        print(user_id, orga_id)
 
-        conn = self._getDbConnection()
+
         links = (user_id, orga_id)
         conn.execute("INSERT INTO work_link (id_user, id_orga) VALUES (?, ?)", links)
+    
         conn.commit()
         conn.close()
         
@@ -136,6 +138,18 @@ class UserDAO(UserDAOInterface):
         conn.commit()
         conn.close()
 
+    def deleteUserOfOrganisation(self, username, organisation) -> None:
+        """ Delete the user of an organisation """
+        conn = self._getDbConnection()
+        query = """
+            DELETE FROM work_link
+            WHERE id_user = (SELECT id_user FROM user WHERE username = ?)
+            AND id_orga = (SELECT id_orga FROM organisation WHERE name_orga = ?)
+        """
+        conn.execute(query, (username, organisation))
+        conn.commit()
+        conn.close()
+
     def updateUserRole(self, username, new_role) -> None:
         """Update user role"""
         conn = self._getDbConnection()
@@ -144,19 +158,20 @@ class UserDAO(UserDAOInterface):
         conn.commit()
         conn.close()
 
-    def getOrganisationByUsername(self, username) -> str:
-        """Get the organisation name of a user"""
+    def getOrganisationsByUsername(self, username) -> list:
+        """Get the organisation names of a user"""
         conn = self._getDbConnection()
         query = """
             SELECT o.name_orga 
             FROM organisation o
-            JOIN work_link w ON o.id_orga = w.id_orga
-            JOIN user u ON w.id_user = u.id_user
+            JOIN work_link w USING (id_orga)
+            JOIN user u USING (id_user)
             WHERE u.username = ?
         """
-        result = conn.execute(query, (username,)).fetchone()
+        rows = conn.execute(query, (username,)).fetchall()
+        result = [row['name_orga'] for row in rows]
         conn.close()
-        return result[0] if result else None
+        return result if result else None
 
     def getAllRoles(self) -> list:
         """Get all available roles from the role table"""
