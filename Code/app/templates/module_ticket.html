@@ -14,7 +14,8 @@
         </thead>
 
         <tbody>
-            {% set ticket_list = los.getTicketLogs() %}
+            {% set id_orga = ogs.getIdByName(orga) %}
+            {% set ticket_list = los.getTicketsByOrganisation(id_orga) %}
             {% set ns = namespace(LineNb=0) %}
 
             {% if ticket_list|length > 0 %}

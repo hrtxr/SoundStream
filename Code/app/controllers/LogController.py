@@ -58,8 +58,9 @@ class LogController:
     def tickets():
         metadata = {'title': 'Tickets'}
         nom_orga = session.get('organisation_name')
-        ticket_list = log.getTicketLogs()
-        return render_template('tickets.html', ticket_list=ticket_list, metadata=metadata, orga=nom_orga)
+        id_orga = orga.getIdByName(nom_orga)
+        ticket_list = log.getTicketsByOrganisation(id_orga)  # Get ticket logs for the user's organization
+        return render_template('tickets.html', ticket_list=ticket_list, metadata=metadata, orga=nom_orga, id_orga=id_orga)
 
     @app.route('/messages_diffused/<nom_orga>', methods=['GET'])
     @LoggedIn

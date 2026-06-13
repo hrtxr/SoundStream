@@ -56,6 +56,8 @@ class UserController :
             new_password = request.form.get('password')
             new_role = request.form.get('role')
             new_email = request.form.get('email')
+
+            message = ""
             
 
             # Récupérer tous les rôles disponibles pour validation
@@ -64,6 +66,7 @@ class UserController :
 
             # Récupérer tous les emails existants pour validation
             existing_emails = [user.email for user in us.findAll()]
+            existing_emails.remove(us.findByUsername(username).email)  # Remove the current user's email from the list
 
 
             # Récupérer l'organisation pour redirection
@@ -102,20 +105,19 @@ class UserController :
             
 
             # Mise à jour de l'email
-            if match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', new_email) and new_email != us.findByUsername(username).email and new_email not in existing_emails:
-                us.udao.updateEmail(username, new_email)
-                log.ldao.createLog("EDIT",
-                                   f"L'email de l'utilisateur {username} a été changé en {new_email} par {user_name_session}",
-                                   datetime.datetime.now(),
-                                   orga_id
-                                )
-                message = "Utilisateur modifié avec succès."
+            if match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', new_email) and new_email not in existing_emails:
+                if new_email != us.findByUsername(username).email:
+                    us.udao.updateEmail(username, new_email)
+                    log.ldao.createLog("EDIT",
+                                        f"L'email de l'utilisateur {username} a été changé en {new_email} par {user_name_session}",
+                                        datetime.datetime.now(),
+                                        orga_id
+                                    )
+                    message = "Utilisateur modifié avec succès."
                 return redirect(url_for('users', nom_orga=orga_name, message=message))
             else:
                 if not match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', new_email):
                     message = "Email non valide"
-                elif new_email == us.findByUsername(username).email:
-                    message = "Le nouvel email est identique à l'ancien"
                 else:
                     for user in us.findAll():
                         if user.email == new_email:
@@ -270,6 +272,18 @@ class UserController :
                 # Envoyer le mail
                 from app.services.EmailService import send_reset_email
                 send_reset_email(email, user.username, new_password)
+
+                username = us.findByEmail(email).username
+                organisations = us.getOrganisationsByUsername(user.username)
+
+                for orga in organisations:
+                    orga_id = ogs.getIdByName(orga)
+
+                    log.ldao.createLog("TICKET",
+                                        f"Une demande de réinitialisation du mot de passe pour {username} a été effectuée",
+                                        datetime.datetime.now(),
+                                        orga_id
+                                    )
 
                 return render_template('forgotten.html', metadata=metadata, success="Un nouveau mot de passe a été envoyé à votre adresse mail.")
             else:
