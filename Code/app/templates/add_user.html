@@ -65,6 +65,9 @@
                 </div>
                 
             </form>
+            {% if message %}
+                <h3 class="error" id="error">{{ message }}</h3>
+            {% endif %}
         </div>
     </div>
 </div>

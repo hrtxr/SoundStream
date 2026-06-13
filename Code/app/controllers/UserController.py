@@ -172,18 +172,45 @@ class UserController :
             # Vérification du rôle
             if not role or role not in available_roles:
                 return "Erreur : Rôle invalide", 400
-            
-            
-            # Création de l'utilisateur
-            us.udao.createUser(username, password, role, orga_name)
-            us.updateEmail(username, email)  # ← NOUVEAU
+
+            user_name_session = session.get('username')
+
+            existing_emails = [user.email for user in us.findAll()]
 
             # Create the log and insert it in the database
             orga_id = ogs.getIdByName(orga_name)
-            log.ldao.createLog("ADD", f"l'utilisateur {username} a été implémenté dans la base de données.",
+
+            if match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email) and email not in existing_emails:
+                # Création de l'utilisateur
+                us.udao.createUser(username, password, role, orga_name)
+
+                log.ldao.createLog("ADD", f"l'utilisateur {username} a été implémenté dans la base de données.",
                            datetime.datetime.now(), orga_id)
+                
+                us.udao.updateEmail(username, email)
+                log.ldao.createLog("ADD",
+                                   f"L'email de l'utilisateur {username} a été ajouté ({email}) par {user_name_session}",
+                                   datetime.datetime.now(),
+                                   orga_id
+                                )
+                
+                return redirect(url_for('users', nom_orga=orga_name))
+            else:
+                if not match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+                    message = "Email non valide"
+                else:
+                    for user in us.findAll():
+                        if user.email == email:
+                            user_with_email = user.username
+                            break
+                    message = "Le nouvel email est similaire à un email existant (utilisé par " + user_with_email + ")"
             
-            return redirect(url_for('users', nom_orga=orga_name))
+                return render_template('add_user.html',
+                                        metadata={'title': 'Ajouter Utilisateur'},
+                                        orga=orga_name,
+                                        roles=available_roles,
+                                        message=message
+                                        )
         
         else:
             # AFFICHAGE DU FORMULAIRE (GET)
