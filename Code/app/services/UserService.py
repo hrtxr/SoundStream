@@ -21,6 +21,10 @@ class UserService():
     def findAllUsername(self) -> list[str]:
         """ Get all usernames """
         return self.udao.findAllUsername()
+    
+    def findAll(self) -> list:
+        """ Get all users """
+        return self.udao.findAll()
 
     def findByEmail(self, email):
         """Get user by email"""

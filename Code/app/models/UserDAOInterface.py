@@ -14,6 +14,14 @@ class UserDAOInterface :
         """ Get user by username """
         pass
 
+    def findByEmail(self, email) -> User:
+        """ Get user by email """
+        pass
+
+    def updateEmail(self, username, new_email) -> None:
+        """ Update the email of a user """
+        pass
+    
     def findUsersInOrganisation(self, organisation) -> list:
         """ Get all the users of an organisation """
         pass
