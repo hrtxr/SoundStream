@@ -20,3 +20,9 @@ class LogDAOInterface:
 
     def findAllMessageDiffused(self) -> list[Log]:
         pass
+
+    def findTypesLog(self) -> list[str]:
+        pass
+
+    def findLogsByOrganizationByType(self, org_id: int, type_log: str) -> list[Log]:
+        pass

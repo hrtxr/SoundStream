@@ -48,3 +48,14 @@ class LogService:
             list_messages.append(message.toDict())
 
         return list_messages
+    
+    def getTypesLog(self) -> list[str]:
+        return self.ldao.findTypesLog()
+    
+    def getLogsByOrganisationByType(self, id_orga: int, type_log: str) -> list[dict]:
+        logs = self.ldao.findLogsByOrganizationByType(id_orga, type_log)  # New method to get logs by organization and type
+        list_logs = list()
+        for log in logs :
+            list_logs.append(log.toDict())
+
+        return list_logs

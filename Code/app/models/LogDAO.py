@@ -111,3 +111,34 @@ class LogSqliteDAO(LogDAOInterface):
         conn.close()
 
         return tickets_instances
+    
+    def findTypesLog(self) -> list[str]:
+        ''' Return the list of the all the types of logs in the database'''
+        conn = self._getDbConnection()
+        query = "SELECT DISTINCT type_log FROM log ;"
+
+        types_log = conn.execute(query).fetchall()
+        types_log_list = list()
+
+        for type_log in types_log :
+            types_log_list.append(type_log['type_log'])
+
+        conn.close()
+
+        return types_log_list
+    
+    def findLogsByOrganizationByType(self, id_orga: int, type_log: str) -> list[Log]:
+        ''' Return the list of the all the logs by the organization id and the type of log in argument'''
+        
+        conn = self._getDbConnection()
+        query = "SELECT * FROM log WHERE id_orga = ? AND type_log = ? ORDER BY date_log DESC;"
+
+        logs = conn.execute(query, (id_orga, type_log)).fetchall()
+        logs_instances = list()
+
+        for log in logs :
+            logs_instances.append(Log(dict(log)))
+
+        conn.close()
+
+        return logs_instances
