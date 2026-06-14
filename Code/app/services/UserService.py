@@ -26,6 +26,10 @@ class UserService():
         """Get the organisation names of a user"""
         return self.udao.getOrganisationsByUsername(username)
     
+    def getRoleByUsername(self, username):
+        """Get the role of a user"""
+        return self.udao.getRoleByUsername(username)
+
     def findByUsername(self, username):
         """ Get user by username  """
         return self.udao.findByUsername(username)

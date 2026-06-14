@@ -172,6 +172,14 @@ class UserDAO(UserDAOInterface):
         result = [row['name_orga'] for row in rows]
         conn.close()
         return result if result else None
+    
+    def getRoleByUsername(self, username) -> str:
+        """Get the role of a user"""
+        conn = self._getDbConnection()
+        query = 'SELECT role FROM user WHERE username = ?'
+        result = conn.execute(query, (username,)).fetchone()
+        conn.close()
+        return result['role'] if result else None
 
     def getAllRoles(self) -> list:
         """Get all available roles from the role table"""

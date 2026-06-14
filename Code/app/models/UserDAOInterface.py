@@ -53,6 +53,10 @@ class UserDAOInterface :
         """Get all available roles from the role table"""
         pass
 
+    def getRoleByUsername(self, username) -> str:
+        """Get the role of a user"""
+        pass
+
     def findAll(self) -> list[User]:
         """ Get all users """
         pass
