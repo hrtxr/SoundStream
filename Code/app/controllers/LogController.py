@@ -20,8 +20,18 @@ class LogController:
     @reqrole(['admin'])
     def logs(nom_orga):
         metadata = {'title': 'log'}
-        log_list = log.getLogsByOrganisation(orga.getIdByName(nom_orga))
-        return render_template('logs.html', log_list=log_list, metadata=metadata, orga=nom_orga)
+        types_log = log.getTypesLog()
+        types_log.insert(0, 'all')  # Ajouter l'option "all" pour afficher tous les types de logs
+        types_log.remove('TICKET')  # Supprimer le type "TICKET" de la liste des types de logs pour le filtrage
+
+        selected_type = request.args.get('type', 'all')  # Récupérer le type sélectionné dans les paramètres de la requête ; par défaut 'all'
+        
+        if selected_type == 'all':
+            log_list = log.getLogsByOrganisation(orga.getIdByName(nom_orga))
+        else:
+            log_list = log.getLogsByOrganisationByType(orga.getIdByName(nom_orga), selected_type)  # Nouvelle méthode pour filtrer les logs par type
+
+        return render_template('logs.html', log_list=log_list, metadata=metadata, orga=nom_orga, types=types_log, selected_type=selected_type)
 
     @app.route('/logs/<nom_orga>/export_csv', methods=['GET'])
     @LoggedIn
@@ -29,6 +39,7 @@ class LogController:
     def export_logs_csv(nom_orga):
         
         log_list = log.getLogsByOrganisation(orga.getIdByName(nom_orga))
+        types_log = log.getTypesLog()
 
         # Créer le fichier CSV en mémoire
         output = io.StringIO()
