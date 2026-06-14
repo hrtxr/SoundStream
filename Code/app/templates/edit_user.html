@@ -35,6 +35,14 @@
                     </select>
                 </div>
                 
+                <!-- Champ Email -->
+                <div style="margin-bottom: 2vh;">
+                    <label for="email" style="display: block; margin-bottom: 0.5vh; color: white;">
+                        New Email :
+                    </label>
+                    <input type="email" id="email" name="email" value="{{ user.email }}" required style="width: 100%; padding: 1vh; border-radius: 5px; border: 1px solid #ccc; background: rgba(255,255,255,0.1); color: white;">
+                </div>
+
                 <!-- Champ Nouveau mot de passe (optionnel) -->
                 <div style="margin-bottom: 2vh;">
                     <label for="password" style="display: block; margin-bottom: 0.5vh; color: white;">
@@ -42,7 +50,7 @@
                     </label>
                     <input type="password" id="password" name="password" placeholder="Laissez vide pour ne pas changer" style="width: 100%; padding: 1vh; border-radius: 5px; border: 1px solid #ccc; background: rgba(255,255,255,0.1); color: white;">
                 </div>
-                
+
                 <!-- Boutons -->
                 <div style="display: flex; gap: 2vh; justify-content: center; margin-top: 3vh;">
                     <a href="{{ url_for('users', nom_orga=orga) }}" class="custom-btn btn-yellow" style="background-color: #ffee00; color: black; padding: 1.2vh 3.5vh; border: none;">Annuler</a>
@@ -54,7 +62,9 @@
                 </div>
                 
             </form>
-            
+            {% if message %}
+                <h3 class="error" id="error">{{ message }}</h3>
+            {% endif %}
         </div>
     </div>
 </div>

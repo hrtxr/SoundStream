@@ -154,3 +154,30 @@ tbody tr:nth-child(odd) {
 .btn-green:hover {
     background-color: #00CC36;
 }
+
+.btn-gmail {
+    background-color: #D44638;
+    color: white;
+}
+
+.btn-gmail:hover {
+    background-color: #A3332B;
+}
+
+.btn-outlook {
+    background-color: #0072C6;
+    color: white;
+}
+
+.btn-outlook:hover {
+    background-color: #005A9E;
+}
+
+.btn-yahoo {
+    background-color: #400191;
+    color: white;
+}
+
+.btn-yahoo:hover {
+    background-color: #2E0066;
+}

@@ -14,6 +14,14 @@ class UserDAOInterface :
         """ Get user by username """
         pass
 
+    def findByEmail(self, email) -> User:
+        """ Get user by email """
+        pass
+
+    def updateEmail(self, username, new_email) -> None:
+        """ Update the email of a user """
+        pass
+    
     def findUsersInOrganisation(self, organisation) -> list:
         """ Get all the users of an organisation """
         pass
@@ -30,11 +38,15 @@ class UserDAOInterface :
         """ Delete user by username """
         pass
 
+    def deleteUserOfOrganisation(self, username, organisation) -> None:
+        """ Delete the user of an organisation """
+        pass
+
     def updateUserRole(self, username, new_role) -> None:
         """Update user role"""
         pass
 
-    def getOrganisationByUsername(self, username) -> str:
+    def getOrganisationsByUsername(self, username) -> list:
         pass
     
     def getAllRoles(self) -> list:

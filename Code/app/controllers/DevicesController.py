@@ -18,6 +18,7 @@ class DevicesController:
 
     @app.route('/devices/<nom_orga>', methods=['GET'])
     @LoggedIn
+    @reqrole(['admin', 'marketing'])
     def devices(nom_orga):
         metadata = {'title': 'Devices'}
         id_orga = ogs.getIdByName(nom_orga)
@@ -29,6 +30,7 @@ class DevicesController:
 
     @app.route('/update/<int:id_player>', methods=['POST', 'GET'])
     @LoggedIn
+    @reqrole(['admin'])
     def update(id_player):
         # Récupérer l'état AVANT le ping
         player_before = sps.spdao.findByID(id_player)
@@ -74,6 +76,7 @@ class DevicesController:
     # Route AJAX  pas de GET/POST car ne transit que du JSON
     @app.route('/auto_update_status/<nom_orga>')
     @LoggedIn
+    @reqrole(['admin'])
     def get_status(nom_orga):
         id_orga = ogs.getIdByName(nom_orga)
         players = sps.findAllSongPlayerByOrganisation(id_orga)
@@ -129,6 +132,7 @@ class DevicesController:
 
     @app.route('/edit/<int:id_player>', methods=['GET', 'POST'])
     @LoggedIn
+    @reqrole(['admin'])
     def edit_player(id_player):
         """
         Route pour modifier les informations d'un lecteur

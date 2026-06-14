@@ -12,6 +12,9 @@ class LogDAOInterface:
     def createLog(self, type_log: str, text_log: str, date_log: datetime , id_orga: int) -> bool:
         pass
 
+    def findTicketsByOrganization(self, org_id: int) -> list[Log]:
+        pass
+    
     def findAllTickets(self) -> list[Log]:
         pass
 

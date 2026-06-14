@@ -10,9 +10,21 @@ class UserService():
         """ Get all the users of an organisation """
         return self.udao.findUsersInOrganisation(organisation)
     
+    def createUser(self, username, password, role, organisation, email='', phone_number=''):
+        """ create a new user """
+        return self.udao.createUser(username, password, role, organisation, email, phone_number)
+    
     def deleteByUsername(self, username):
         """ Delete user by username """
         return self.udao.deleteByUsername(username)
+    
+    def deleteUserOfOrganisation(self, username, organisation):
+        """ Delete the user of an organisation """
+        return self.udao.deleteUserOfOrganisation(username, organisation)
+    
+    def getOrganisationsByUsername(self, username):
+        """Get the organisation names of a user"""
+        return self.udao.getOrganisationsByUsername(username)
     
     def findByUsername(self, username):
         """ Get user by username  """
@@ -21,6 +33,10 @@ class UserService():
     def findAllUsername(self) -> list[str]:
         """ Get all usernames """
         return self.udao.findAllUsername()
+    
+    def findAll(self) -> list:
+        """ Get all users """
+        return self.udao.findAll()
 
     def findByEmail(self, email):
         """Get user by email"""

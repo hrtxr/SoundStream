@@ -5,7 +5,9 @@ from app.controllers.LoginController import LoggedIn, reqrole
 from app.services.UserService import UserService
 from app.services.OrganisationService import OrganisationService
 from app.services.LogService import LogService
+from re import match
 import datetime
+
 
 log = LogService()
 ogs=OrganisationService()
@@ -26,15 +28,23 @@ class UserController :
     @reqrole(['admin'])
     def deleteUser(username):
 
-        # Create the log before and insert it in the database before delete the user
-        user_orga = us.udao.getOrganisationByUsername(username)
-        orga_id = ogs.getIdByName(user_orga)
-        log.ldao.createLog("DELETE", f"l'utilisateur {username} a été supprimé de la base de données.",
-                           datetime.datetime.now(), orga_id)
-        
+        # Claim the organizations of the user to delete and its id to create the log
+        user_orga = us.getOrganisationsByUsername(username)
+        orga_name = session.get('organisation_name')
 
-        us.deleteByUsername(username)
-        return redirect(request.referrer)
+        orga_id = ogs.getIdByName(orga_name)
+        print(user_orga)
+
+        if len(user_orga) == 1:
+            us.deleteByUsername(username)
+            log.ldao.createLog("DELETE", f"l'utilisateur {username} a été supprimé de la base de données.",
+                                datetime.datetime.now(), orga_id)
+        elif (len(user_orga) > 1):
+            us.deleteUserOfOrganisation(username, orga_name)
+            log.ldao.createLog("DELETE", f"l'utilisateur {username} a été supprimé de l'organisation {orga_name}",
+                                datetime.datetime.now(), orga_id)
+        
+        return redirect(url_for('users', nom_orga=orga_name))
     
     @app.route('/editUsn/<username>', methods=['GET', 'POST'])
     @LoggedIn
@@ -45,18 +55,37 @@ class UserController :
             # Récupération des données du formulaire
             new_password = request.form.get('password')
             new_role = request.form.get('role')
+            new_email = request.form.get('email')
+
+            message = ""
             
+
             # Récupérer tous les rôles disponibles pour validation
             available_roles = us.udao.getAllRoles()
+
+
+            # Récupérer tous les emails existants pour validation
+            existing_emails = [user.email for user in us.findAll()]
+            existing_emails.remove(us.findByUsername(username).email)  # Remove the current user's email from the list
+
+
+            # Récupérer l'organisation pour redirection
+            orga_name = session.get('organisation_name')
+            
+            if not orga_name:
+                orga_name = 'default'
+
             
             # Vérification du rôle
             if not new_role or new_role not in available_roles:
                 return "Erreur : Rôle invalide", 400
             
+
             # Mise à jour du mot de passe si fourni
             if new_password and new_password.strip():
                 us.udao.changePassword(username, new_password)
             
+
             user_name_session = session.get('username')
             orga_id = session.get('organisation_name')
             log.ldao.createLog("EDIT",
@@ -64,6 +93,8 @@ class UserController :
                                datetime.datetime.now(),
                                orga_id
                             )
+            
+
             # Mise à jour du rôle
             us.udao.updateUserRole(username, new_role)
             log.ldao.createLog("EDIT",
@@ -71,13 +102,38 @@ class UserController :
                                datetime.datetime.now(),
                                orga_id
                             )
-            # Récupérer l'organisation pour redirection
-            orga_name = us.udao.getOrganisationByUsername(username)
             
-            if not orga_name:
-                orga_name = 'default'
+
+            # Mise à jour de l'email
+            if match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', new_email) and new_email not in existing_emails:
+                if new_email != us.findByUsername(username).email:
+                    us.udao.updateEmail(username, new_email)
+                    log.ldao.createLog("EDIT",
+                                        f"L'email de l'utilisateur {username} a été changé en {new_email} par {user_name_session}",
+                                        datetime.datetime.now(),
+                                        orga_id
+                                    )
+                    message = "Utilisateur modifié avec succès."
+                return redirect(url_for('users', nom_orga=orga_name, message=message))
+            else:
+                if not match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', new_email):
+                    message = "Email non valide"
+                else:
+                    for user in us.findAll():
+                        if user.email == new_email:
+                            user_with_email = user.username
+                            break
+                    
+                    message = "Le nouvel email est similaire à un email existant (utilisé par " + user_with_email + ")"
             
-            return redirect(url_for('users', nom_orga=orga_name))
+            
+            return render_template('edit_user.html',
+                                    metadata={'title': 'Modifier Utilisateur'},
+                                    user=us.findByUsername(username),
+                                    orga=orga_name,
+                                    roles=available_roles,
+                                    message=message
+                                    )
         
         else:
             # AFFICHAGE DU FORMULAIRE (GET)
@@ -87,7 +143,7 @@ class UserController :
                 return "Utilisateur non trouvé", 404
             
             # Récupérer l'organisation de l'utilisateur
-            orga_name = us.udao.getOrganisationByUsername(username)
+            orga_name = session.get('organisation_name')
             
             if not orga_name:
                 orga_name = 'Harman_Kardon'
@@ -101,7 +157,8 @@ class UserController :
                                  metadata=metadata, 
                                  user=user,
                                  orga=orga_name,
-                                 roles=available_roles)  # <- Passage des rôles au template
+                                 roles=available_roles,
+                                )
         
 
     @app.route('/addUser', methods=['GET', 'POST'])
@@ -125,18 +182,58 @@ class UserController :
             # Vérification du rôle
             if not role or role not in available_roles:
                 return "Erreur : Rôle invalide", 400
+
+            user_name_session = session.get('username')
             
-            
-            # Création de l'utilisateur
-            us.udao.createUser(username, password, role, orga_name)
-            us.updateEmail(username, email)  # ← NOUVEAU
+            users = us.findAll()
+
+            user_organizations = us.getOrganisationsByUsername(username)
+
+            for user in users:
+                if user.username == username:
+
+                    if orga_name in user_organizations:
+                        message = "L'utilisateur existe déjà dans cette organisation"
+                        return render_template('add_user.html',
+                                                metadata={'title': 'Ajouter Utilisateur'},
+                                                orga=orga_name,
+                                                roles=available_roles,
+                                                message=message
+                                                )
+                    
+                    user_with_email = user.email
+
+
+            existing_emails = [user.email for user in us.findAll()]
 
             # Create the log and insert it in the database
             orga_id = ogs.getIdByName(orga_name)
-            log.ldao.createLog("ADD", f"l'utilisateur {username} a été implémenté dans la base de données.",
-                           datetime.datetime.now(), orga_id)
+
+            if match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+                if email not in existing_emails or email == user_with_email:
+                    # Création de l'utilisateur
+                    us.createUser(username, password, role, orga_name, email)
+
+                    log.ldao.createLog("ADD", f"l'utilisateur {username} a été implémenté dans la base de données.",
+                                        datetime.datetime.now(), orga_id)
+                
+                return redirect(url_for('users', nom_orga=orga_name))
+            else:
+                if not match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
+                    message = "Email non valide"
+                else:
+                    for user in us.findAll():
+                        if user.email == email:
+                            user_with_email = user.username
+                            break
+                    message = "Le nouvel email est similaire à un email existant (utilisé par " + user_with_email + ")"
             
-            return redirect(url_for('users', nom_orga=orga_name))
+                return render_template('add_user.html',
+                                        metadata={'title': 'Ajouter Utilisateur'},
+                                        orga=orga_name,
+                                        roles=available_roles,
+                                        message=message
+                                        )
         
         else:
             # AFFICHAGE DU FORMULAIRE (GET)
@@ -175,6 +272,18 @@ class UserController :
                 # Envoyer le mail
                 from app.services.EmailService import send_reset_email
                 send_reset_email(email, user.username, new_password)
+
+                username = us.findByEmail(email).username
+                organisations = us.getOrganisationsByUsername(user.username)
+
+                for orga in organisations:
+                    orga_id = ogs.getIdByName(orga)
+
+                    log.ldao.createLog("TICKET",
+                                        f"Une demande de réinitialisation du mot de passe pour {username} a été effectuée",
+                                        datetime.datetime.now(),
+                                        orga_id
+                                    )
 
                 return render_template('forgotten.html', metadata=metadata, success="Un nouveau mot de passe a été envoyé à votre adresse mail.")
             else:

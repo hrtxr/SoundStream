@@ -32,7 +32,12 @@
                             <th>Ip</th>
                             <th>Status</th>
                             <th>Location</th>
-                            <th>Actions</th>
+                            {% if session.get('role') in ['admin'] %}
+                                <th>Actions</th>
+                            {% else %}
+                                <th>Postcode</th>
+                                <th>Building</th>
+                            {% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -46,36 +51,54 @@
                                         {{ el['state'] }}
                                     </td>
                                     <td> {{ el['name_place'] }}</td>
-                                    <td class="actions-cell">
-                                        <div class="buttons-wrapper">
-                                            <a href="/delete/{{ el['id_player'] }}" class="custom-btn btn-red" onclick="return confirm('Confirm deletion?')">Delete</a>
-                                            <a href="/update/{{ el['id_player'] }}" class="custom-btn btn-yellow" onclick="return confirm('Confirm update?')">Update</a>
-                                            <a href="/edit/{{ el['id_player'] }}" class="custom-btn btn-green">Edit</a>
-                                        </div>
-                                    </td>
+                                    {% if session.get('role') in ['admin'] %}
+                                        <td class="actions-cell">
+                                            <div class="buttons-wrapper">
+                                                <a href="/delete/{{ el['id_player'] }}" class="custom-btn btn-red" onclick="return confirm('Confirm deletion?')">Delete</a>
+                                                <a href="/update/{{ el['id_player'] }}" class="custom-btn btn-yellow" onclick="return confirm('Confirm update?')">Update</a>
+                                                <a href="/edit/{{ el['id_player'] }}" class="custom-btn btn-green">Edit</a>
+                                            </div>
+                                        </td>
+                                    {% elif session.get('role') in ['marketing'] %}
+                                        <td>{{ el['place_postcode'] }}</td>
+                                        <td>{{ el['place_building_name'] }}</td>
+                                    {% endif %}
                                 </tr>
                             {% endif %}
                         {% endfor %}
-                        <tr>
-                            <td class="actions-cell">
-                                <div class="buttons-wrapper">
-                                    <a href="/addPlayer" class="custom-btn-add btn-green">Add Player</a>
-                                </div>
-                            </td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
+                        {% if session.get('role') in ['admin'] %}
+                            <tr>
+                                <td class="actions-cell">
+                                    <div class="buttons-wrapper">
+                                        <a href="/addPlayer" class="custom-btn-add btn-green">Add Player</a>
+                                    </div>
+                                </td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                        {% endif %}
 
                         <!-- Completion of empty lines -->
                         {% for i in range(ns.LineNb, 11) %}
-                            <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+                            <tr>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                {% if session.get('role') in ['marketing'] %}
+                                    <td>&nbsp;</td>
+                                {% endif %}
+                            </tr>
                         {% endfor %}
                         <tr>
                             <td> Offline : <span class="red"> {{ nb_off }}</span></td>
                             <td> Playing : <span class="green"> {{ nb_on }}</span></td>
                             <td><p style="font-size: 0.8em; font-style: italic; margin-bottom: 10px; color: gray;"> Last auto-update: <span id="last-update-time">--:--:--</span></p></td>
                             <td>&nbsp;</td>
+                            {% if session.get('role') in ['marketing'] %}
+                                <td>&nbsp;</td>
+                            {% endif %}
                         </tr>
                     </tbody>
                 </table>

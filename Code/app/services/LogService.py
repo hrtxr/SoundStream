@@ -25,6 +25,14 @@ class LogService:
 
         return list_logs
     
+    def getTicketsByOrganisation(self, id_orga: int) -> list[dict]:
+        tickets = self.ldao.findTicketsByOrganization(id_orga)  # New method to get ticket logs by organization
+        list_tickets = list()
+        for ticket in tickets :
+            list_tickets.append(ticket.toDict())
+
+        return list_tickets
+    
     def getTicketLogs(self) -> list[dict]:
         tickets = self.ldao.findAllTickets()  # New method to get ticket logs
         list_tickets = list()
