@@ -116,7 +116,7 @@ class TimetableController:
         username = session.get('username')
         playlist_id = request.form.get('playlist_id')
         playlist = ts.getPlaylistById(playlist_id)
-        user_orga = us.udao.getOrganisationByUsername(username)
+        user_orga = session.get('organisation_name')
         orga_id = orga.getIdByName(user_orga)
 
         log.ldao.createLog(
