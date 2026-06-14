@@ -50,6 +50,14 @@ h1 {
     margin-bottom: -1vh;
 }
 
+h3 {
+    font-family: 'HelveticaNeueThin';
+    text-align: left;
+    margin-top: -4vh;
+    margin-bottom: -0.5vh;
+    margin-left: 2vh;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;

@@ -35,16 +35,25 @@ class UserController :
         orga_id = ogs.getIdByName(orga_name)
         print(user_orga)
 
-        if len(user_orga) == 1:
-            us.deleteByUsername(username)
-            log.ldao.createLog("DELETE", f"l'utilisateur {username} a été supprimé de la base de données.",
-                                datetime.datetime.now(), orga_id)
-        elif (len(user_orga) > 1):
-            us.deleteUserOfOrganisation(username, orga_name)
-            log.ldao.createLog("DELETE", f"l'utilisateur {username} a été supprimé de l'organisation {orga_name}",
-                                datetime.datetime.now(), orga_id)
+        user_role = us.getRoleByUsername(username)
+
+        if user_role != 'admin':
+            if user_orga and len(user_orga) == 1:
+                us.deleteByUsername(username)
+                log.ldao.createLog("DELETE", f"l'utilisateur {username} a été supprimé de la base de données.",
+                                    datetime.datetime.now(), orga_id)
+            elif user_orga and len(user_orga) > 1:
+                us.deleteUserOfOrganisation(username, orga_name)
+                log.ldao.createLog("DELETE", f"l'utilisateur {username} a été supprimé de l'organisation {orga_name}",
+                                    datetime.datetime.now(), orga_id)
+            message = f"L'utilisateur {username} a été supprimé avec succès"
+        else:
+            message = "Vous ne pouvez pas supprimer un utilisateur avec un rôle admin"
+
+        metadata= {'title': 'Users'}
+        orga_name = session.get('organisation_name')
         
-        return redirect(url_for('users', nom_orga=orga_name))
+        return render_template('users.html', metadata=metadata, ogs=ogs, us=us, message=message, orga=orga_name)
     
     @app.route('/editUsn/<username>', methods=['GET', 'POST'])
     @LoggedIn
@@ -217,7 +226,10 @@ class UserController :
                     log.ldao.createLog("ADD", f"l'utilisateur {username} a été implémenté dans la base de données.",
                                         datetime.datetime.now(), orga_id)
                 
-                return redirect(url_for('users', nom_orga=orga_name))
+                message = f"L'utilisateur {username} a été créé avec succès"
+                metadata = {"title" : "Users"}
+
+                return render_template('users.html', metadata=metadata, ogs=ogs, us=us, message=message, orga=orga_name)
             else:
                 if not match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
                     message = "Email non valide"
