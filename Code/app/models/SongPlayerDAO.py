@@ -1,16 +1,14 @@
 import sqlite3
-from app import app
-import requests
 import subprocess
-from ping3 import ping, verbose_ping
-import sys
+import json
 import paramiko
 from concurrent.futures import ThreadPoolExecutor
-import json
+from ping3 import ping
+from app import app
 from app.models.SongPlayer import SongPlayer
 from app.models.SongPlayerDAOInterface import SongPlayerDAOInterface
 
-class SongPlayerDAO(SongPlayerDAOInterface) :
+class SongPlayerDAO(SongPlayerDAOInterface):
 
     def __init__(self) -> None:
         self.databasename = app.static_folder + '/database/database.db'
@@ -22,17 +20,18 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         return conn
 
 
-    def sshForMultiThread(self,player:dict) -> dict:
-        """Utilise pour findDevices on fait du multi thread donc asynchrone on veut pas vérifier une machine une à une trop long """
-        try :
+    def sshForMultiThread(self, player: dict) -> dict:
+        """SSH into a device to retrieve its public IP and geolocation (used by findDevices in multi-threaded mode)."""
+        try:
             ssh = paramiko.SSHClient()
-            # se connecter malgré tout
             ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             ssh.connect(hostname=player["ip"],
-            username=player["name"]',
+            username=player["name"],
             timeout=5)
             stdin, stdout, stderr = ssh.exec_command("curl -s https://api.ipify.org")
             public_ip = stdout.read().decode('utf-8').strip()
+
+            import requests
             res = requests.get(f"https://ipinfo.io/{public_ip}")
             loc_data = res.json()
             player["ville"] = loc_data["city"]
@@ -40,12 +39,10 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
             ssh.close()
 
             return player
-        except Exception as e: # le except à vraiment plus d'utilité qu'un excpet normal si une machine répond pas le processus marche malgré cela
-            print(f"sa n'à pas marcher pour {player['ip']}'")
+        except Exception as e:
+            print(f"SSH connection failed for {player['ip']}")
 
         return player
-
-
 
 
     def findDevices(self) -> None:
@@ -54,7 +51,7 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
 
         try:
             players = {}
-            cmd = subprocess.run(["tailscale","status","--json"],capture_output=True,text=True)
+            cmd = subprocess.run(["tailscale", "status", "--json"], capture_output=True, text=True)
             data = json.loads(cmd.stdout)
             for peer in data['Peer'].values():
                 name = peer['HostName'].split('-')[0]
@@ -67,9 +64,8 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
                                      "ville": None,
                                      "orga": None}
 
-            with ThreadPoolExecutor(max_workers=len(devices)) as executor:
+            with ThreadPoolExecutor(max_workers=len(players)) as executor:
                 updated_players = list(executor.map(self.sshForMultiThread, players.values()))
-
 
                 query_player = """
                 INSERT OR IGNORE  INTO song_player
@@ -97,7 +93,7 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         finally:
             conn.close()
 
-    
+
 
     def findByID(self, id_player) -> SongPlayer:
         """ Get song player by the id of the song player """
@@ -108,14 +104,14 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
 
         if res:
             return SongPlayer(dict(res))
-        return  []
+        return []
 
     def findByOrganisation(self, name_orga) -> SongPlayer:
         """ Get song player by organisation name """
         conn = self._getDbConnection()
         songplayers = conn.execute('SELECT * FROM song_player JOIN organisation USING(id_orga) WHERE name_orga = ?;', (name_orga,)).fetchall()
         songplayerList = list()
-        for songplayer in songplayers :
+        for songplayer in songplayers:
             songplayerList.append(SongPlayer(dict(songplayer)))
         conn.close()
 
@@ -126,9 +122,9 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
     def findByState(self, state) -> SongPlayer:
         """ Get song player by state """
         conn = self._getDbConnection()
-        songplayers = conn.execute('SELECT * FROM song_player WHERE state = ;', (state,)).fetchall()
+        songplayers = conn.execute('SELECT * FROM song_player WHERE state = ?;', (state,)).fetchall()
         songplayerList = list()
-        for songplayer in songplayers :
+        for songplayer in songplayers:
             songplayerList.append(SongPlayer(dict(songplayer)))
         conn.close()
 
@@ -136,10 +132,10 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
             return songplayerList
         return []
 
-    
+
 
     def findAllByOrganisationAndStatus(self, id_orga, status) -> list:
-        """ find all song players by organisation and status """
+        """ Find all song players by organisation and status """
         conn = self._getDbConnection()
 
         sql = "SELECT * FROM song_player WHERE id_orga = ? AND state = ?;"
@@ -159,11 +155,11 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         conn = self._getDbConnection()
         songplayers = conn.execute('SELECT * FROM song_player;').fetchall()
         songplayerList = list()
-        for songplayer in songplayers :
-            songplayerList.append(S/Documents/SoundStreamV2/Code/app/ongPlayer(dict(songplayer)))
+        for songplayer in songplayers:
+            songplayerList.append(SongPlayer(dict(songplayer)))
         conn.close()
 
-        if songplayerList :
+        if songplayerList:
             return songplayerList
         return []
 
@@ -182,11 +178,11 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
 
         return building_names
 
-    def UpdateState(self, ip) -> None :
-        """ Really updates player states (via ping) """
+    def UpdateState(self, ip) -> None:
+        """ Update player state based on ping result """
         conn = self._getDbConnection()
-        if ping(ip) != None:
-            conn.execute('UPDATE song_player SET state = ONLINE WHERE ip =  ?;', (ip))
+        if ping(ip) is not None:
+            conn.execute("UPDATE song_player SET state = 'ONLINE' WHERE IP_adress = ?;", (ip,))
         conn.commit()
         conn.close()
 
@@ -195,42 +191,8 @@ class SongPlayerDAO(SongPlayerDAOInterface) :
         songplayers = conn.execute("SELECT * FROM song_player WHERE state = 'ONLINE';").fetchall()
         players_online_list = list()
 
-        for songplayer in songplayers :
+        for songplayer in songplayers:
             players_online_list.append(SongPlayer(dict(songplayer)))
 
         conn.close()
         return players_online_list
-
-    def rtp(self):
-
-        """Si tout va dans le meilleur des mondes on ferra du rtp (la machine étant une grande fille elle sera distinguer
-        quand activer le plan de secours en local) """
-
-        rtp_url = "rtp://239.1.1.1:5004?localport=5004"
-        fifo_path = "../static/playlists/mpd.fifo" # PIPE
-
-        command = [
-            'ffmpeg',
-            '-f', 's16le',         # Format d'entrée : PCM 16-bit Little-Endian
-            '-ar', '44100',        # Facultatif : 44.1 kHz
-            '-ac', '2',            # Facultatif : 2 canaux stéréo
-            '-i', fifo_path,       # Obligatoire : PIPE
-            '-acodec', 'libmp3lame', # MP3
-            '-ab', '192k',         #  192 kbps
-            '-f', 'rtp',           # Obligatoire (pour les besoins de soundstream) : RTP
-            rtp_url                # url rtp
-        ]
-
-        try:
-
-            process_async = subprocess.Popen(command, stderr=subprocess.PIPE, text=True) # Popen != Run dans la synchronisité
-
-        except e:
-            print(f"Probléme {e} dans rtps")
-
-    def pause_paspause(self):
-        """ Permet de faire pause ou pas on utilise toggle de mpd"""
-        subprocess.run(["mpc", "toggle"])
-
-
- 
