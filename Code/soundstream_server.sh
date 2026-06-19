@@ -6,22 +6,22 @@ GREEN='\033[32m'
 
 echo 'Configuration Serveur SoundStream '
 ascii-image-converter -C 1.png
-echo 'informations : ANSI escape tout text rouge = erreur , vert = informations utile'
+echo 'informations : ANSI escape tout texte rouge = erreur , vert = informations utile'
 echo -e "${GREEN} SoundStreamV2 est une mise à jour d'un autre projet universitaires , encore merci d'implantées nos solutions 
-comme dit sur le readme i permet d'initier l'installation , x permet d'executer le programme avec at , on utilise x car i fait beaucoup de chose"
+comme dit sur le readme i permet d'initier l'installation , x permet d'exécuter le programme avec at , on utilise x car il fait beaucoup de chose"
 if [ "$EUID" -ne 0 ]; then
-	echo -e "${RED}Vous n'êtes pas en super user , executer ce scripte avec sudo"
+	echo -e "${RED}Vous n'êtes pas en super utilisateur , veuillez exécuter ce script avec sudo"
 	exit 1
 fi
-echo "Application de mise à jour (il faudra souvent aprés cela rédemarrer sur Arch)"
+echo "Application de mise à jour (il faudra souvent après cela redémarrer sur Arch)"
 pacman -Syu --noconfirm
 user=${SUDO_USER:-$(whoami)} # On est en super utilisateur , moyen pour récupérer l'utilisateur actuelle dans tout les cas
 
 if [ "$1" == "i" ];then
 	if command -v tailscale &>/dev/null; then
-		echo 'tailscale est deja installer'
+		echo 'tailscale est deja installé'
 		echo -e "${GREEN}couche 2 non disponible sur tailscale or on veut faire du multicast"
-		echo "Creation pipes"
+		echo "Création pipes"
 		ip link add dev vx_sound type vxlan id 42 remote 100.94.208.67 local 100.112.176.54 dev tailscale0 dstport 4789
 		ip addr add 192.168.100.1/24 dev vx_sound
 		ip link set dev vx_sound up
@@ -30,7 +30,7 @@ if [ "$1" == "i" ];then
 		if [ -n "$check" ]; then
 			echo "OK"
 			if command -v mpd &>/dev/null; then
-				echo 'mpd est déjà installer'
+				echo 'mpd est déjà installé'
 				echo 'configuration de mpd' 
 				rm /etc/mpd.conf
 				echo "# See: /usr/share/doc/mpd/mpdconf.example
@@ -50,7 +50,7 @@ if [ "$1" == "i" ];then
 				" > /etc/mpd.conf
 				echo "configurée"
 				if command -v ffmpeg &>/dev/null; then
-					echo 'ffmpeg est déjà installer'
+					echo 'ffmpeg est déjà installé'
 					echo -e "${GREEN}mpd va lire ces playlists sur les repo du projet ne les supprimer surtout pas ou modifier le fichier de conf"
 					echo "à quelle heure ouvre le magasin ?"
 					read heure
@@ -58,22 +58,22 @@ if [ "$1" == "i" ];then
 				else
 					pacman -S --noconfirm ffmpeg
 					if command -v ffmpeg &>/dev/null; then
-						echo 'installation de ffmpeg effectuer avec succées vous pouvez redemarrer le script'
+						echo 'installation de ffmpeg effectuer avec succès vous pouvez relancer le script'
 					else 
-						echo -e "${RED} pb avec l'installation de ffmpeg : executer journalctl -xe des erreurs ?"
+						echo -e "${RED} problème avec l'installation de ffmpeg : veuillez exécuter journalctl -xe des erreurs ?"
 					fi
 				fi
 			else
 			       pacman -S --noconfirm mpd mpc
 		       	       if command -v mpd &>/dev/null; then
-			  		echo 'installation de mpd avec succés vous pouvez redemarrer le script'
+			  		echo 'installation de mpd avec succès vous pouvez relancer le script'
 			 	else
-					echo -e "${RED} pb avec l'installation de mpd : executer journalctl -xe des erreurs ?"
+					echo -e "${RED} problème avec l'installation de mpd : veuillez exécuter journalctl -xe des erreurs ?"
 			       fi
 	       		fi		       
 
 		else
-			echo -e "${RED}Pb avec Pipe : executer journalctl -xe des erreurs ?"
+			echo -e "${RED}Pb avec Pipe : veuillez exécuter journalctl -xe des erreurs ?"
 			exit 1
 		fi
 
@@ -97,7 +97,7 @@ if [ "$1" == "x" ];then
 	systemctl start mpd
 	running= $(systemctl status mpd | grep "running")
 	echo "${GREEN} Malheuresement on doit s'occuper de la couche 2 à chaque démarrage"
-	echo "Creation pipes"
+	echo "Création pipes"
         ip link add dev vx_sound type vxlan id 42 remote 100.94.208.67 local 100.112.176.54 dev tailscale0 dstport 4789
         ip addr add 192.168.100.1/24 dev vx_sound
         ip link set dev vx_sound up

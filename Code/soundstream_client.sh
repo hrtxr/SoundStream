@@ -6,11 +6,11 @@ GREEN='\033[32m'
 
 echo 'Configuration Serveur SoundStream '
 ascii-image-converter -C 1.png
-echo 'informations : ANSI escape tout text rouge = erreur , vert = informations utile'
+echo 'informations : ANSI escape tout texte rouge = erreur , vert = informations utile'
 echo -e "${GREEN} SoundStreamV2 est une mise à jour d'un autre projet universitaires , encore merci d'implantées nos solutions 
-comme dit sur le readme i permet d'initier l'installation , x permet d'executer le programme avec at , on utilise x car i fait beaucoup de chose"
+comme dit sur le readme i permet d'initier l'installation , x permet d'exécuter le programme avec at , on utilise x car il git status"
 if [ "$EUID" -ne 0 ]; then
-	echo -e "${RED}Vous n'êtes pas en super user , executer ce scripte avec sudo"
+	echo -e "${RED}Vous n'êtes pas en super utilisateur , veuillez exécuter ce script avec sudo"
 	exit 1
 fi
 echo "Application de mise à jour "
@@ -19,7 +19,7 @@ user=${SUDO_USER:-$(whoami)} # On est en super utilisateur , moyen pour récupé
 
 if [ "$1" == "i" ];then
 	if command -v tailscale &>/dev/null; then
-		echo 'tailscale est deja installer'
+		echo 'tailscale est deja installé'
 		echo -e "${GREEN}couche 2 non disponible sur tailscale or on veut faire du multicast"
 		echo "Creation pipes"
 		ip link add dev vx_sound type vxlan id 42 remote 100.112.176.54 local 100.94.208.67 dev tailscale0 dstport 4789
@@ -30,8 +30,8 @@ if [ "$1" == "i" ];then
 		if [ -n "$check" ]; then
 			echo "OK"
 			if command -v mpd &>/dev/null; then
-				echo 'mpd est déjà installer'
-				echo 'configuration de mpd (cas ou le reseau tombe)' 
+				echo 'mpd est déjà installé'
+				echo 'configuration de mpd (cas où le réseau tombe)' 
 				rm /etc/mpd.conf
 				echo "# See: /usr/share/doc/mpd/mpdconf.example
 
@@ -49,7 +49,7 @@ if [ "$1" == "i" ];then
 				" > /etc/mpd.conf
 				echo "configurée"
 				if command -v ffplay &>/dev/null; then
-					echo 'ffplay est déjà installer'
+					echo 'ffplay est déjà installé'
 					echo "Creation d'un service ffplay"
 					touch /etc/systemd/system/soundstream.service
 					echo "[Unit]
@@ -92,14 +92,14 @@ if [ "$1" == "i" ];then
 			else
 			       sudo apt install --noconfirm mpd mpc
 		       	       if command -v mpd &>/dev/null; then
-			  		echo 'installation de mpd avec succés vous pouvez redemarrer le script'
+			  		echo 'installation de mpd avec succès vous pouvez relancer le script'
 			 	else
-					echo -e "${RED} pb avec l'installation de mpd : executer journalctl -xe des erreurs ?"
+					echo -e "${RED} problème avec l'installation de mpd : veuillez exécuter journalctl -xe des erreurs ?"
 			       fi
 	       		fi		       
 
 		else
-			echo -e "${RED}Pb avec Pipe : executer journalctl -xe des erreurs ?"
+			echo -e "${RED}Pb avec Pipe : veuillez executer journalctl -xe des erreurs ?"
 			exit 1
 		fi
 
@@ -110,9 +110,9 @@ if [ "$1" == "i" ];then
 		up=$(tailscale status | grep "$user")
 
 		if [ -n "$up" ]; then
-			echo 'installation effectuer avec succés vous pouvez redemarrer le script'
+			echo 'installation effectuée avec succès vous pouvez relancer le script'
 		else
-			echo -e "${RED}Une erreur est intervenue lors de l'installation de tailscale : executer journalctl -xe des erreurs ?"
+			echo -e "${RED}Une erreur est intervenue lors de l'installation de tailscale : veuillez exécuter journalctl -xe des erreurs ?"
 			exit 1
 		fi
 	fi
@@ -142,9 +142,9 @@ if [ "$1" == "x" ];then
 				mpc repeat on 
 				mpc play
 			else
-				echo -e "${RED}Pb avec MPD : executer journalctl -xeu mpd.service : des erreurs ?"
+				echo -e "${RED}Problème avec MPD : veuillez exécuter journalctl -xeu mpd.service des erreurs ?"
 	else 
-		echo -e "${RED} Pb avec pipe, : executer journalctl -xe des erreurs ?"
+		echo -e "${RED} Problème avec pipe, : veuillez exécuter journalctl -xe des erreurs ?"
 
 	fi
 fi
