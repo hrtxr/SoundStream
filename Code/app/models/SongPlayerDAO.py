@@ -53,19 +53,24 @@ class SongPlayerDAO(SongPlayerDAOInterface):
             players = {}
             cmd = subprocess.run(["tailscale", "status", "--json"], capture_output=True, text=True)
             data = json.loads(cmd.stdout)
-            for peer in data['Peer'].values():
-                name = peer['HostName'].split('-')[0]
-                ip = peer['TailscaleIPs'][0]
+            
+            # Vérification ajoutée: si aucun autre appareil n'est sur le VPN, 'Peer' est null
+            if data.get('Peer'):
+                for peer in data['Peer'].values():
+                    name = peer['HostName'].split('-')[0]
+                    ip = peer['TailscaleIPs'][0]
+    
+                    if name not in players:
+                        players[name] = {
+                                         "name": name,
+                                         "ip": ip,
+                                         "ville": None,
+                                         "orga": None}
 
-                if name not in players:
-                    players[name] = {
-                                     "name": name,
-                                     "ip": ip,
-                                     "ville": None,
-                                     "orga": None}
-
-            with ThreadPoolExecutor(max_workers=len(players)) as executor:
-                updated_players = list(executor.map(self.sshForMultiThread, players.values()))
+            updated_players = []
+            if players:
+                with ThreadPoolExecutor(max_workers=len(players)) as executor:
+                    updated_players = list(executor.map(self.sshForMultiThread, players.values()))
 
                 query_player = """
                 INSERT OR IGNORE  INTO song_player
@@ -132,6 +137,19 @@ class SongPlayerDAO(SongPlayerDAOInterface):
             return songplayerList
         return []
 
+
+    def findAllByOrganisationInBd(self, id_orga) -> list:
+        """ Find all song players by organisation """
+        conn = self._getDbConnection()
+        sql = "SELECT * FROM song_player WHERE id_orga = ?;"
+        songplayers = conn.execute(sql, (id_orga,)).fetchall()
+
+        songplayerList = list()
+        for songplayer in songplayers:
+            songplayerList.append(SongPlayer(dict(songplayer)))
+        conn.close()
+
+        return songplayerList
 
 
     def findAllByOrganisationAndStatus(self, id_orga, status) -> list:
