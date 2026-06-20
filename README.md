@@ -1,6 +1,6 @@
 # 🔉 SoundStream
 
-# Livrable pour les évaluations des Compétences :
+# Livrable pour les évaluations des Compétences (S3) :
 ## Compétence 2 :  
 ### livrable compétence 2 :  
 [livrable compétence 2](00-Documents/rapport_compétence_2-1.pdf)  
