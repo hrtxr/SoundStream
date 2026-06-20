@@ -99,6 +99,8 @@ class UserController:
             # Get all available roles
             available_roles = us.getAllRoles()
 
+            metadata = {'title': 'Edit User'}
+
             context = {
                 'metadata': metadata,
                 'user': user,
@@ -150,6 +152,8 @@ class UserController:
 
             # Get all available roles
             available_roles = us.getAllRoles()
+
+            metadata = {'title': 'Add User'}
 
             context = {
                 'metadata': metadata,
