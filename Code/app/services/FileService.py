@@ -9,6 +9,7 @@ from mutagen import File as MutagenFile         # External library used to read 
 
 from app import app
 from app.models.FileDAO import FileDAO
+from app.models.File import File
 
 class FileService:
     """
@@ -169,5 +170,6 @@ class FileService:
         # 3. Delete from Database and return the boolean result (True/False)
         return self.fdao.deleteFile(id_file)
         
-
-
+    def findFileById(self, id_file: int) -> Optional[File]:
+        """ Find a file by its ID """
+        return self.fdao.findFileById(id_file)
