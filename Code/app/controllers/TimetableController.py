@@ -188,11 +188,16 @@ class TimetableController:
         ts.updateDaySchedule(day_name, playlist_id, start_time)
 
         # Log the schedule update
-        playlist = ts.getPlaylistById(playlist_id)
         username = session.get('username')
         orga_id = orga.getIdByName(session.get('organisation_name'))
+        if playlist_id:
+            playlist = ts.getPlaylistById(playlist_id)
+            log_msg = f"User {username} updated the schedule for playlist {playlist.name} on {day_name}."
+        else:
+            log_msg = f"User {username} cleared the schedule for {day_name}."
+            
         log.createLog("SCHEDULE_UPDATE",
-                            f"User {username} updated the schedule for playlist {playlist.name}.",
+                            log_msg,
                            datetime.datetime.now(),
                              orga_id)
 

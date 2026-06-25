@@ -7,6 +7,7 @@ from app.services.SongPlayerService import SongPlayerService
 from app.services.OrganisationService import OrganisationService
 from app.services.LogService import LogService
 from app.services.FileService import FileService
+from app.services.AdvertisementService import AdvertisementService
 import datetime
 import subprocess
 
@@ -17,6 +18,7 @@ sps = SongPlayerService()
 ogs = OrganisationService()
 los = LogService()
 file_service = FileService()
+ads = AdvertisementService()
 
 
 class DashboardController:
@@ -107,7 +109,8 @@ class DashboardController:
         for device in devices:
             # Attempt broadcast even if marked OFFLINE (device may have reconnected)
             ip = device['IP_adress']
-            user_vm = "synapse"
+            # Retrieve the SSH username for this device (stored as device_name)
+            user_vm = device['device_name']
 
             # Sync the file to device
             try:
@@ -115,24 +118,8 @@ class DashboardController:
             except Exception as e:
                 print(f"Error syncing to {ip}: {e}")
                 continue
-
-            # MPC command sequence:
-            # update --wait : ensure the new file is indexed
-            # insert        : queue the emergency file right after the current track
-            # next          : skip to the emergency file immediately
-            # wait          : wait for the emergency file to finish playing
-            # prev          : go back to the previous track
-            # seek          : fast-forward by the emergency duration to stay on schedule
-            # play          : resume playback
-            cmd = (
-                f"mpc update --wait && "
-                f"mpc insert \"{filename}\" && "
-                f"mpc next && "
-                f"mpc wait && "
-                f"mpc prev && "
-                f"mpc seek +{duration_seconds} && "
-                f"mpc play"
-            )
+            # Pause MPD, play the emergency file, then resume MPD
+            cmd = f"export PATH=$PATH:/opt/homebrew/bin:/usr/local/bin && mpc pause ; mpg123 \"~/music/{filename}\" ; mpc play"
 
             # Execute asynchronously via SSH
             try:
@@ -159,7 +146,7 @@ class DashboardController:
     @app.route('/advertisement', methods=['POST'])
     @reqrole(['sales'])
     @LoggedIn
-    def advertisement(nom_orga):
+    def advertisement():
         """Handle advertisement message upload."""
         metadata = {'title': 'Upload Advertisement Message'}
 
@@ -181,12 +168,19 @@ class DashboardController:
         if file_id == -1:
             return redirect(url_for('dashboard', nom_orga=nom_orga))
 
+        # Schedule the advertisement
+        play_time = request.form.get('heure_choisie')
+        play_date = request.form.get('date_choisie')
+        orga_id = ogs.getIdByName(nom_orga)
+        
+        if play_time and play_date:
+            ads.scheduleAdvertisement(file_id, orga_id, play_date, play_time)
+
         # Log the advertisement upload
         username = session.get('username')
-        orga_id = ogs.getIdByName(nom_orga)
         los.createLog(
             "UPLOAD_ADVERTISEMENT",
-            f"User {username} uploaded advertisement message: {file_storage.filename}",
+            f"User {username} scheduled advertisement {file_storage.filename} for {play_date} at {play_time}",
             datetime.datetime.now(),
             orga_id
         )

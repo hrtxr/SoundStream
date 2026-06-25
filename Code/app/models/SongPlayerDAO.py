@@ -88,7 +88,6 @@ class SongPlayerDAO(SongPlayerDAOInterface):
                             player["orga"],
                         ),
                     )
-                    conn.execute(query_loc, (player["ville"],))
 
             conn.commit()
 
@@ -214,3 +213,20 @@ class SongPlayerDAO(SongPlayerDAOInterface):
 
         conn.close()
         return players_online_list
+
+    def createDevice(self, name_place: str, ip_address: str, state: str, place_address: str, place_postcode: str, place_city: str, place_building_name: str, device_name: str, id_orga: int) -> None:
+        """ Create a new device in the database """
+        conn = self._getDbConnection()
+        try:
+            query = """
+            INSERT INTO song_player (name_place, IP_adress, state, place_adress, place_postcode, place_city, place_building_name, device_name, id_orga)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+            """
+            conn.execute(query, (name_place, ip_address, state, place_address, place_postcode, place_city, place_building_name, device_name, id_orga))
+            
+            conn.commit()
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()

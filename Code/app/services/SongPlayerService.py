@@ -9,7 +9,10 @@ from app.models.SongPlayerDAO import SongPlayerDAO
 from app.services.TimeTableService import TimeTableService
 import ping3
 
+from app.services.AdvertisementService import AdvertisementService
+
 ts = TimeTableService()
+ads = AdvertisementService()
 
 class SongPlayerService:
 
@@ -107,7 +110,7 @@ class SongPlayerService:
                 (os.path.join(app.static_folder, 'audio/'), "music/"),
                 (os.path.join(app.static_folder, 'playlists/'), "playlists/")
             ]
-            base_dest_path = f"/home/{device_name}"
+            base_dest_path = "~"
             for src, subfolder in sync_tasks:
                 full_remote_path = f"{base_dest_path}/{subfolder}"
                 dest = f"{device_name}@{ip}:{full_remote_path}"
@@ -138,6 +141,36 @@ class SongPlayerService:
             now = datetime.datetime.now()
             current_time = now.strftime("%H:%M")
             current_day = now.strftime("%A")
+            
+            # --- Advertisement check ---
+            pending_ads = ads.getAndMarkPendingAdvertisements()
+            if pending_ads:
+                devices = self.spdao.findAllOnlineDevices()
+                if devices:
+                    for ad in pending_ads:
+                        filename = ad['name']
+                        print(f"Playing scheduled advertisement: {filename}")
+                        # Same SSH command as emergency message
+                        cmd = f"export PATH=$PATH:/opt/homebrew/bin:/usr/local/bin && mpc pause ; mpg123 \"~/music/{filename}\" ; mpc play"
+                        for dev in devices:
+                            # Sync first in case it's not on the device
+                            try:
+                                self.sync_to_device(dev.IP_adress, dev.device_name)
+                            except Exception as e:
+                                print(f"Error syncing ad to {dev.IP_adress}: {e}")
+                                continue
+                            
+                            # Play asynchronously
+                            try:
+                                subprocess.Popen(
+                                    ["ssh", "-o", "StrictHostKeyChecking=no", f"{dev.device_name}@{dev.IP_adress}", cmd],
+                                    stdout=subprocess.PIPE,
+                                    stderr=subprocess.PIPE
+                                )
+                            except Exception as e:
+                                print(f"Error playing ad on {dev.IP_adress}: {e}")
+
+            # --- Playlist check ---
             scheduled_playlist = ts.getPlaylistForTime(current_day, current_time)
 
             if scheduled_playlist and scheduled_playlist != SongPlayerService._current_playlist:
@@ -177,4 +210,22 @@ class SongPlayerService:
     def createDevice(self, name_place: str, ip_address: str, state: str, place_address: str, place_postcode: str, place_city: str, place_building_name: str, device_name: str, id_orga: int) -> None:
         """ Wrapper to create a new device in the database. """
         self.spdao.createDevice(name_place, ip_address, state, place_address, place_postcode, place_city, place_building_name, device_name, id_orga)
+
+    def sync_to_device(self, ip: str, device_name: str) -> None:
+        """ Sync files to a specific device """
+        player = {'ip': ip, 'name': device_name}
+        self.run_sync(player)
+
+    def remote_play_playlist(self, ip: str, device_name: str, playlist_name: str) -> None:
+        """SSH into a device and use MPC to load and play a playlist."""
+        try:
+            cmd = f"export PATH=$PATH:/opt/homebrew/bin:/usr/local/bin && mpc clear && mpc load {playlist_name} && mpc play"
+            subprocess.Popen(
+                ["ssh", "-o", "StrictHostKeyChecking=no", f"{device_name}@{ip}", cmd],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE
+            )
+            print(f"[{device_name}]: Playing playlist {playlist_name}")
+        except Exception as e:
+            print(f"[{device_name}]: Failed to play playlist {playlist_name}. Error: {e}")
 
